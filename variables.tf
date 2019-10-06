@@ -76,12 +76,6 @@ variable "runners_name" {
   type        = string
 }
 
-variable "runners_executor" {
-  description = "The executor to use. Currently supports `docker+machine` or `docker`."
-  type        = string
-  default     = "docker+machine"
-}
-
 variable "runners_gitlab_url" {
   description = "URL of the GitLab instance to connect to."
   type        = string

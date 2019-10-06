@@ -25,7 +25,7 @@ Module is available as Terraform 0.11 module, pin module to version 3.x. Please 
 
 This [Terraform](https://www.terraform.io/) modules creates a [GitLab CI runner](https://docs.gitlab.com/runner/). A blog post describes the original version of the the runner. See the post at [040code](https://040code.github.io/2017/12/09/runners-on-the-spot/). The original setup of the module is based on the blog post: [Auto scale GitLab CI runners and save 90% on EC2 costs](https://about.gitlab.com/2017/11/23/autoscale-ci-runners/).
 
-The runners created by the module using by default spot instances for running the builds using the `docker+machine` executor.
+The runners created by the module using spot instances for running the builds using the `docker+machine` executor.
 
   - Shared cache in S3 with life cycle management to clear objects after x days.
   - Logs streamed to CloudWatch.
