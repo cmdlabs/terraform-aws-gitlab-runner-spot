@@ -20,3 +20,5 @@ done
 ${logging}
 
 ${gitlab_runner}
+
+# vim: set ft=sh:

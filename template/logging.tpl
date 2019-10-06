@@ -43,3 +43,5 @@ sed -i -e "s/{instanceId}/$instanceId/g" /etc/awslogs/awslogs.conf
 
 service awslogs start
 chkconfig awslogs on
+
+# vim: set ft=sh:

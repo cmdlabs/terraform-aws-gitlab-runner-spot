@@ -44,3 +44,5 @@ ${post_install}
 
 service gitlab-runner restart
 chkconfig gitlab-runner on
+
+# vim: set ft=sh:
