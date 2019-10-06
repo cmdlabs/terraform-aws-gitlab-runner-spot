@@ -41,16 +41,9 @@ variable "runner_instance_spot_price" {
   default     = ""
 }
 
-variable "ssh_key_pair" {
-  description = "Set this to use existing AWS key pair"
-  type        = string
-  default     = ""
-}
-
 variable "ssh_public_key" {
   description = "Public SSH key used for the GitLab runner EC2 instance."
   type        = string
-  default     = ""
 }
 
 variable "docker_machine_instance_type" {
