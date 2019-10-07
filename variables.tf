@@ -1,26 +1,26 @@
 variable "aws_region" {
-  description = "AWS region."
+  description = "AWS region"
   type        = string
 }
 
 variable "aws_zone" {
-  description = "AWS availability zone (typically 'a', 'b', or 'c')."
+  description = "AWS availability zone (typically 'a', 'b', or 'c')"
   type        = string
   default     = "a"
 }
 
 variable "vpc_id" {
-  description = "The target VPC for the docker-machine and runner instances."
+  description = "The target VPC for the docker-machine and runner instances"
   type        = string
 }
 
 variable "subnet_id_runners" {
-  description = "List of subnets used for hosting the gitlab-runners."
+  description = "List of subnets used for hosting the gitlab-runners"
   type        = string
 }
 
 variable "subnet_ids_gitlab_runner" {
-  description = "Subnet used for hosting the GitLab runner."
+  description = "Subnet used for hosting the GitLab runner"
   type        = list(string)
 }
 
@@ -31,77 +31,77 @@ variable "key_name" {
 }
 
 variable "instance_type" {
-  description = "Instance type used for the GitLab runner."
+  description = "Instance type used for the GitLab runner"
   type        = string
   default     = "t3.micro"
 }
 
 variable "runner_instance_spot_price" {
-  description = "By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS."
+  description = "By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS"
   type        = string
   default     = ""
 }
 
 variable "docker_machine_instance_type" {
-  description = "Instance type used for the instances hosting docker-machine."
+  description = "Instance type used for the instances hosting docker-machine"
   type        = string
   default     = "m5a.large"
 }
 
 variable "docker_machine_spot_price_bid" {
-  description = "Spot price bid."
+  description = "Spot price bid"
   type        = string
   default     = "0.06"
 }
 
 variable "docker_machine_version" {
-  description = "Version of docker-machine."
+  description = "Version of docker-machine"
   type        = string
   default     = "0.16.2"
 }
 
 variable "runners_name" {
-  description = "Name of the runner, will be used in the runner config.toml."
+  description = "Name of the runner, will be used in the runner config.toml"
   type        = string
 }
 
 variable "runners_gitlab_url" {
-  description = "URL of the GitLab instance to connect to."
+  description = "URL of the GitLab instance to connect to"
   type        = string
 }
 
 variable "runners_token" {
-  description = "Token for the runner, will be used in the runner config.toml."
+  description = "Token for the runner, will be used in the runner config.toml"
   type        = string
   default     = "__REPLACED_BY_USER_DATA__"
 }
 
 variable "runners_limit" {
-  description = "Limit for the runners, will be used in the runner config.toml."
+  description = "Limit for the runners, will be used in the runner config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_concurrent" {
-  description = "Concurrent value for the runners, will be used in the runner config.toml."
+  description = "Concurrent value for the runners, will be used in the runner config.toml"
   type        = number
   default     = 10
 }
 
 variable "runners_idle_time" {
-  description = "Idle time of the runners, will be used in the runner config.toml."
+  description = "Idle time of the runners, will be used in the runner config.toml"
   type        = number
   default     = 600
 }
 
 variable "runners_idle_count" {
-  description = "Idle count of the runners, will be used in the runner config.toml."
+  description = "Idle count of the runners, will be used in the runner config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_max_builds" {
-  description = "Max builds for each runner after which it will be removed, will be used in the runner config.toml. By default set to 0, no maxBuilds will be set in the configuration."
+  description = "Max builds for each runner after which it will be removed, will be used in the runner config.toml. By default set to 0, no maxBuilds will be set in the configuration"
   type        = number
   default     = 0
 }
@@ -137,37 +137,37 @@ variable "runners_pull_policy" {
 }
 
 variable "runners_monitoring" {
-  description = "Enable detailed cloudwatch monitoring for spot instances."
+  description = "Enable detailed cloudwatch monitoring for spot instances"
   type        = bool
   default     = false
 }
 
 variable "runners_off_peak_timezone" {
-  description = "Off peak idle time zone of the runners, will be used in the runner config.toml."
+  description = "Off peak idle time zone of the runners, will be used in the runner config.toml"
   type        = string
   default     = ""
 }
 
 variable "runners_off_peak_idle_count" {
-  description = "Off peak idle count of the runners, will be used in the runner config.toml."
+  description = "Off peak idle count of the runners, will be used in the runner config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_off_peak_idle_time" {
-  description = "Off peak idle time of the runners, will be used in the runner config.toml."
+  description = "Off peak idle time of the runners, will be used in the runner config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_off_peak_periods" {
-  description = "Off peak periods of the runners, will be used in the runner config.toml."
+  description = "Off peak periods of the runners, will be used in the runner config.toml"
   type        = string
   default     = ""
 }
 
 variable "runners_root_size" {
-  description = "Runner instance root size in GB."
+  description = "Runner instance root size in GB"
   type        = number
   default     = 16
 }
@@ -239,79 +239,79 @@ variable "runners_use_private_address" {
 }
 
 variable "docker_machine_user" {
-  description = "Username of the user used to create the spot instances that host docker-machine."
+  description = "Username of the user used to create the spot instances that host docker-machine"
   type        = string
   default     = "docker-machine"
 }
 
 variable "cache_bucket_prefix" {
-  description = "Prefix for s3 cache bucket name."
+  description = "Prefix for s3 cache bucket name"
   type        = string
   default     = ""
 }
 
 variable "cache_bucket_name_include_account_id" {
-  description = "Boolean to add current account ID to cache bucket name."
+  description = "Boolean to add current account ID to cache bucket name"
   type        = bool
   default     = true
 }
 
 variable "cache_bucket_versioning" {
-  description = "Boolean used to enable versioning on the cache bucket, false by default."
+  description = "Boolean used to enable versioning on the cache bucket, false by default"
   type        = bool
   default     = false
 }
 
 variable "cache_expiration_days" {
-  description = "Number of days before cache objects expires."
+  description = "Number of days before cache objects expires"
   type        = number
   default     = 1
 }
 
 variable "cache_shared" {
-  description = "Enables cache sharing between runners, false by default."
+  description = "Enables cache sharing between runners, false by default"
   type        = bool
   default     = false
 }
 
 variable "gitlab_runner_version" {
-  description = "Version of the GitLab runner."
+  description = "Version of the GitLab runner"
   type        = string
   default     = "12.3.0"
 }
 
 variable "enable_gitlab_runner_ssh_access" {
-  description = "Enables SSH Access to the gitlab runner instance."
+  description = "Enables SSH Access to the gitlab runner instance"
   type        = bool
   default     = false
 }
 
 variable "gitlab_runner_ssh_cidr_blocks" {
-  description = "List of CIDR blocks to allow SSH Access to the gitlab runner instance."
+  description = "List of CIDR blocks to allow SSH Access to the gitlab runner instance"
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
 variable "docker_machine_docker_cidr_blocks" {
-  description = "List of CIDR blocks to allow Docker Access to the docker machine runner instance."
+  description = "List of CIDR blocks to allow Docker Access to the docker machine runner instance"
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
 variable "docker_machine_ssh_cidr_blocks" {
-  description = "List of CIDR blocks to allow SSH Access to the docker machine runner instance."
+  description = "List of CIDR blocks to allow SSH Access to the docker machine runner instance"
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
 variable "enable_cloudwatch_logging" {
-  description = "Boolean used to enable or disable the CloudWatch logging."
+  description = "Boolean used to enable or disable the CloudWatch logging"
   type        = bool
   default     = true
 }
 
 variable "allow_iam_service_linked_role_creation" {
-  description = "Boolean used to control attaching the policy to a runner instance to create service linked roles."
+  description = "Boolean used to control attaching the policy to a runner instance to create service linked roles"
   type        = bool
   default     = true
 }
@@ -323,19 +323,19 @@ variable "docker_machine_options" {
 }
 
 variable "instance_role_json" {
-  description = "Default runner instance override policy, expected to be in JSON format."
+  description = "Default runner instance override policy, expected to be in JSON format"
   type        = string
   default     = ""
 }
 
 variable "docker_machine_role_json" {
-  description = "Docker machine runner instance override policy, expected to be in JSON format."
+  description = "Docker machine runner instance override policy, expected to be in JSON format"
   type        = string
   default     = ""
 }
 
 variable "ami_filter" {
-  description = "List of maps used to create the AMI filter for the Gitlab runner agent AMI. Currently Amazon Linux 2 `amzn2-ami-hvm-2.0.????????-x86_64-ebs` looks to *not* be working for this configuration."
+  description = "List of maps used to create the AMI filter for the Gitlab runner agent AMI. Currently Amazon Linux 2 `amzn2-ami-hvm-2.0.????????-x86_64-ebs` looks to *not* be working for this configuration"
   type        = map(list(string))
 
   default = {
@@ -344,13 +344,13 @@ variable "ami_filter" {
 }
 
 variable "ami_owners" {
-  description = "The list of owners used to select the AMI of Gitlab runner agent instances."
+  description = "The list of owners used to select the AMI of Gitlab runner agent instances"
   type        = list(string)
   default     = ["amazon"]
 }
 
 variable "runner_ami_filter" {
-  description = "List of maps used to create the AMI filter for the Gitlab runner docker-machine AMI."
+  description = "List of maps used to create the AMI filter for the Gitlab runner docker-machine AMI"
   type        = map(list(string))
 
   default = {
@@ -359,7 +359,7 @@ variable "runner_ami_filter" {
 }
 
 variable "runner_ami_owners" {
-  description = "The list of owners used to select the AMI of Gitlab runner docker-machine instances."
+  description = "The list of owners used to select the AMI of Gitlab runner docker-machine instances"
   type        = list(string)
 
   # Canonical
@@ -367,7 +367,7 @@ variable "runner_ami_owners" {
 }
 
 variable "gitlab_runner_registration_config" {
-  description = "Configuration used to register the runner. See the README for an example, or reference the examples in the examples directory of this repo."
+  description = "Configuration used to register the runner. See the README for an example, or reference the examples in the examples directory of this repo"
   type        = map(string)
 
   default = {
@@ -387,13 +387,13 @@ variable "secure_parameter_store_runner_token_key" {
 }
 
 variable "enable_manage_gitlab_token" {
-  description = "Boolean to enable the management of the GitLab token in SSM. If `true` the token will be stored in SSM, which means the SSM property is a terraform managed resource. If `false` the Gitlab token will be stored in the SSM by the user-data script during creation of the the instance. However the SSM parameter is not managed by terraform and will remain in SSM after a `terraform destroy`."
+  description = "Boolean to enable the management of the GitLab token in SSM. If `true` the token will be stored in SSM, which means the SSM property is a terraform managed resource. If `false` the Gitlab token will be stored in the SSM by the user-data script during creation of the the instance. However the SSM parameter is not managed by terraform and will remain in SSM after a `terraform destroy`"
   type        = bool
   default     = true
 }
 
 variable "overrides" {
-  description = "This maps provides the possibility to override some defaults. The following attributes are supported: `name_sg` overwrite the `Name` tag for all security groups created by this module. `name_runner_agent_instance` override the `Name` tag for the ec2 instance defined in the auto launch configuration. `name_docker_machine_runners` ovverrid the `Name` tag spot instances created by the runner agent."
+  description = "This maps provides the possibility to override some defaults. The following attributes are supported: `name_sg` overwrite the `Name` tag for all security groups created by this module. `name_runner_agent_instance` override the `Name` tag for the ec2 instance defined in the auto launch configuration. `name_docker_machine_runners` ovverrid the `Name` tag spot instances created by the runner agent"
   type        = map(string)
 
   default = {
@@ -404,7 +404,7 @@ variable "overrides" {
 }
 
 variable "cache_bucket" {
-  description = "Configuration to control the creation of the cache bucket. By default the bucket will be created and used as shared cache. To use the same cache cross multiple runners disable the cration of the cache and provice a policy and bucket name. See the public runner example for more details."
+  description = "Configuration to control the creation of the cache bucket. By default the bucket will be created and used as shared cache. To use the same cache cross multiple runners disable the cration of the cache and provice a policy and bucket name. See the public runner example for more details"
   type        = map
 
   default = {
@@ -415,7 +415,7 @@ variable "cache_bucket" {
 }
 
 variable "enable_runner_user_data_trace_log" {
-  description = "Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token."
+  description = "Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token"
   type        = bool
   default     = false
 }
@@ -444,7 +444,7 @@ variable "runner_root_block_device" {
 }
 
 variable "enable_runner_ssm_access" {
-  description = "Add IAM policies to the runner agent instance to connect via the Session Manager."
+  description = "Add IAM policies to the runner agent instance to connect via the Session Manager"
   type        = bool
   default     = false
 }
