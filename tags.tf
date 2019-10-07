@@ -1,10 +1,10 @@
 locals {
   tags = merge(
     {
-      "Name" = format("%s", var.environment)
+      "Name" = "gitlab-runner"
     },
     {
-      "Environment" = format("%s", var.environment)
+      "Environment" = "gitlab-runner" # FIXME.
     },
     var.tags,
   )
@@ -23,4 +23,3 @@ data "null_data_source" "tags" {
     propagate_at_launch = "true"
   }
 }
-

@@ -1,10 +1,10 @@
 resource "aws_key_pair" "key" {
-  key_name   = "${var.environment}-gitlab-runner"
+  key_name   = "gitlab-runner"
   public_key = var.ssh_public_key
 }
 
 resource "aws_security_group" "runner" {
-  name_prefix = "${var.environment}-security-group"
+  name_prefix = "gitlab-runner-security-group"
   vpc_id      = var.vpc_id
 
   egress {
@@ -35,7 +35,7 @@ resource "aws_security_group_rule" "runner_ssh" {
 }
 
 resource "aws_security_group" "docker_machine" {
-  name_prefix = "${var.environment}-docker-machine"
+  name_prefix = "gitlab-runner-docker-machine"
   vpc_id      = var.vpc_id
 
   tags = merge(
@@ -111,10 +111,6 @@ data "template_file" "user_data" {
 
 data "template_file" "logging" {
   template = file("${path.module}/template/logging.tpl")
-
-  vars = {
-    environment = var.environment
-  }
 }
 
 data "template_file" "gitlab_runner" {
@@ -177,9 +173,8 @@ data "template_file" "runners" {
     docker_machine_options      = length(var.docker_machine_options) == 0 ? "" : local.docker_machine_options_string
     runners_name                = var.runners_name
     runners_tags = var.overrides["name_docker_machine_runners"] == "" ? format(
-      "%s,Name,%s-docker-machine",
+      "%s,Name,gitlab-runner-docker-machine",
       local.tags_string,
-      var.environment,
       ) : format(
       "%s,Name,%s",
       local.tags_string,
@@ -230,7 +225,7 @@ data "aws_ami" "docker-machine" {
 }
 
 resource "aws_autoscaling_group" "gitlab_runner_instance" {
-  name                = "${var.environment}-as-group"
+  name                = "gitlab-runner-as-group"
   vpc_zone_identifier = var.subnet_ids_gitlab_runner
 
   min_size                  = "1"
@@ -322,7 +317,6 @@ locals {
 module "cache" {
   source = "./cache"
 
-  environment = var.environment
   tags        = local.tags
 
   create_cache_bucket                  = var.cache_bucket["create"]
@@ -336,7 +330,7 @@ module "cache" {
 ### Trust policy
 ################################################################################
 resource "aws_iam_instance_profile" "instance" {
-  name = "${var.environment}-instance-profile"
+  name = "gitlab-runner-instance-profile"
   role = aws_iam_role.instance.name
 }
 
@@ -345,7 +339,7 @@ data "template_file" "instance_role_trust_policy" {
 }
 
 resource "aws_iam_role" "instance" {
-  name               = "${var.environment}-instance-role"
+  name               = "gitlab-runner-instance-role"
   assume_role_policy = data.template_file.instance_role_trust_policy.rendered
 }
 
@@ -359,7 +353,7 @@ data "template_file" "instance_docker_machine_policy" {
 }
 
 resource "aws_iam_policy" "instance_docker_machine_policy" {
-  name        = "${var.environment}-docker-machine"
+  name        = "gitlab-runner-docker-machine"
   path        = "/"
   description = "Policy for docker machine."
 
@@ -386,7 +380,7 @@ data "template_file" "instance_session_manager_policy" {
 resource "aws_iam_policy" "instance_session_manager_policy" {
   count = var.enable_runner_ssm_access ? 1 : 0
 
-  name        = "${var.environment}-session-manager"
+  name        = "gitlab-runner-session-manager"
   path        = "/"
   description = "Policy session manager."
 
@@ -425,12 +419,12 @@ data "template_file" "dockermachine_role_trust_policy" {
 }
 
 resource "aws_iam_role" "docker_machine" {
-  name               = "${var.environment}-docker-machine-role"
+  name               = "gitlab-runner-docker-machine-role"
   assume_role_policy = data.template_file.dockermachine_role_trust_policy.rendered
 }
 
 resource "aws_iam_instance_profile" "docker_machine" {
-  name = "${var.environment}-docker-machine-profile"
+  name = "gitlab-runner-docker-machine-profile"
   role = aws_iam_role.docker_machine.name
 }
 
@@ -448,7 +442,7 @@ data "template_file" "service_linked_role" {
 resource "aws_iam_policy" "service_linked_role" {
   count = var.allow_iam_service_linked_role_creation ? 1 : 0
 
-  name        = "${var.environment}-service_linked_role"
+  name        = "gitlab-runner-service_linked_role"
   path        = "/"
   description = "Policy for creation of service linked roles."
 
@@ -476,7 +470,7 @@ data "template_file" "ssm_policy" {
 resource "aws_iam_policy" "ssm" {
   count = var.enable_manage_gitlab_token ? 1 : 0
 
-  name        = "${var.environment}-ssm"
+  name        = "gitlab-runner-ssm"
   path        = "/"
   description = "Policy for runner token param access via SSM"
 

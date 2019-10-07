@@ -9,11 +9,6 @@ variable "aws_zone" {
   default     = "a"
 }
 
-variable "environment" {
-  description = "A name that identifies the environment, used as prefix and for tagging."
-  type        = string
-}
-
 variable "vpc_id" {
   description = "The target VPC for the docker-machine and runner instances."
   type        = string

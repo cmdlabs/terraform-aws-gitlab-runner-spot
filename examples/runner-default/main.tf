@@ -6,7 +6,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "2.5"
 
-  name = "vpc-${var.environment}"
+  name = "vpc-gitlab-runner"
   cidr = "10.0.0.0/16"
 
   azs             = [data.aws_availability_zones.available.names[0]]
@@ -16,17 +16,12 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
   enable_s3_endpoint = true
-
-  tags = {
-    Environment = var.environment
-  }
 }
 
 module "runner" {
   source = "../../"
 
   aws_region  = var.aws_region
-  environment = var.environment
 
   vpc_id                   = module.vpc.vpc_id
   subnet_ids_gitlab_runner = module.vpc.private_subnets
@@ -66,17 +61,7 @@ module "runner" {
   runners_services_volumes_tmpfs = [
     { "/var/lib/mysql" = "rw,noexec" },
   ]
+
   # working 9 to 5 :)
   runners_off_peak_periods = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
-}
-
-
-
-resource "null_resource" "cancel_spot_requests" {
-  # Cancel active and open spot requests, terminate instances
-
-  provisioner "local-exec" {
-    when    = "destroy"
-    command = "../../ci/bin/cancel-spot-instances.sh ${var.environment}"
-  }
 }

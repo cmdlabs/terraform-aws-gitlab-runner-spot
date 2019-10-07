@@ -5,10 +5,10 @@ data "aws_caller_identity" "current" {
 locals {
   tags = merge(
     {
-      "Name" = format("%s", var.environment)
+      "Name" = "gitlab-runner"
     },
     {
-      "Environment" = format("%s", var.environment)
+      "Environment" = "gitlab-runner" # FIXME. Sticking this here temporarily before I remove tags altogether in a later commit.
     },
     var.tags,
   )
@@ -67,10 +67,9 @@ data "template_file" "docker_machine_cache_policy" {
 resource "aws_iam_policy" "docker_machine_cache" {
   count = var.create_cache_bucket ? 1 : 0
 
-  name        = "${var.environment}-docker-machine-cache"
+  name        = "gitlab-runner-docker-machine-cache"
   path        = "/"
   description = "Policy for docker machine instance to access cache"
 
   policy = data.template_file.docker_machine_cache_policy[0].rendered
 }
-
