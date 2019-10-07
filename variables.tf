@@ -316,12 +316,6 @@ variable "allow_iam_service_linked_role_creation" {
   default     = true
 }
 
-variable "docker_machine_options" {
-  description = "List of additional options for the docker machine config. Each element of this list must be a key=value pair. E.g. '[\"amazonec2-zone=a\"]'"
-  type        = list(string)
-  default     = []
-}
-
 variable "instance_role_json" {
   description = "Default runner instance override policy, expected to be in JSON format"
   type        = string

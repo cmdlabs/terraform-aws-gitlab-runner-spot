@@ -53,7 +53,6 @@ check_interval = 0
       "amazonec2-iam-instance-profile=%{ if runners_iam_instance_profile_name != "" }${runners_iam_instance_profile_name}%{ else }${runners_instance_profile}%{ endif ~}",
       "amazonec2-root-size=${runners_root_size}",
       "amazonec2-ami=${runners_ami}"
-      ${docker_machine_options}
     ]
     OffPeakTimezone = "${runners_off_peak_timezone}"
     OffPeakIdleCount = ${runners_off_peak_idle_count}

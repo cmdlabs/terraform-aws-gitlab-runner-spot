@@ -157,7 +157,6 @@ The below outlines the current parameters and defaults.
 |docker_machine_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the docker machine runner instance|list(string)|[0.0.0.0/0]|No|
 |enable_cloudwatch_logging|Boolean used to enable or disable the CloudWatch logging|bool|true|No|
 |allow_iam_service_linked_role_creation|Boolean used to control attaching the policy to a runner instance to create service linked roles|bool|true|No|
-|docker_machine_options|List of additional options for the docker machine config. Each element of this list must be a key=value pair. E.g. '[\|list(string)|[]|No|
 |instance_role_json|Default runner instance override policy, expected to be in JSON format|string|""|Yes|
 |docker_machine_role_json|Docker machine runner instance override policy, expected to be in JSON format|string|""|Yes|
 |ami_filter|List of maps used to create the AMI filter for the Gitlab runner agent AMI. Currently Amazon Linux 2 `amzn2-ami-hvm-2.0.????????-x86_64-ebs` looks to *not* be working for this configuration|map(list(string))|(map)|No|
