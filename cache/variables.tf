@@ -22,12 +22,6 @@ variable "cache_expiration_days" {
   default     = 1
 }
 
-variable "tags" {
-  description = "Map of tags that will be added to created resources. By default resources will be tagged with name and environment."
-  type        = map(string)
-  default     = {}
-}
-
 variable "create_cache_bucket" {
   description = "This module is by default included in the runner module. To disable the creation of the bucket this parameter can be disabled."
   type        = string

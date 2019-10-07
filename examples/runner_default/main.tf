@@ -37,16 +37,10 @@ module "runner" {
 
   gitlab_runner_registration_config = {
     registration_token = "GBpeL612xfp3DtEjzZsx"
-    tag_list           = "docker_spot_runner"
     description        = "runner default - auto"
     locked_to_project  = "true"
     run_untagged       = "false"
     maximum_timeout    = "3600"
-  }
-
-  tags = {
-    "tf-aws-gitlab-runner:example"           = "runner-default"
-    "tf-aws-gitlab-runner:instancelifecycle" = "spot:yes"
   }
 
   runners_off_peak_timezone   = "Australia/Sydney"

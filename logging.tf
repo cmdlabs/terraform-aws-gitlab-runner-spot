@@ -13,6 +13,4 @@ resource "aws_iam_role_policy" "instance" {
 resource "aws_cloudwatch_log_group" "environment" {
   count = var.enable_cloudwatch_logging ? 1 : 0
   name  = "gitlab-runner-log-group"
-
-  tags = local.tags
 }

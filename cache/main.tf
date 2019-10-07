@@ -3,16 +3,6 @@ data "aws_caller_identity" "current" {
 }
 
 locals {
-  tags = merge(
-    {
-      "Name" = "gitlab-runner"
-    },
-    {
-      "Environment" = "gitlab-runner" # FIXME. Sticking this here temporarily before I remove tags altogether in a later commit.
-    },
-    var.tags,
-  )
-
   cache_bucket_name = var.cache_bucket_name_include_account_id ? "${var.cache_bucket_prefix}${data.aws_caller_identity.current[0].account_id}-gitlab-runner-cache" : "${var.cache_bucket_prefix}-gitlab-runner-cache"
 }
 
@@ -21,8 +11,6 @@ resource "aws_s3_bucket" "build_cache" {
 
   bucket = local.cache_bucket_name
   acl    = "private"
-
-  tags = local.tags
 
   force_destroy = true
 

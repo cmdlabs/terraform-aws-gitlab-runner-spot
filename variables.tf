@@ -309,12 +309,6 @@ variable "enable_cloudwatch_logging" {
   default     = true
 }
 
-variable "tags" {
-  description = "Map of tags that will be added to created resources. By default resources will be tagged with name and environment."
-  type        = map(string)
-  default     = {}
-}
-
 variable "allow_iam_service_linked_role_creation" {
   description = "Boolean used to control attaching the policy to a runner instance to create service linked roles."
   type        = bool
@@ -377,7 +371,6 @@ variable "gitlab_runner_registration_config" {
 
   default = {
     registration_token = ""
-    tag_list           = ""
     description        = ""
     locked_to_project  = ""
     run_untagged       = ""

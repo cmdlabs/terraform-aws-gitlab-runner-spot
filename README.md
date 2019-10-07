@@ -67,7 +67,6 @@ To register the runner automatically set the variable `gitlab_runner_registratio
 ``` hcl
 gitlab_runner_registration_config = {
   registration_token = "<registration token>"
-  tag_list           = "<your tags, comma separated>"
   description        = "<some description>"
   locked_to_project  = "true"
   run_untagged       = "false"
@@ -157,7 +156,6 @@ The below outlines the current parameters and defaults.
 |docker_machine_docker_cidr_blocks|List of CIDR blocks to allow Docker Access to the docker machine runner instance.|list(string)|[0.0.0.0/0]|No|
 |docker_machine_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the docker machine runner instance.|list(string)|[0.0.0.0/0]|No|
 |enable_cloudwatch_logging|Boolean used to enable or disable the CloudWatch logging.|bool|true|No|
-|tags|Map of tags that will be added to created resources. By default resources will be tagged with name and environment.|map(string)|{}|No|
 |allow_iam_service_linked_role_creation|Boolean used to control attaching the policy to a runner instance to create service linked roles.|bool|true|No|
 |docker_machine_options|List of additional options for the docker machine config. Each element of this list must be a key=value pair. E.g. '[\|list(string)|[]|No|
 |instance_role_json|Default runner instance override policy, expected to be in JSON format.|string|""|No|
@@ -237,16 +235,10 @@ module "runner" {
 
   gitlab_runner_registration_config = {
     registration_token = "GBpeL612xfp3DtEjzZsx"
-    tag_list           = "docker_spot_runner"
     description        = "runner default - auto"
     locked_to_project  = "true"
     run_untagged       = "false"
     maximum_timeout    = "3600"
-  }
-
-  tags = {
-    "tf-aws-gitlab-runner:example"           = "runner-default"
-    "tf-aws-gitlab-runner:instancelifecycle" = "spot:yes"
   }
 
   runners_off_peak_timezone   = "Australia/Sydney"

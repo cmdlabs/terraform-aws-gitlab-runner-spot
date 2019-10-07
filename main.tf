@@ -13,13 +13,6 @@ resource "aws_security_group" "runner" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = merge(
-    local.tags,
-    {
-      "Name" = format("%s", local.name_sg)
-    },
-  )
 }
 
 resource "aws_security_group_rule" "runner_ssh" {
@@ -37,13 +30,6 @@ resource "aws_security_group_rule" "runner_ssh" {
 resource "aws_security_group" "docker_machine" {
   name_prefix = "gitlab-runner-docker-machine"
   vpc_id      = var.vpc_id
-
-  tags = merge(
-    local.tags,
-    {
-      "Name" = format("%s", local.name_sg)
-    },
-  )
 }
 
 resource "aws_security_group_rule" "docker_machine_docker_runner" {
@@ -92,8 +78,6 @@ resource "aws_ssm_parameter" "runner_registration_token" {
   type  = "SecureString"
   value = "null"
 
-  tags = local.tags
-
   lifecycle {
     ignore_changes = [value]
   }
@@ -128,7 +112,6 @@ data "template_file" "gitlab_runner" {
     secure_parameter_store_region           = var.aws_region
     gitlab_runner_registration_token        = var.gitlab_runner_registration_config["registration_token"]
     giltab_runner_description               = var.gitlab_runner_registration_config["description"]
-    gitlab_runner_tag_list                  = var.gitlab_runner_registration_config["tag_list"]
     gitlab_runner_locked_to_project         = var.gitlab_runner_registration_config["locked_to_project"]
     gitlab_runner_run_untagged              = var.gitlab_runner_registration_config["run_untagged"]
     gitlab_runner_maximum_timeout           = var.gitlab_runner_registration_config["maximum_timeout"]
@@ -172,14 +155,6 @@ data "template_file" "runners" {
     runners_additional_volumes  = local.runners_additional_volumes
     docker_machine_options      = length(var.docker_machine_options) == 0 ? "" : local.docker_machine_options_string
     runners_name                = var.runners_name
-    runners_tags = var.overrides["name_docker_machine_runners"] == "" ? format(
-      "%s,Name,gitlab-runner-docker-machine",
-      local.tags_string,
-      ) : format(
-      "%s,Name,%s",
-      local.tags_string,
-      var.overrides["name_docker_machine_runners"],
-    )
     runners_token                     = var.runners_token
     runners_limit                     = var.runners_limit
     runners_concurrent                = var.runners_concurrent
@@ -233,18 +208,6 @@ resource "aws_autoscaling_group" "gitlab_runner_instance" {
   desired_capacity          = "1"
   health_check_grace_period = 0
   launch_configuration      = aws_launch_configuration.gitlab_runner_instance.name
-
-  tags = concat(
-    data.null_data_source.tags.*.outputs,
-    [
-      {
-        "key"                 = "Name"
-        "value"               = local.name_runner_instance
-        "propagate_at_launch" = true
-      },
-    ],
-  )
-
 }
 
 resource "aws_autoscaling_schedule" "scale_in" {
@@ -316,8 +279,6 @@ locals {
 
 module "cache" {
   source = "./cache"
-
-  tags        = local.tags
 
   create_cache_bucket                  = var.cache_bucket["create"]
   cache_bucket_prefix                  = var.cache_bucket_prefix
