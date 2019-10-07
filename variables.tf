@@ -24,6 +24,12 @@ variable "subnet_ids_gitlab_runner" {
   type        = list(string)
 }
 
+variable "key_name" {
+  description = "The name of the EC2 key pair to use"
+  type        = string
+  default     = "default"
+}
+
 variable "instance_type" {
   description = "Instance type used for the GitLab runner."
   type        = string
@@ -34,11 +40,6 @@ variable "runner_instance_spot_price" {
   description = "By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS."
   type        = string
   default     = ""
-}
-
-variable "ssh_public_key" {
-  description = "Public SSH key used for the GitLab runner EC2 instance."
-  type        = string
 }
 
 variable "docker_machine_instance_type" {

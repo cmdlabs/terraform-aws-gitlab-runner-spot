@@ -1,8 +1,3 @@
-resource "aws_key_pair" "key" {
-  key_name   = "gitlab-runner"
-  public_key = var.ssh_public_key
-}
-
 resource "aws_security_group" "runner" {
   name_prefix = "gitlab-runner-security-group"
   vpc_id      = var.vpc_id
@@ -246,7 +241,7 @@ data "aws_ami" "runner" {
 
 resource "aws_launch_configuration" "gitlab_runner_instance" {
   security_groups      = [aws_security_group.runner.id]
-  key_name             = aws_key_pair.key.key_name
+  key_name             = var.key_name
   image_id             = data.aws_ami.runner.id
   user_data            = data.template_file.user_data.rendered
   instance_type        = var.instance_type

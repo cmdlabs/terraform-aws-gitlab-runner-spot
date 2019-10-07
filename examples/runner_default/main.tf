@@ -21,7 +21,7 @@ module "vpc" {
 module "runner" {
   source = "../../"
 
-  ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpVsFWujoVyCo/IopxGoilRntA52N+VS2JKTHOO847SY+56GVPd5Rj7FSdGet/r/wIqPSQGtmfxyTUseiaP8NrHxeCt9MQlrFEXBO/z/5NEfLtAS/DAbZKZBiFlJkYiHrWKNG2luINIqSAOLQk9DsgUn2zCPG7Ysdf8p02U6EzUZovpMqercPwlP0DuDspdSIHnq8gtwBzqyu2NnWnAUlREyjmscBTvHBkjFR8gQl1PNR7qApXVYR/1Qn5Z97RUbM7ld4J3wZYlZdR/Y5zR5l3G8SBn01/MddL6j/D8Gb6lYEqwB+qJGcsEnQSNCkz2aXTZEphwjpWhQ2dgBbOs7W9"
+  key_name = "default"
 
   aws_region = "ap-southeast-2"
 

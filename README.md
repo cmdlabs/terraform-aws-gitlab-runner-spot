@@ -108,9 +108,9 @@ The below outlines the current parameters and defaults.
 |vpc_id|The target VPC for the docker-machine and runner instances.|string|""|No|
 |subnet_id_runners|List of subnets used for hosting the gitlab-runners.|string|""|No|
 |subnet_ids_gitlab_runner|Subnet used for hosting the GitLab runner.|list(string)|""|No|
+|key_name|The name of the EC2 key pair to use|string|default|No|
 |instance_type|Instance type used for the GitLab runner.|string|t3.micro|No|
 |runner_instance_spot_price|By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS.|string|""|No|
-|ssh_public_key|Public SSH key used for the GitLab runner EC2 instance.|string|""|No|
 |docker_machine_instance_type|Instance type used for the instances hosting docker-machine.|string|m5a.large|No|
 |docker_machine_spot_price_bid|Spot price bid.|string|0.06|No|
 |docker_machine_version|Version of docker-machine.|string|0.16.2|No|
@@ -219,7 +219,7 @@ module "vpc" {
 module "runner" {
   source = "git@github.com:cmdlabs/terraform-aws-gitlab-runner.git"
 
-  ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpVsFWujoVyCo/IopxGoilRntA52N+VS2JKTHOO847SY+56GVPd5Rj7FSdGet/r/wIqPSQGtmfxyTUseiaP8NrHxeCt9MQlrFEXBO/z/5NEfLtAS/DAbZKZBiFlJkYiHrWKNG2luINIqSAOLQk9DsgUn2zCPG7Ysdf8p02U6EzUZovpMqercPwlP0DuDspdSIHnq8gtwBzqyu2NnWnAUlREyjmscBTvHBkjFR8gQl1PNR7qApXVYR/1Qn5Z97RUbM7ld4J3wZYlZdR/Y5zR5l3G8SBn01/MddL6j/D8Gb6lYEqwB+qJGcsEnQSNCkz2aXTZEphwjpWhQ2dgBbOs7W9"
+  key_name = "default"
 
   aws_region = "ap-southeast-2"
 
