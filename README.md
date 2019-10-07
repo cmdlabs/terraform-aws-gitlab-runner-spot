@@ -143,7 +143,6 @@ The below outlines the current parameters and defaults.
 |runners_output_limit|Sets the maximum build log size in kilobytes, by default set to 4096 (4MB)|number|4096|No|
 |userdata_pre_install|User-data script snippet to insert before GitLab runner install|string|""|Yes|
 |userdata_post_install|User-data script snippet to insert after GitLab runner install|string|""|Yes|
-|runners_use_private_address|Restrict runners to the use of a private IP address|bool|true|No|
 |docker_machine_user|Username of the user used to create the spot instances that host docker-machine|string|docker-machine|No|
 |cache_bucket_prefix|Prefix for s3 cache bucket name|string|""|Yes|
 |cache_bucket_name_include_account_id|Boolean to add current account ID to cache bucket name|bool|true|No|

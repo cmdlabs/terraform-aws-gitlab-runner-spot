@@ -232,12 +232,6 @@ variable "userdata_post_install" {
   default     = ""
 }
 
-variable "runners_use_private_address" {
-  description = "Restrict runners to the use of a private IP address"
-  type        = bool
-  default     = true
-}
-
 variable "docker_machine_user" {
   description = "Username of the user used to create the spot instances that host docker-machine"
   type        = string
