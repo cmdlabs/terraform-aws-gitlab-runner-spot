@@ -21,20 +21,22 @@ module "vpc" {
 module "runner" {
   source = "../../"
 
-  aws_region  = var.aws_region
+  ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpVsFWujoVyCo/IopxGoilRntA52N+VS2JKTHOO847SY+56GVPd5Rj7FSdGet/r/wIqPSQGtmfxyTUseiaP8NrHxeCt9MQlrFEXBO/z/5NEfLtAS/DAbZKZBiFlJkYiHrWKNG2luINIqSAOLQk9DsgUn2zCPG7Ysdf8p02U6EzUZovpMqercPwlP0DuDspdSIHnq8gtwBzqyu2NnWnAUlREyjmscBTvHBkjFR8gQl1PNR7qApXVYR/1Qn5Z97RUbM7ld4J3wZYlZdR/Y5zR5l3G8SBn01/MddL6j/D8Gb6lYEqwB+qJGcsEnQSNCkz2aXTZEphwjpWhQ2dgBbOs7W9"
+
+  aws_region = "ap-southeast-2"
 
   vpc_id                   = module.vpc.vpc_id
   subnet_ids_gitlab_runner = module.vpc.private_subnets
   subnet_id_runners        = element(module.vpc.private_subnets, 0)
 
-  runners_name             = var.runner_name
-  runners_gitlab_url       = var.gitlab_url
+  runners_name             = "test-runner"
+  runners_gitlab_url       = "https://gitlab.com"
   enable_runner_ssm_access = true
 
   docker_machine_spot_price_bid = "0.06"
 
   gitlab_runner_registration_config = {
-    registration_token = var.registration_token
+    registration_token = "GBpeL612xfp3DtEjzZsx"
     tag_list           = "docker_spot_runner"
     description        = "runner default - auto"
     locked_to_project  = "true"
@@ -47,7 +49,7 @@ module "runner" {
     "tf-aws-gitlab-runner:instancelifecycle" = "spot:yes"
   }
 
-  runners_off_peak_timezone   = var.timezone
+  runners_off_peak_timezone   = "Australia/Sydney"
   runners_off_peak_idle_count = 0
   runners_off_peak_idle_time  = 60
 
