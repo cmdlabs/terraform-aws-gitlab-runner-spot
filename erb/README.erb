@@ -1,0 +1,120 @@
+<!-- vim: set ft=markdown: -->
+![CMD Solutions|medium](https://s3-ap-southeast-2.amazonaws.com/cmd-website-images/CMDlogo.jpg)
+
+# terraform-aws-gitlab-runner
+
+<%= %x{ruby erb/toc.rb erb/README.erb} -%>
+
+## Overview
+
+This module creates an auto-scaling [GitLab CI runner](https://docs.gitlab.com/runner/) on AWS spot instances. The original setup of the module is based on the blog post: [Auto scale GitLab CI runners and save 90% on EC2 costs](https://about.gitlab.com/2017/11/23/autoscale-ci-runners/).
+
+The runners created by the module using spot instances for running the builds using the `docker+machine` executor.
+
+- Shared cache in S3 with life cycle management to clear objects after x days.
+- Logs streamed to CloudWatch.
+- Runner agents registered automatically.
+
+The runner agent is running on a single EC2 node and runners are created by [docker machine](https://docs.gitlab.com/runner/configuration/autoscale.html) using spot instances. Runners will scale automatically based on configuration. The module creates by default a S3 cache that is shared cross runners (spot instances).
+
+## AWS Gitlab Runner - Overview Diagram
+
+![runners-default](https://github.com/npalm/assets/raw/master/images/terraform-aws-gitlab-runner/runner-default.png)
+
+## Prerequisites
+
+### AWS
+
+Ensure you have setup you AWS credentials. The module requires access to IAM, EC2, CloudWatch, S3 and SSM.
+
+### Service linked roles
+
+The GitLab runner EC2 instance requires the following service linked roles:
+
+  - AWSServiceRoleForAutoScaling
+  - AWSServiceRoleForEC2Spot
+
+By default the EC2 instance is allowed to create the required roles, but this can be disabled by setting the option `allow_iam_service_linked_role_creation` to `false`. If disabled you must ensure the roles exist. You can create them manually or via Terraform.
+
+```tf
+resource "aws_iam_service_linked_role" "spot" {
+  aws_service_name = "spot.amazonaws.com"
+}
+
+resource "aws_iam_service_linked_role" "autoscaling" {
+  aws_service_name = "autoscaling.amazonaws.com"
+}
+```
+
+### GitLab runner token configuration
+
+The runner is registered on initial deployment.
+
+To register the runner automatically set the variable `gitlab_runner_registration_config["token"]`. This token value can be found in your GitLab project, group, or global settings. For a generic runner you can find the token in the admin section. By default the runner will be locked to the target project, not run untagged. Below is an example of the configuration map.
+
+``` hcl
+gitlab_runner_registration_config = {
+  registration_token = "<registration token>"
+  tag_list           = "<your tags, comma separated>"
+  description        = "<some description>"
+  locked_to_project  = "true"
+  run_untagged       = "false"
+  maximum_timeout    = "3600"
+  access_level       = "<not_protected OR ref_protected, ref_protected runner will only run on pipelines triggered on protected branches. Defaults to not_protected>"
+}
+```
+
+For migration to the new setup simply add the runner token to the parameter store. Once the runner is started it will lookup the required values via the parameter store. If the value is `null` a new runner will be created.
+
+```bash
+# set the following variables, look up the variables in your Terraform config.
+# see your Terraform variables to fill in the vars below.
+aws-region=<${var.aws_region}>
+token=<runner-token-see-your-gitlab-runner>
+parameter-name=<${var.environment}>-<${var.secure_parameter_store_runner_token_key}>
+
+aws ssm put-parameter --overwrite --type SecureString --name "${parameter-name}" --value ${token} --region "${aws-region}"
+```
+
+Once you have created the parameter, you must remove the variable `runners_token` from your config. The next time your gitlab runner instance is created it will look up the token from the SSM parameter store.
+
+Finally, the runner still supports the manual runner creation. No changes are required. Please keep in mind that this setup will be removed in future releases.
+
+### GitLab runner cache
+
+By default the module creates a cache for the runner in S3. Old objects are automatically remove via a configurable life cycle policy on the bucket.
+
+Creation of the bucket can be disabled and managed outside this module. A good use case is for sharing the cache cross multiple runners. For this purpose the cache is implemented as sub module. For more details see the [cache module](https://github.com/npalm/terraform-aws-gitlab-runner/tree/develop/cache). An example implementation of this use case can be find in the [runner-public](https://github.com/npalm/terraform-aws-gitlab-runner/tree/__GIT_REF__/examples/runner-public) example.
+
+### Inputs
+
+The below outlines the current parameters and defaults.
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-------:|:--------:|
+<%= %x{ruby erb/variables2md.rb variables.tf} -%>
+
+### Outputs
+
+|Name|Description|
+|------------|---------------------|
+<%= %x{ruby erb/outputs2md.rb outputs.tf} -%>
+
+### Examples
+
+To create a Gitlab Runner:
+
+```tf
+<% remote = %x{git remote -v}.split("\n")[0].split[1] -%>
+<%= %x{sed -E 's!source( +)=.*!source\\1= "#{remote}"!' examples/runner_default/main.tf} -%>
+```
+
+To apply that:
+
+```text
+▶ TF_VAR_TODO terraform apply
+```
+
+## License
+
+Apache 2.0.
