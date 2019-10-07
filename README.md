@@ -103,19 +103,19 @@ The below outlines the current parameters and defaults.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-------:|:--------:|
-|aws_region|AWS region.|string|""|No|
+|aws_region|AWS region.|string|""|Yes|
 |aws_zone|AWS availability zone (typically 'a', 'b', or 'c').|string|a|No|
-|vpc_id|The target VPC for the docker-machine and runner instances.|string|""|No|
-|subnet_id_runners|List of subnets used for hosting the gitlab-runners.|string|""|No|
-|subnet_ids_gitlab_runner|Subnet used for hosting the GitLab runner.|list(string)|""|No|
+|vpc_id|The target VPC for the docker-machine and runner instances.|string|""|Yes|
+|subnet_id_runners|List of subnets used for hosting the gitlab-runners.|string|""|Yes|
+|subnet_ids_gitlab_runner|Subnet used for hosting the GitLab runner.|list(string)|""|Yes|
 |key_name|The name of the EC2 key pair to use|string|default|No|
 |instance_type|Instance type used for the GitLab runner.|string|t3.micro|No|
-|runner_instance_spot_price|By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS.|string|""|No|
+|runner_instance_spot_price|By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS.|string|""|Yes|
 |docker_machine_instance_type|Instance type used for the instances hosting docker-machine.|string|m5a.large|No|
 |docker_machine_spot_price_bid|Spot price bid.|string|0.06|No|
 |docker_machine_version|Version of docker-machine.|string|0.16.2|No|
-|runners_name|Name of the runner, will be used in the runner config.toml.|string|""|No|
-|runners_gitlab_url|URL of the GitLab instance to connect to.|string|""|No|
+|runners_name|Name of the runner, will be used in the runner config.toml.|string|""|Yes|
+|runners_gitlab_url|URL of the GitLab instance to connect to.|string|""|Yes|
 |runners_token|Token for the runner, will be used in the runner config.toml.|string|__REPLACED_BY_USER_DATA__|No|
 |runners_limit|Limit for the runners, will be used in the runner config.toml.|number|0|No|
 |runners_concurrent|Concurrent value for the runners, will be used in the runner config.toml.|number|10|No|
@@ -128,24 +128,24 @@ The below outlines the current parameters and defaults.
 |runners_shm_size|shm_size for the runners, will be used in the runner config.toml|number|0|No|
 |runners_pull_policy|pull_policy for the runners, will be used in the runner config.toml|string|always|No|
 |runners_monitoring|Enable detailed cloudwatch monitoring for spot instances.|bool|false|No|
-|runners_off_peak_timezone|Off peak idle time zone of the runners, will be used in the runner config.toml.|string|""|No|
+|runners_off_peak_timezone|Off peak idle time zone of the runners, will be used in the runner config.toml.|string|""|Yes|
 |runners_off_peak_idle_count|Off peak idle count of the runners, will be used in the runner config.toml.|number|0|No|
 |runners_off_peak_idle_time|Off peak idle time of the runners, will be used in the runner config.toml.|number|0|No|
-|runners_off_peak_periods|Off peak periods of the runners, will be used in the runner config.toml.|string|""|No|
+|runners_off_peak_periods|Off peak periods of the runners, will be used in the runner config.toml.|string|""|Yes|
 |runners_root_size|Runner instance root size in GB.|number|16|No|
 |create_runners_iam_instance_profile|Boolean to control the creation of the runners IAM instance profile|bool|true|No|
-|runners_iam_instance_profile_name|IAM instance profile name of the runners, will be used in the runner config.toml|string|""|No|
+|runners_iam_instance_profile_name|IAM instance profile name of the runners, will be used in the runner config.toml|string|""|Yes|
 |runners_environment_vars|Environment variables during build execution, e.g. KEY=Value, see runner-public example. Will be used in the runner config.toml|list(string)|[]|No|
-|runners_pre_build_script|Script to execute in the pipeline just before the build, will be used in the runner config.toml|string|""|No|
-|runners_post_build_script|Commands to be executed on the Runner just after executing the build, but before executing after_script. |string|""|No|
-|runners_pre_clone_script|Commands to be executed on the Runner before cloning the Git repository. this can be used to adjust the Git client configuration first, for example. |string|""|No|
+|runners_pre_build_script|Script to execute in the pipeline just before the build, will be used in the runner config.toml|string|""|Yes|
+|runners_post_build_script|Commands to be executed on the Runner just after executing the build, but before executing after_script. |string|""|Yes|
+|runners_pre_clone_script|Commands to be executed on the Runner before cloning the Git repository. this can be used to adjust the Git client configuration first, for example. |string|""|Yes|
 |runners_request_concurrency|Limit number of concurrent requests for new jobs from GitLab (default 1)|number|1|No|
 |runners_output_limit|Sets the maximum build log size in kilobytes, by default set to 4096 (4MB)|number|4096|No|
-|userdata_pre_install|User-data script snippet to insert before GitLab runner install|string|""|No|
-|userdata_post_install|User-data script snippet to insert after GitLab runner install|string|""|No|
+|userdata_pre_install|User-data script snippet to insert before GitLab runner install|string|""|Yes|
+|userdata_post_install|User-data script snippet to insert after GitLab runner install|string|""|Yes|
 |runners_use_private_address|Restrict runners to the use of a private IP address|bool|true|No|
 |docker_machine_user|Username of the user used to create the spot instances that host docker-machine.|string|docker-machine|No|
-|cache_bucket_prefix|Prefix for s3 cache bucket name.|string|""|No|
+|cache_bucket_prefix|Prefix for s3 cache bucket name.|string|""|Yes|
 |cache_bucket_name_include_account_id|Boolean to add current account ID to cache bucket name.|bool|true|No|
 |cache_bucket_versioning|Boolean used to enable versioning on the cache bucket, false by default.|bool|false|No|
 |cache_expiration_days|Number of days before cache objects expires.|number|1|No|
@@ -158,8 +158,8 @@ The below outlines the current parameters and defaults.
 |enable_cloudwatch_logging|Boolean used to enable or disable the CloudWatch logging.|bool|true|No|
 |allow_iam_service_linked_role_creation|Boolean used to control attaching the policy to a runner instance to create service linked roles.|bool|true|No|
 |docker_machine_options|List of additional options for the docker machine config. Each element of this list must be a key=value pair. E.g. '[\|list(string)|[]|No|
-|instance_role_json|Default runner instance override policy, expected to be in JSON format.|string|""|No|
-|docker_machine_role_json|Docker machine runner instance override policy, expected to be in JSON format.|string|""|No|
+|instance_role_json|Default runner instance override policy, expected to be in JSON format.|string|""|Yes|
+|docker_machine_role_json|Docker machine runner instance override policy, expected to be in JSON format.|string|""|Yes|
 |ami_filter|List of maps used to create the AMI filter for the Gitlab runner agent AMI. Currently Amazon Linux 2 `amzn2-ami-hvm-2.0.????????-x86_64-ebs` looks to *not* be working for this configuration.|map(list(string))|(map)|No|
 |ami_owners|The list of owners used to select the AMI of Gitlab runner agent instances.|list(string)|[amazon]|No|
 |runner_ami_filter|List of maps used to create the AMI filter for the Gitlab runner docker-machine AMI.|map(list(string))|(map)|No|
