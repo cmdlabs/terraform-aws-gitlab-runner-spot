@@ -3,12 +3,6 @@ variable "aws_region" {
   type        = string
 }
 
-variable "aws_zone" {
-  description = "AWS availability zone (typically 'a', 'b', or 'c')"
-  type        = string
-  default     = "a"
-}
-
 variable "vpc_id" {
   description = "The target VPC for the docker-machine and runner instances"
   type        = string
@@ -22,6 +16,12 @@ variable "subnet_id_runners" {
 variable "subnet_ids_gitlab_runner" {
   description = "Subnet used for hosting the GitLab runner"
   type        = list(string)
+}
+
+variable "aws_zone" {
+  description = "AWS availability zone (typically 'a', 'b', or 'c'), will be used in the runner config.toml"
+  type        = string
+  default     = "a"
 }
 
 variable "key_name" {

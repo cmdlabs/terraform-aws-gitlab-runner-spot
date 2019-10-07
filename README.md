@@ -104,10 +104,10 @@ The below outlines the current parameters and defaults.
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-------:|:--------:|
 |aws_region|AWS region|string|""|Yes|
-|aws_zone|AWS availability zone (typically 'a', 'b', or 'c')|string|a|No|
 |vpc_id|The target VPC for the docker-machine and runner instances|string|""|Yes|
 |subnet_id_runners|List of subnets used for hosting the gitlab-runners|string|""|Yes|
 |subnet_ids_gitlab_runner|Subnet used for hosting the GitLab runner|list(string)|""|Yes|
+|aws_zone|AWS availability zone (typically 'a', 'b', or 'c'), will be used in the runner config.toml|string|a|No|
 |key_name|The name of the EC2 key pair to use|string|default|No|
 |instance_type|Instance type used for the GitLab runner|string|t3.micro|No|
 |runner_instance_spot_price|By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS|string|""|Yes|
