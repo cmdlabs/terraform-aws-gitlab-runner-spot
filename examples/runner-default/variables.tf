@@ -4,12 +4,6 @@ variable "aws_region" {
   default     = "eu-west-1"
 }
 
-variable "environment" {
-  description = "A name that identifies the environment, will used as prefix and for tagging."
-  type        = string
-  default     = "runners-default"
-}
-
 variable "public_ssh_key_filename" {
   default = "generated/id_rsa.pub"
 }
