@@ -1,5 +1,5 @@
 locals {
-  instance_type = "t3.micro"
+  instance_type = "t3.micro"  // Instance type used for the GitLab runner
 
   // Ensure off peak is optional
   runners_off_peak_periods_string = var.runners_off_peak_periods == "" ? "" : format("OffPeakPeriods = %s", var.runners_off_peak_periods)
