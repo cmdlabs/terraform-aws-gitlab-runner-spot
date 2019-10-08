@@ -5,6 +5,8 @@ locals {
   docker_machine_spot_price_bid = "0.06"
   docker_machine_version        = "0.16.2"
 
+  runners_image                 = "docker:18.03.1-ce"
+
   // Ensure off peak is optional
   runners_off_peak_periods_string = var.runners_off_peak_periods == "" ? "" : format("OffPeakPeriods = %s", var.runners_off_peak_periods)
 
@@ -175,7 +177,7 @@ data "template_file" "runners" {
     runners_token                     = var.runners_token
     runners_limit                     = var.runners_limit
     runners_concurrent                = var.runners_concurrent
-    runners_image                     = var.runners_image
+    runners_image                     = local.runners_image
     runners_privileged                = var.runners_privileged
     runners_shm_size                  = var.runners_shm_size
     runners_pull_policy               = var.runners_pull_policy

@@ -76,12 +76,6 @@ variable "runners_max_builds" {
   default     = 0
 }
 
-variable "runners_image" {
-  description = "Image to run builds, will be used in the runner config.toml"
-  type        = string
-  default     = "docker:18.03.1-ce"
-}
-
 variable "runners_privileged" {
   description = "Runners will run in privileged mode, will be used in the runner config.toml"
   type        = bool
