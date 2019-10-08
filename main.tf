@@ -1,4 +1,6 @@
 locals {
+  instance_type = "t3.micro"
+
   // Ensure off peak is optional
   runners_off_peak_periods_string = var.runners_off_peak_periods == "" ? "" : format("OffPeakPeriods = %s", var.runners_off_peak_periods)
 
@@ -261,7 +263,7 @@ resource "aws_launch_configuration" "gitlab_runner_instance" {
   key_name             = var.key_name
   image_id             = data.aws_ami.runner.id
   user_data            = data.template_file.user_data.rendered
-  instance_type        = var.instance_type
+  instance_type        = local.instance_type
   spot_price           = var.runner_instance_spot_price
   iam_instance_profile = aws_iam_instance_profile.instance.name
   dynamic "root_block_device" {

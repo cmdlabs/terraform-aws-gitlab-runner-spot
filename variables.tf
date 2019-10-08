@@ -30,12 +30,6 @@ variable "key_name" {
   default     = "default"
 }
 
-variable "instance_type" {
-  description = "Instance type used for the GitLab runner"
-  type        = string
-  default     = "t3.micro"
-}
-
 variable "runner_instance_spot_price" {
   description = "By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS"
   type        = string
