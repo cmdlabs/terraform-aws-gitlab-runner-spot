@@ -30,12 +30,6 @@ variable "key_name" {
   default     = "default"
 }
 
-variable "runner_instance_spot_price" {
-  description = "By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS"
-  type        = string
-  default     = ""
-}
-
 variable "runners_name" {
   description = "Name of the runner, will be used in the runner config.toml"
   type        = string
