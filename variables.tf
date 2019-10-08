@@ -196,18 +196,6 @@ variable "runners_output_limit" {
   default     = 4096
 }
 
-variable "userdata_pre_install" {
-  description = "User-data script snippet to insert before GitLab runner install"
-  type        = string
-  default     = ""
-}
-
-variable "userdata_post_install" {
-  description = "User-data script snippet to insert after GitLab runner install"
-  type        = string
-  default     = ""
-}
-
 variable "docker_machine_user" {
   description = "Username of the user used to create the spot instances that host docker-machine"
   type        = string

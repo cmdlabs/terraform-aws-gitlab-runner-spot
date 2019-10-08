@@ -5,8 +5,6 @@ ${runners_config}
 
 EOF
 
-${pre_install}
-
 curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash
 yum install gitlab-runner-${gitlab_runner_version} -y
 curl  --fail --retry 6 -L https://github.com/docker/machine/releases/download/v${docker_machine_version}/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && \
@@ -38,8 +36,6 @@ then
 fi
 
 sed -i.bak s/__REPLACED_BY_USER_DATA__/`echo $token`/g /etc/gitlab-runner/config.toml
-
-${post_install}
 
 service gitlab-runner restart
 chkconfig gitlab-runner on

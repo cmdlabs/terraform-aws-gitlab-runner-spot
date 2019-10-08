@@ -123,8 +123,6 @@ data "template_file" "gitlab_runner" {
     gitlab_runner_version                   = var.gitlab_runner_version
     docker_machine_version                  = local.docker_machine_version
     runners_config                          = data.template_file.runners.rendered
-    pre_install                             = var.userdata_pre_install
-    post_install                            = var.userdata_post_install
     runners_gitlab_url                      = var.runners_gitlab_url
     runners_token                           = var.runners_token
     secure_parameter_store_runner_token_key = local.secure_parameter_store_runner_token_key
