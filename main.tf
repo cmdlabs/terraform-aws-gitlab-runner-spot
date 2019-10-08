@@ -123,12 +123,13 @@ data "template_file" "gitlab_runner" {
     runners_token                           = var.runners_token
     secure_parameter_store_runner_token_key = local.secure_parameter_store_runner_token_key
     secure_parameter_store_region           = var.aws_region
+
     gitlab_runner_registration_token        = var.gitlab_runner_registration_config["registration_token"]
     giltab_runner_description               = var.gitlab_runner_registration_config["description"]
     gitlab_runner_locked_to_project         = var.gitlab_runner_registration_config["locked_to_project"]
     gitlab_runner_run_untagged              = var.gitlab_runner_registration_config["run_untagged"]
     gitlab_runner_maximum_timeout           = var.gitlab_runner_registration_config["maximum_timeout"]
-    gitlab_runner_access_level              = lookup(var.gitlab_runner_registration_config, "access_level", "not_protected") // lookup is providing a default.
+    gitlab_runner_access_level              = var.gitlab_runner_registration_config["access_level"]
   }
 }
 
