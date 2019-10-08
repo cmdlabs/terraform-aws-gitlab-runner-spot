@@ -19,9 +19,6 @@ locals {
   // custom names for instances and security groups
   name_runner_instance       = var.overrides["name_runner_agent_instance"]
   name_sg                    = var.overrides["name_sg"]
-  runners_additional_volumes = <<-EOT
-  %{~for volume in var.runners_additional_volumes~},"${volume}"%{endfor~}
-  EOT
 }
 
 resource "aws_security_group" "runner" {
@@ -172,7 +169,6 @@ data "template_file" "runners" {
     runners_security_group_name = aws_security_group.docker_machine.name
     runners_monitoring          = var.runners_monitoring
     runners_instance_profile    = aws_iam_instance_profile.docker_machine.name
-    runners_additional_volumes  = local.runners_additional_volumes
     runners_name                = var.runners_name
     runners_token                     = var.runners_token
     runners_limit                     = var.runners_limit

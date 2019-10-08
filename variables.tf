@@ -82,12 +82,6 @@ variable "runners_privileged" {
   default     = true
 }
 
-variable "runners_additional_volumes" {
-  description = "Additional volumes that will be used in the runner config.toml, e.g Docker socket"
-  type        = list
-  default     = []
-}
-
 variable "runners_shm_size" {
   description = "shm_size for the runners, will be used in the runner config.toml"
   type        = number

@@ -47,7 +47,6 @@ module "runner" {
   runners_off_peak_idle_time  = 60
 
   runners_privileged         = "true"
-  runners_additional_volumes = ["/certs/client"]
 
   runners_volumes_tmpfs = [
     { "/var/opt/cache" = "rw,noexec" },
