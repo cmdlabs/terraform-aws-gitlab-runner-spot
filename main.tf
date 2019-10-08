@@ -1,5 +1,9 @@
 locals {
-  instance_type = "t3.micro"  // Instance type used for the GitLab runner
+  instance_type                 = "t3.micro"
+
+  docker_machine_instance_type  = "m5a.large"
+  docker_machine_spot_price_bid = "0.06"
+  docker_machine_version        = "0.16.2"
 
   // Ensure off peak is optional
   runners_off_peak_periods_string = var.runners_off_peak_periods == "" ? "" : format("OffPeakPeriods = %s", var.runners_off_peak_periods)
@@ -117,7 +121,7 @@ data "template_file" "gitlab_runner" {
 
   vars = {
     gitlab_runner_version                   = var.gitlab_runner_version
-    docker_machine_version                  = var.docker_machine_version
+    docker_machine_version                  = local.docker_machine_version
     runners_config                          = data.template_file.runners.rendered
     pre_install                             = var.userdata_pre_install
     post_install                            = var.userdata_post_install
@@ -162,8 +166,8 @@ data "template_file" "runners" {
     runners_vpc_id              = var.vpc_id
     runners_subnet_id           = var.subnet_id_runners
     runners_aws_zone            = var.aws_zone
-    runners_instance_type       = var.docker_machine_instance_type
-    runners_spot_price_bid      = var.docker_machine_spot_price_bid
+    runners_instance_type       = local.docker_machine_instance_type
+    runners_spot_price_bid      = local.docker_machine_spot_price_bid
     runners_ami                 = data.aws_ami.docker-machine.id
     runners_security_group_name = aws_security_group.docker_machine.name
     runners_monitoring          = var.runners_monitoring

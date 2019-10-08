@@ -33,8 +33,6 @@ module "runner" {
   runners_gitlab_url       = "https://gitlab.com"
   enable_runner_ssm_access = true
 
-  docker_machine_spot_price_bid = "0.06"
-
   gitlab_runner_registration_config = {
     registration_token = "GBpeL612xfp3DtEjzZsx"
     description        = "runner default - auto"

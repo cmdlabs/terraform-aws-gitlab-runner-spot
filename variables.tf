@@ -36,24 +36,6 @@ variable "runner_instance_spot_price" {
   default     = ""
 }
 
-variable "docker_machine_instance_type" {
-  description = "Instance type used for the instances hosting docker-machine"
-  type        = string
-  default     = "m5a.large"
-}
-
-variable "docker_machine_spot_price_bid" {
-  description = "Spot price bid"
-  type        = string
-  default     = "0.06"
-}
-
-variable "docker_machine_version" {
-  description = "Version of docker-machine"
-  type        = string
-  default     = "0.16.2"
-}
-
 variable "runners_name" {
   description = "Name of the runner, will be used in the runner config.toml"
   type        = string
