@@ -17,10 +17,6 @@ locals {
 
   // Define key for runner token for SSM
   secure_parameter_store_runner_token_key = "gitlab-runner-${var.secure_parameter_store_runner_token_key}"
-
-  // custom names for instances and security groups
-  name_runner_instance       = var.overrides["name_runner_agent_instance"]
-  name_sg                    = var.overrides["name_sg"]
 }
 
 resource "aws_security_group" "runner" {

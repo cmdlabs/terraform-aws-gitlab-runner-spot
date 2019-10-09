@@ -271,17 +271,6 @@ variable "enable_manage_gitlab_token" {
   default     = true
 }
 
-variable "overrides" {
-  description = "This maps provides the possibility to override some defaults. The following attributes are supported: `name_sg` overwrite the `Name` tag for all security groups created by this module. `name_runner_agent_instance` override the `Name` tag for the ec2 instance defined in the auto launch configuration. `name_docker_machine_runners` ovverrid the `Name` tag spot instances created by the runner agent"
-  type        = map(string)
-
-  default = {
-    name_sg                     = ""
-    name_runner_agent_instance  = ""
-    name_docker_machine_runners = ""
-  }
-}
-
 variable "cache_bucket" {
   description = "Configuration to control the creation of the cache bucket. By default the bucket will be created and used as shared cache. To use the same cache cross multiple runners disable the cration of the cache and provice a policy and bucket name. See the public runner example for more details"
   type        = map
