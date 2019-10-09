@@ -1,3 +1,7 @@
+variable "bucket_name" {
+  default = "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0"
+}
+
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -24,6 +28,8 @@ module "runner" {
   key_name = "default"
 
   aws_region = "ap-southeast-2"
+
+  cache_bucket_name = var.bucket_name
 
   vpc_id                   = module.vpc.vpc_id
   subnet_ids_gitlab_runner = module.vpc.private_subnets

@@ -1,13 +1,6 @@
-variable "cache_bucket_prefix" {
-  description = "Prefix for s3 cache bucket name."
+variable "cache_bucket_name" {
   type        = string
-  default     = ""
-}
-
-variable "cache_bucket_name_include_account_id" {
-  description = "Boolean to add current account ID to cache bucket name."
-  type        = bool
-  default     = true
+  description = "The bucket name of the S3 cache bucket"
 }
 
 variable "cache_bucket_versioning" {
