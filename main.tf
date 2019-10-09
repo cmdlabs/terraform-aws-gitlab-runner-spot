@@ -6,6 +6,7 @@ locals {
   docker_machine_version        = "0.16.2"
 
   runners_image                 = "docker:18.03.1-ce"
+  runners_pull_policy           = "always"
 
   // Ensure off peak is optional
   runners_off_peak_periods_string = var.runners_off_peak_periods == "" ? "" : format("OffPeakPeriods = %s", var.runners_off_peak_periods)
@@ -176,7 +177,7 @@ data "template_file" "runners" {
     runners_image                     = local.runners_image
     runners_privileged                = var.runners_privileged
     runners_shm_size                  = var.runners_shm_size
-    runners_pull_policy               = var.runners_pull_policy
+    runners_pull_policy               = local.runners_pull_policy
     runners_idle_count                = var.runners_idle_count
     runners_idle_time                 = var.runners_idle_time
     runners_max_builds                = local.runners_max_builds_string
