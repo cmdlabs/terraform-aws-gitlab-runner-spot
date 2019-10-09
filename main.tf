@@ -187,7 +187,6 @@ data "template_file" "runners" {
     runners_off_peak_idle_time        = var.runners_off_peak_idle_time
     runners_off_peak_periods_string   = local.runners_off_peak_periods_string
     runners_root_size                 = var.runners_root_size
-    runners_iam_instance_profile_name = var.runners_iam_instance_profile_name
     runners_environment_vars          = jsonencode(var.runners_environment_vars)
     runners_pre_build_script          = var.runners_pre_build_script
     runners_post_build_script         = var.runners_post_build_script

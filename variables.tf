@@ -118,12 +118,6 @@ variable "runners_root_size" {
   default     = 16
 }
 
-variable "runners_iam_instance_profile_name" {
-  description = "IAM instance profile name of the runners, will be used in the runner config.toml"
-  type        = string
-  default     = ""
-}
-
 variable "runners_environment_vars" {
   description = "Environment variables during build execution, e.g. KEY=Value, see runner-public example. Will be used in the runner config.toml"
   type        = list(string)
