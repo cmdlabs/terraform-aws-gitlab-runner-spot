@@ -91,7 +91,7 @@ variable "runners_monitoring" {
 variable "runners_off_peak_timezone" {
   description = "Off peak idle time zone of the runners, will be used in the runner config.toml"
   type        = string
-  default     = ""
+  default     = "Australia/Sydney"
 }
 
 variable "runners_off_peak_idle_count" {
