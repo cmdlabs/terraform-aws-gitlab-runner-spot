@@ -188,9 +188,6 @@ data "template_file" "runners" {
     runners_off_peak_periods_string   = local.runners_off_peak_periods_string
     runners_root_size                 = var.runners_root_size
     runners_environment_vars          = jsonencode(var.runners_environment_vars)
-    runners_pre_build_script          = var.runners_pre_build_script
-    runners_post_build_script         = var.runners_post_build_script
-    runners_pre_clone_script          = var.runners_pre_clone_script
     runners_request_concurrency       = var.runners_request_concurrency
     runners_output_limit              = var.runners_output_limit
     runners_volumes_tmpfs             = chomp(join("", data.template_file.volumes_tmpfs.*.rendered))

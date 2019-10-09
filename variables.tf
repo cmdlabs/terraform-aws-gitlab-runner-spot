@@ -124,24 +124,6 @@ variable "runners_environment_vars" {
   default     = []
 }
 
-variable "runners_pre_build_script" {
-  description = "Script to execute in the pipeline just before the build, will be used in the runner config.toml"
-  type        = string
-  default     = ""
-}
-
-variable "runners_post_build_script" {
-  description = "Commands to be executed on the Runner just after executing the build, but before executing after_script. "
-  type        = string
-  default     = ""
-}
-
-variable "runners_pre_clone_script" {
-  description = "Commands to be executed on the Runner before cloning the Git repository. this can be used to adjust the Git client configuration first, for example. "
-  type        = string
-  default     = ""
-}
-
 variable "runners_request_concurrency" {
   description = "Limit number of concurrent requests for new jobs from GitLab (default 1)"
   type        = number
