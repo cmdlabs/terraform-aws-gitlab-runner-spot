@@ -76,12 +76,6 @@ variable "runners_max_builds" {
   default     = 0
 }
 
-variable "runners_privileged" {
-  description = "Runners will run in privileged mode, will be used in the runner config.toml"
-  type        = bool
-  default     = true
-}
-
 variable "runners_shm_size" {
   description = "shm_size for the runners, will be used in the runner config.toml"
   type        = number
