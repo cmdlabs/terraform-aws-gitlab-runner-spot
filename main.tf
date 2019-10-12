@@ -196,15 +196,12 @@ data "template_file" "runners" {
 data "aws_ami" "docker-machine" {
   most_recent = "true"
 
-  dynamic "filter" {
-    for_each = var.runner_ami_filter
-    content {
-      name   = filter.key
-      values = filter.value
-    }
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
   }
 
-  owners = var.runner_ami_owners
+  owners = ["099720109477"] # Canonical.
 }
 
 resource "aws_autoscaling_group" "gitlab_runner_instance" {
@@ -241,15 +238,12 @@ resource "aws_autoscaling_schedule" "scale_out" {
 data "aws_ami" "runner" {
   most_recent = "true"
 
-  dynamic "filter" {
-    for_each = var.ami_filter
-    content {
-      name   = filter.key
-      values = filter.value
-    }
+  filter {
+    name   = "name"
+    values = ["amzn-ami-hvm-2018.03*-x86_64-ebs"]
   }
 
-  owners = var.ami_owners
+  owners = ["amazon"]
 }
 
 resource "aws_launch_configuration" "gitlab_runner_instance" {
