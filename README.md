@@ -46,23 +46,11 @@ The GitLab runner EC2 instance requires the following service linked roles:
   - AWSServiceRoleForAutoScaling
   - AWSServiceRoleForEC2Spot
 
-By default the EC2 instance is allowed to create the required roles, but this can be disabled by setting the option `allow_iam_service_linked_role_creation` to `false`. If disabled you must ensure the roles exist. You can create them manually or via Terraform.
-
-```tf
-resource "aws_iam_service_linked_role" "spot" {
-  aws_service_name = "spot.amazonaws.com"
-}
-
-resource "aws_iam_service_linked_role" "autoscaling" {
-  aws_service_name = "autoscaling.amazonaws.com"
-}
-```
-
 ### GitLab runner token configuration
 
 The runner is registered on initial deployment.
 
-To register the runner automatically set the variable `gitlab_runner_registration_config["token"]`. This token value can be found in your GitLab project, group, or global settings. For a generic runner you can find the token in the admin section. By default the runner will be locked to the target project, not run untagged. Below is an example of the configuration map.
+To register the runner automatically set the variable `gitlab_runner_registration_config["token"]`. This token value can be found in your GitLab project, group, or global settings. For a generic runner you can find the token in the admin section. Here is an example:
 
 ``` hcl
 gitlab_runner_registration_config = {
@@ -71,31 +59,13 @@ gitlab_runner_registration_config = {
   locked_to_project  = "true"
   run_untagged       = "false"
   maximum_timeout    = "3600"
-  access_level       = "<not_protected OR ref_protected, ref_protected runner will only run on pipelines triggered on protected branches. Defaults to not_protected>"
+  access_level       = "<not_protected OR ref_protected, ref_protected runner will only run on pipelines triggered on protected branches>"
 }
 ```
 
-For migration to the new setup simply add the runner token to the parameter store. Once the runner is started it will lookup the required values via the parameter store. If the value is `null` a new runner will be created.
-
-```bash
-# set the following variables, look up the variables in your Terraform config.
-# see your Terraform variables to fill in the vars below.
-aws-region=<${var.aws_region}>
-token=<runner-token-see-your-gitlab-runner>
-parameter-name=<${var.environment}>-<${var.secure_parameter_store_runner_token_key}>
-
-aws ssm put-parameter --overwrite --type SecureString --name "${parameter-name}" --value ${token} --region "${aws-region}"
-```
-
-Once you have created the parameter, you must remove the variable `runners_token` from your config. The next time your gitlab runner instance is created it will look up the token from the SSM parameter store.
-
-Finally, the runner still supports the manual runner creation. No changes are required. Please keep in mind that this setup will be removed in future releases.
-
 ### GitLab runner cache
 
-By default the module creates a cache for the runner in S3. Old objects are automatically remove via a configurable life cycle policy on the bucket.
-
-Creation of the bucket can be disabled and managed outside this module. A good use case is for sharing the cache cross multiple runners. For this purpose the cache is implemented as sub module. For more details see the [cache module](https://github.com/npalm/terraform-aws-gitlab-runner/tree/develop/cache). An example implementation of this use case can be find in the [runner-public](https://github.com/npalm/terraform-aws-gitlab-runner/tree/__GIT_REF__/examples/runner-public) example.
+The module creates a cache for the runner in S3. Old objects are automatically remove via a configurable life cycle policy on the bucket.
 
 ### Inputs
 
@@ -111,7 +81,6 @@ The below outlines the current parameters and defaults.
 |aws_zone|AWS availability zone (typically 'a', 'b', or 'c'), used in config.toml|string|a|No|
 |key_name|The name of the EC2 key pair to use|string|default|No|
 |runners_name|Name of the runner, used in config.toml|string|""|Yes|
-|runners_token|Token for the runner, used in config.toml|string|__REPLACED_BY_USER_DATA__|No|
 |runners_limit|Limit for the runners, used in config.toml|number|0|No|
 |runners_concurrent|Concurrent value for the runners, used in config.toml|number|10|No|
 |runners_idle_time|Idle time of the runners, used in config.toml|number|600|No|
@@ -135,7 +104,7 @@ The below outlines the current parameters and defaults.
 |docker_machine_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the docker machine runner instance|list(string)|[0.0.0.0/0]|No|
 |gitlab_runner_registration_config||map(string)|(map)|No|
 |enable_runner_user_data_trace_log|Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token|bool|false|No|
-|schedule_config|Map containing the configuration of the ASG scale-in and scale-up for the runner instance. Will only be used if enable_schedule is set to true. |map|(map)|No|
+|schedule_config|Map containing the configuration of the ASG scale-in and scale-up for the runner instance|map|(map)|No|
 
 ### Outputs
 

@@ -166,7 +166,7 @@ variable "docker_machine_ssh_cidr_blocks" {
 }
 
 variable "gitlab_runner_registration_config" {
-  description = "Configuration used to register the runner. See the README for an example, or reference the examples in the examples directory of this repo"
+  description = "Configuration used to register the runner"
   type        = map(string)
 
   default = {
@@ -186,7 +186,7 @@ variable "enable_runner_user_data_trace_log" {
 }
 
 variable "schedule_config" {
-  description = "Map containing the configuration of the ASG scale-in and scale-up for the runner instance. Will only be used if enable_schedule is set to true. "
+  description = "Map containing the configuration of the ASG scale-in and scale-up for the runner instance"
   type        = map
   default = {
     scale_in_recurrence  = "0 18 * * 1-5"

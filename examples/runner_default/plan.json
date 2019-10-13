@@ -2382,7 +2382,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 13:58:48.479922 +0000 UTC",
+              "id": "2019-10-13 14:04:38.316953 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2554,7 +2554,7 @@
                 "values": {
                   "account_id": "885164491973",
                   "arn": "arn:aws:iam::885164491973:user/alex",
-                  "id": "2019-10-13 13:58:49.598024 +0000 UTC",
+                  "id": "2019-10-13 14:04:39.485197 +0000 UTC",
                   "user_id": "AIDAIA2HJENE7W7DDPY5G"
                 }
               },
@@ -3982,7 +3982,7 @@
                   "registration_token": "",
                   "run_untagged": ""
                 },
-                "description": "Configuration used to register the runner. See the README for an example, or reference the examples in the examples directory of this repo"
+                "description": "Configuration used to register the runner"
               },
               "gitlab_runner_ssh_cidr_blocks": {
                 "default": [
@@ -4067,7 +4067,7 @@
                   "scale_out_count": "1",
                   "scale_out_recurrence": "0 8 * * 1-5"
                 },
-                "description": "Map containing the configuration of the ASG scale-in and scale-up for the runner instance. Will only be used if enable_schedule is set to true. "
+                "description": "Map containing the configuration of the ASG scale-in and scale-up for the runner instance"
               },
               "subnet_id_runners": {
                 "description": "Subnet used for hosting the GitLab runner"
