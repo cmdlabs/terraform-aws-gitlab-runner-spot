@@ -1,3 +1,9 @@
+# To debug these tests
+#   export TF_VAR_enable_gitlab_runner_ssh_access=true
+
+variable "enable_gitlab_runner_ssh_access" {}
+variable "registration_token" {}
+
 variable "bucket_name" {
   default = "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0"
 }
@@ -39,7 +45,7 @@ module "runner" {
   runners_gitlab_url       = "https://gitlab.com"
 
   gitlab_runner_registration_config = {
-    registration_token = "GBpeL612xfp3DtEjzZsx"
+    registration_token = var.registration_token
     description        = "runner default - auto"
     locked_to_project  = "true"
     run_untagged       = "false"
@@ -50,7 +56,7 @@ module "runner" {
   runners_off_peak_timezone   = "Australia/Sydney"
   runners_off_peak_idle_count = 0
   runners_off_peak_idle_time  = 60
+  runners_off_peak_periods    = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
 
-  # working 9 to 5 :)
-  runners_off_peak_periods = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
+  enable_gitlab_runner_ssh_access = var.enable_gitlab_runner_ssh_access
 }

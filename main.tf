@@ -217,7 +217,7 @@ resource "aws_launch_configuration" "gitlab_runner_instance" {
     volume_size           = 8
   }
 
-  associate_public_ip_address = false
+  associate_public_ip_address = var.enable_gitlab_runner_ssh_access
 
   lifecycle {
     create_before_destroy = true
