@@ -44,11 +44,10 @@
               }
             },
             {
-              "address": "module.runner.aws_cloudwatch_log_group.environment[0]",
+              "address": "module.runner.aws_cloudwatch_log_group.environment",
               "mode": "managed",
               "type": "aws_cloudwatch_log_group",
               "name": "environment",
-              "index": 0,
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
@@ -189,11 +188,10 @@
               }
             },
             {
-              "address": "module.runner.aws_iam_role_policy.instance[0]",
+              "address": "module.runner.aws_iam_role_policy.instance",
               "mode": "managed",
               "type": "aws_iam_role_policy",
               "name": "instance",
-              "index": 0,
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
@@ -526,9 +524,8 @@
               "schema_version": 0,
               "values": {
                 "filename": null,
-                "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${logging}\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
+                "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
                 "vars": {
-                  "logging": "echo 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\n\nservice awslogs start\nchkconfig awslogs on\n\n# vim: set ft=sh:\n",
                   "user_data_trace_log": "false"
                 }
               }
@@ -916,12 +913,11 @@
       }
     },
     {
-      "address": "module.runner.aws_cloudwatch_log_group.environment[0]",
+      "address": "module.runner.aws_cloudwatch_log_group.environment",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_cloudwatch_log_group",
       "name": "environment",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -1161,12 +1157,11 @@
       }
     },
     {
-      "address": "module.runner.aws_iam_role_policy.instance[0]",
+      "address": "module.runner.aws_iam_role_policy.instance",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_iam_role_policy",
       "name": "instance",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -1721,9 +1716,8 @@
         "before": null,
         "after": {
           "filename": null,
-          "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${logging}\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
+          "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
           "vars": {
-            "logging": "echo 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\n\nservice awslogs start\nchkconfig awslogs on\n\n# vim: set ft=sh:\n",
             "user_data_trace_log": "false"
           }
         },
@@ -2370,7 +2364,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 04:49:31.08077 +0000 UTC",
+              "id": "2019-10-13 04:56:39.59314 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2567,7 +2561,6 @@
                 "mode": "data",
                 "type": "template_file",
                 "name": "instance_profile",
-                "index": 0,
                 "provider_name": "template",
                 "schema_version": 0,
                 "values": {
@@ -2710,7 +2703,7 @@
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 04:49:31.974625 +0000 UTC",
+                      "id": "2019-10-13 04:56:40.472245 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -3063,12 +3056,7 @@
                     "constant_value": "gitlab-runner-log-group"
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_cloudwatch_logging"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_iam_instance_profile.docker_machine",
@@ -3265,7 +3253,7 @@
                   },
                   "policy": {
                     "references": [
-                      "data.template_file.instance_profile[0]"
+                      "data.template_file.instance_profile"
                     ]
                   },
                   "role": {
@@ -3274,12 +3262,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_cloudwatch_logging"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_iam_role_policy_attachment.docker_machine_cache_instance",
@@ -3819,12 +3802,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_cloudwatch_logging"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "data.template_file.instance_role_trust_policy",
@@ -4012,8 +3990,6 @@
                   },
                   "vars": {
                     "references": [
-                      "var.enable_cloudwatch_logging",
-                      "data.template_file.logging",
                       "data.template_file.gitlab_runner",
                       "var.enable_runner_user_data_trace_log"
                     ]
@@ -4296,10 +4272,6 @@
                   "0.0.0.0/0"
                 ],
                 "description": "List of CIDR blocks to allow SSH Access to the docker machine runner instance"
-              },
-              "enable_cloudwatch_logging": {
-                "default": true,
-                "description": "Boolean used to enable or disable the CloudWatch logging"
               },
               "enable_gitlab_runner_ssh_access": {
                 "default": false,
