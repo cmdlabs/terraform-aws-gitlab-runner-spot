@@ -44,6 +44,38 @@
               }
             },
             {
+              "address": "module.runner.aws_autoscaling_schedule.scale_in",
+              "mode": "managed",
+              "type": "aws_autoscaling_schedule",
+              "name": "scale_in",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "autoscaling_group_name": "gitlab-runner-as-group",
+                "desired_capacity": 0,
+                "max_size": 0,
+                "min_size": 0,
+                "recurrence": "0 18 * * 1-5",
+                "scheduled_action_name": "scale_in-gitlab-runner-as-group"
+              }
+            },
+            {
+              "address": "module.runner.aws_autoscaling_schedule.scale_out",
+              "mode": "managed",
+              "type": "aws_autoscaling_schedule",
+              "name": "scale_out",
+              "provider_name": "aws",
+              "schema_version": 0,
+              "values": {
+                "autoscaling_group_name": "gitlab-runner-as-group",
+                "desired_capacity": 1,
+                "max_size": 1,
+                "min_size": 1,
+                "recurrence": "0 8 * * 1-5",
+                "scheduled_action_name": "scale_out-gitlab-runner-as-group"
+              }
+            },
+            {
               "address": "module.runner.aws_cloudwatch_log_group.environment",
               "mode": "managed",
               "type": "aws_cloudwatch_log_group",
@@ -909,6 +941,62 @@
           "tag": [],
           "target_group_arns": true,
           "vpc_zone_identifier": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_autoscaling_schedule.scale_in",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_autoscaling_schedule",
+      "name": "scale_in",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "autoscaling_group_name": "gitlab-runner-as-group",
+          "desired_capacity": 0,
+          "max_size": 0,
+          "min_size": 0,
+          "recurrence": "0 18 * * 1-5",
+          "scheduled_action_name": "scale_in-gitlab-runner-as-group"
+        },
+        "after_unknown": {
+          "arn": true,
+          "end_time": true,
+          "id": true,
+          "start_time": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_autoscaling_schedule.scale_out",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_autoscaling_schedule",
+      "name": "scale_out",
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "autoscaling_group_name": "gitlab-runner-as-group",
+          "desired_capacity": 1,
+          "max_size": 1,
+          "min_size": 1,
+          "recurrence": "0 8 * * 1-5",
+          "scheduled_action_name": "scale_out-gitlab-runner-as-group"
+        },
+        "after_unknown": {
+          "arn": true,
+          "end_time": true,
+          "id": true,
+          "start_time": true
         }
       }
     },
@@ -2364,7 +2452,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 04:56:39.59314 +0000 UTC",
+              "id": "2019-10-13 05:03:58.053019 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2703,7 +2791,7 @@
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 04:56:40.472245 +0000 UTC",
+                      "id": "2019-10-13 05:03:58.929787 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -2993,12 +3081,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_schedule"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_autoscaling_schedule.scale_out",
@@ -3038,12 +3121,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_schedule"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_cloudwatch_log_group.environment",
@@ -4288,10 +4366,6 @@
               "enable_runner_user_data_trace_log": {
                 "default": false,
                 "description": "Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token"
-              },
-              "enable_schedule": {
-                "default": false,
-                "description": "Flag used to enable/disable auto scaling group schedule for the runner instance. "
               },
               "gitlab_runner_registration_config": {
                 "default": {
