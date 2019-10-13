@@ -549,8 +549,9 @@
               "schema_version": 0,
               "values": {
                 "filename": null,
-                "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
+                "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${logging}\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
                 "vars": {
+                  "logging": "echo 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\n\nservice awslogs start\nchkconfig awslogs on\n\n# vim: set ft=sh:\n",
                   "user_data_trace_log": "false"
                 }
               }
@@ -1790,8 +1791,9 @@
         "before": null,
         "after": {
           "filename": null,
-          "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
+          "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${logging}\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
           "vars": {
+            "logging": "echo 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\n\nservice awslogs start\nchkconfig awslogs on\n\n# vim: set ft=sh:\n",
             "user_data_trace_log": "false"
           }
         },
@@ -2438,7 +2440,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 08:19:29.175257 +0000 UTC",
+              "id": "2019-10-13 08:25:10.970968 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2454,41 +2456,6 @@
           }
         ],
         "child_modules": [
-          {
-            "resources": [
-              {
-                "address": "data.aws_vpc_endpoint_service.s3",
-                "mode": "data",
-                "type": "aws_vpc_endpoint_service",
-                "name": "s3",
-                "index": 0,
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "acceptance_required": false,
-                  "availability_zones": [
-                    "ap-southeast-2a",
-                    "ap-southeast-2b",
-                    "ap-southeast-2c"
-                  ],
-                  "base_endpoint_dns_names": [
-                    "s3.ap-southeast-2.amazonaws.com"
-                  ],
-                  "id": "1802082413",
-                  "manages_vpc_endpoints": false,
-                  "owner": "amazon",
-                  "private_dns_name": "",
-                  "service": "s3",
-                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
-                  "service_name": "com.amazonaws.ap-southeast-2.s3",
-                  "service_type": "Gateway",
-                  "tags": {},
-                  "vpc_endpoint_policy_supported": true
-                }
-              }
-            ],
-            "address": "module.vpc"
-          },
           {
             "resources": [
               {
@@ -2809,7 +2776,7 @@
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 08:19:30.071708 +0000 UTC",
+                      "id": "2019-10-13 08:25:11.913982 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -2817,6 +2784,41 @@
                 "address": "module.runner.module.cache"
               }
             ]
+          },
+          {
+            "resources": [
+              {
+                "address": "data.aws_vpc_endpoint_service.s3",
+                "mode": "data",
+                "type": "aws_vpc_endpoint_service",
+                "name": "s3",
+                "index": 0,
+                "provider_name": "aws",
+                "schema_version": 0,
+                "values": {
+                  "acceptance_required": false,
+                  "availability_zones": [
+                    "ap-southeast-2a",
+                    "ap-southeast-2b",
+                    "ap-southeast-2c"
+                  ],
+                  "base_endpoint_dns_names": [
+                    "s3.ap-southeast-2.amazonaws.com"
+                  ],
+                  "id": "1802082413",
+                  "manages_vpc_endpoints": false,
+                  "owner": "amazon",
+                  "private_dns_name": "",
+                  "service": "s3",
+                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
+                  "service_name": "com.amazonaws.ap-southeast-2.s3",
+                  "service_type": "Gateway",
+                  "tags": {},
+                  "vpc_endpoint_policy_supported": true
+                }
+              }
+            ],
+            "address": "module.vpc"
           }
         ]
       }
@@ -4007,6 +4009,7 @@
                   },
                   "vars": {
                     "references": [
+                      "data.template_file.logging",
                       "data.template_file.gitlab_runner",
                       "var.enable_runner_user_data_trace_log"
                     ]
