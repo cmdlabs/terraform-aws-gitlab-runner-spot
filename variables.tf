@@ -159,12 +159,6 @@ variable "cache_shared" {
   default     = false
 }
 
-variable "gitlab_runner_version" {
-  description = "Version of the GitLab runner"
-  type        = string
-  default     = "12.3.0"
-}
-
 variable "enable_gitlab_runner_ssh_access" {
   description = "Enables SSH Access to the gitlab runner instance"
   type        = bool

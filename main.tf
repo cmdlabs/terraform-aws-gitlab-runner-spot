@@ -5,6 +5,8 @@ locals {
   docker_machine_spot_price_bid = "0.06"
   docker_machine_version        = "0.16.2"
 
+  gitlab_runner_version         = "12.3.0"
+
   runners_image                 = "docker:18.03.1-ce"
   runners_pull_policy           = "always"
   runners_privileged            = true
@@ -117,7 +119,7 @@ data "template_file" "gitlab_runner" {
   template = file("${path.module}/template/gitlab-runner.tpl")
 
   vars = {
-    gitlab_runner_version                   = var.gitlab_runner_version
+    gitlab_runner_version                   = local.gitlab_runner_version
     docker_machine_version                  = local.docker_machine_version
     runners_config                          = data.template_file.runners.rendered
     runners_gitlab_url                      = var.runners_gitlab_url
