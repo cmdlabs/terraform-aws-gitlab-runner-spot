@@ -98,41 +98,6 @@ resource "aws_ssm_parameter" "runner_registration_token" {
   }
 }
 
-data "template_file" "user_data" {
-  template = file("${path.module}/template/user-data.sh.tpl")
-
-  vars = {
-    logging             = data.template_file.logging.rendered
-    gitlab_runner       = data.template_file.gitlab_runner.rendered
-    user_data_trace_log = var.enable_runner_user_data_trace_log
-  }
-}
-
-data "template_file" "logging" {
-  template = file("${path.module}/template/logging.sh.tpl")
-}
-
-data "template_file" "gitlab_runner" {
-  template = file("${path.module}/template/gitlab-runner.sh.tpl")
-
-  vars = {
-    gitlab_runner_version                   = local.gitlab_runner_version
-    docker_machine_version                  = local.docker_machine_version
-    runners_config                          = data.template_file.runners.rendered
-    runners_gitlab_url                      = var.runners_gitlab_url
-    runners_token                           = var.runners_token
-    secure_parameter_store_runner_token_key = local.secure_parameter_store_runner_token_key
-    secure_parameter_store_region           = var.aws_region
-
-    gitlab_runner_registration_token        = var.gitlab_runner_registration_config["registration_token"]
-    giltab_runner_description               = var.gitlab_runner_registration_config["description"]
-    gitlab_runner_locked_to_project         = var.gitlab_runner_registration_config["locked_to_project"]
-    gitlab_runner_run_untagged              = var.gitlab_runner_registration_config["run_untagged"]
-    gitlab_runner_maximum_timeout           = var.gitlab_runner_registration_config["maximum_timeout"]
-    gitlab_runner_access_level              = var.gitlab_runner_registration_config["access_level"]
-  }
-}
-
 data "template_file" "services_volumes_tmpfs" {
   template = file("${path.module}/template/volumes.tpl")
   count    = length(var.runners_services_volumes_tmpfs)
@@ -155,39 +120,60 @@ data "template_file" "runners" {
   template = file("${path.module}/template/runner-config.tpl")
 
   vars = {
-    aws_region                  = var.aws_region
-    gitlab_url                  = var.runners_gitlab_url
-    runners_vpc_id              = var.vpc_id
-    runners_subnet_id           = var.subnet_id_runners
-    runners_aws_zone            = var.aws_zone
-    runners_instance_type       = local.docker_machine_instance_type
-    runners_spot_price_bid      = local.docker_machine_spot_price_bid
-    runners_ami                 = data.aws_ami.docker-machine.id
-    runners_security_group_name = aws_security_group.docker_machine.name
-    runners_monitoring          = var.runners_monitoring
-    runners_instance_profile    = aws_iam_instance_profile.docker_machine.name
-    runners_name                = var.runners_name
-    runners_token                  = var.runners_token
-    runners_limit                  = var.runners_limit
-    runners_concurrent             = var.runners_concurrent
+    runners_instance_profile       = aws_iam_instance_profile.docker_machine.name
+    runners_security_group_name    = aws_security_group.docker_machine.name
+    runners_services_volumes_tmpfs = chomp(join("", data.template_file.services_volumes_tmpfs.*.rendered))
+    runners_volumes_tmpfs          = chomp(join("", data.template_file.volumes_tmpfs.*.rendered))
+    runners_ami                    = data.aws_ami.docker-machine.id
+    runners_environment_vars       = jsonencode(var.runners_environment_vars)
+    bucket_name                    = local.bucket_name
+    runners_instance_type          = local.docker_machine_instance_type
+    runners_spot_price_bid         = local.docker_machine_spot_price_bid
     runners_image                  = local.runners_image
+    runners_max_builds             = local.runners_max_builds_string
     runners_privileged             = local.runners_privileged
-    runners_shm_size               = var.runners_shm_size
     runners_pull_policy            = local.runners_pull_policy
+    aws_region                     = var.aws_region
+    runners_aws_zone               = var.aws_zone
+    runners_concurrent             = var.runners_concurrent
+    gitlab_url                     = var.runners_gitlab_url
     runners_idle_count             = var.runners_idle_count
     runners_idle_time              = var.runners_idle_time
-    runners_max_builds             = local.runners_max_builds_string
-    runners_off_peak_timezone      = var.runners_off_peak_timezone
+    runners_limit                  = var.runners_limit
+    runners_monitoring             = var.runners_monitoring
+    runners_name                   = var.runners_name
     runners_off_peak_idle_count    = var.runners_off_peak_idle_count
     runners_off_peak_idle_time     = var.runners_off_peak_idle_time
     runners_off_peak_periods       = var.runners_off_peak_periods
-    runners_root_size              = var.runners_root_size
-    runners_environment_vars       = jsonencode(var.runners_environment_vars)
-    runners_request_concurrency    = var.runners_request_concurrency
+    runners_off_peak_timezone      = var.runners_off_peak_timezone
     runners_output_limit           = var.runners_output_limit
-    runners_volumes_tmpfs          = chomp(join("", data.template_file.volumes_tmpfs.*.rendered))
-    runners_services_volumes_tmpfs = chomp(join("", data.template_file.services_volumes_tmpfs.*.rendered))
-    bucket_name                    = local.bucket_name
+    runners_request_concurrency    = var.runners_request_concurrency
+    runners_root_size              = var.runners_root_size
+    runners_shm_size               = var.runners_shm_size
+    runners_token                  = var.runners_token
+    runners_subnet_id              = var.subnet_id_runners
+    runners_vpc_id                 = var.vpc_id
+  }
+}
+
+data "template_file" "user_data" {
+  template = file("${path.module}/template/user-data.sh.tpl")
+
+  vars = {
+    runners_config                          = data.template_file.runners.rendered
+    docker_machine_version                  = local.docker_machine_version
+    gitlab_runner_version                   = local.gitlab_runner_version
+    secure_parameter_store_runner_token_key = local.secure_parameter_store_runner_token_key
+    secure_parameter_store_region           = var.aws_region
+    user_data_trace_log                     = var.enable_runner_user_data_trace_log
+    gitlab_runner_access_level              = var.gitlab_runner_registration_config["access_level"]
+    giltab_runner_description               = var.gitlab_runner_registration_config["description"]
+    gitlab_runner_locked_to_project         = var.gitlab_runner_registration_config["locked_to_project"]
+    gitlab_runner_maximum_timeout           = var.gitlab_runner_registration_config["maximum_timeout"]
+    gitlab_runner_registration_token        = var.gitlab_runner_registration_config["registration_token"]
+    gitlab_runner_run_untagged              = var.gitlab_runner_registration_config["run_untagged"]
+    runners_gitlab_url                      = var.runners_gitlab_url
+    runners_token                           = var.runners_token
   }
 }
 

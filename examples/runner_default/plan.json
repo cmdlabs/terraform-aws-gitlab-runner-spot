@@ -471,32 +471,6 @@
               }
             },
             {
-              "address": "module.runner.data.template_file.gitlab_runner",
-              "mode": "data",
-              "type": "template_file",
-              "name": "gitlab_runner",
-              "provider_name": "template",
-              "schema_version": 0,
-              "values": {
-                "filename": null,
-                "template": "mkdir -p /etc/gitlab-runner\ncat > /etc/gitlab-runner/config.toml <<- EOF\n\n${runners_config}\n\nEOF\n\ncurl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\nyum install gitlab-runner-${gitlab_runner_version} -y\ncurl  --fail --retry 6 -L https://github.com/docker/machine/releases/download/v${docker_machine_version}/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && \\\n  chmod +x /tmp/docker-machine && \\\n  cp /tmp/docker-machine /usr/local/bin/docker-machine && \\\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n# Create a dummy machine so that the cert is generated properly\n# See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\ndocker-machine create --driver none --url localhost dummy-machine\n\n# Install jq if not exists\nif ! [ -x \"$(command -v jq)\" ]; then\n  yum install jq -y\nfi\n\ntoken=$(aws ssm get-parameters --names \"${secure_parameter_store_runner_token_key}\" --with-decryption --region \"${secure_parameter_store_region}\" | jq -r \".Parameters | .[0] | .Value\")\nif [[ `echo ${runners_token}` == \"__REPLACED_BY_USER_DATA__\" && `echo $token` == \"null\" ]]\nthen\n  token=$(curl --request POST -L \"${runners_gitlab_url}/api/v4/runners\" \\\n    --form \"token=${gitlab_runner_registration_token}\" \\\n    --form \"description=${giltab_runner_description}\" \\\n    --form \"locked=${gitlab_runner_locked_to_project}\" \\\n    --form \"run_untagged=${gitlab_runner_run_untagged}\" \\\n    --form \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n    --form \"access_level=${gitlab_runner_access_level}\" \\\n    | jq -r .token)\n  aws ssm put-parameter --overwrite --type SecureString  --name \"${secure_parameter_store_runner_token_key}\" --value $token --region \"${secure_parameter_store_region}\"\nfi\n\nsed -i.bak s/__REPLACED_BY_USER_DATA__/`echo $token`/g /etc/gitlab-runner/config.toml\n\nservice gitlab-runner restart\nchkconfig gitlab-runner on\n\n# vim: set ft=sh:\n",
-                "vars": {
-                  "docker_machine_version": "0.16.2",
-                  "giltab_runner_description": "runner default - auto",
-                  "gitlab_runner_access_level": "not_protected",
-                  "gitlab_runner_locked_to_project": "true",
-                  "gitlab_runner_maximum_timeout": "3600",
-                  "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
-                  "gitlab_runner_run_untagged": "false",
-                  "gitlab_runner_version": "12.3.0",
-                  "runners_gitlab_url": "https://gitlab.com",
-                  "runners_token": "__REPLACED_BY_USER_DATA__",
-                  "secure_parameter_store_region": "ap-southeast-2",
-                  "secure_parameter_store_runner_token_key": "gitlab-runner-runner-token"
-                }
-              }
-            },
-            {
               "address": "module.runner.data.template_file.runners",
               "mode": "data",
               "type": "template_file",
@@ -549,9 +523,20 @@
               "schema_version": 0,
               "values": {
                 "filename": null,
-                "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${logging}\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
+                "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\necho 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\nservice awslogs start\nchkconfig awslogs on\n\nmkdir -p /etc/gitlab-runner\ncat > /etc/gitlab-runner/config.toml <<- EOF\n${runners_config}\nEOF\n\ncurl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\nyum install gitlab-runner-${gitlab_runner_version} -y\ncurl  --fail --retry 6 -L https://github.com/docker/machine/releases/download/v${docker_machine_version}/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && \\\n  chmod +x /tmp/docker-machine && \\\n  cp /tmp/docker-machine /usr/local/bin/docker-machine && \\\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n# Create a dummy machine so that the cert is generated properly\n# See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\ndocker-machine create --driver none --url localhost dummy-machine\n\n# Install jq if not exists\nif ! [ -x \"$(command -v jq)\" ]; then\n  yum install jq -y\nfi\n\ntoken=$(aws ssm get-parameters --names \"${secure_parameter_store_runner_token_key}\" --with-decryption --region \"${secure_parameter_store_region}\" | jq -r \".Parameters | .[0] | .Value\")\nif [[ `echo ${runners_token}` == \"__REPLACED_BY_USER_DATA__\" && `echo $token` == \"null\" ]]\nthen\n  token=$(curl --request POST -L \"${runners_gitlab_url}/api/v4/runners\" \\\n    --form \"token=${gitlab_runner_registration_token}\" \\\n    --form \"description=${giltab_runner_description}\" \\\n    --form \"locked=${gitlab_runner_locked_to_project}\" \\\n    --form \"run_untagged=${gitlab_runner_run_untagged}\" \\\n    --form \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n    --form \"access_level=${gitlab_runner_access_level}\" \\\n    | jq -r .token)\n  aws ssm put-parameter --overwrite --type SecureString  --name \"${secure_parameter_store_runner_token_key}\" --value $token --region \"${secure_parameter_store_region}\"\nfi\n\nsed -i.bak s/__REPLACED_BY_USER_DATA__/`echo $token`/g /etc/gitlab-runner/config.toml\n\nservice gitlab-runner restart\nchkconfig gitlab-runner on\n\n# vim: set ft=sh:\n",
                 "vars": {
-                  "logging": "echo 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\n\nservice awslogs start\nchkconfig awslogs on\n\n# vim: set ft=sh:\n",
+                  "docker_machine_version": "0.16.2",
+                  "giltab_runner_description": "runner default - auto",
+                  "gitlab_runner_access_level": "not_protected",
+                  "gitlab_runner_locked_to_project": "true",
+                  "gitlab_runner_maximum_timeout": "3600",
+                  "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
+                  "gitlab_runner_run_untagged": "false",
+                  "gitlab_runner_version": "12.3.0",
+                  "runners_gitlab_url": "https://gitlab.com",
+                  "runners_token": "__REPLACED_BY_USER_DATA__",
+                  "secure_parameter_store_region": "ap-southeast-2",
+                  "secure_parameter_store_runner_token_key": "gitlab-runner-runner-token",
                   "user_data_trace_log": "false"
                 }
               }
@@ -1680,45 +1665,6 @@
       }
     },
     {
-      "address": "module.runner.data.template_file.gitlab_runner",
-      "module_address": "module.runner",
-      "mode": "data",
-      "type": "template_file",
-      "name": "gitlab_runner",
-      "provider_name": "template",
-      "change": {
-        "actions": [
-          "read"
-        ],
-        "before": null,
-        "after": {
-          "filename": null,
-          "template": "mkdir -p /etc/gitlab-runner\ncat > /etc/gitlab-runner/config.toml <<- EOF\n\n${runners_config}\n\nEOF\n\ncurl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\nyum install gitlab-runner-${gitlab_runner_version} -y\ncurl  --fail --retry 6 -L https://github.com/docker/machine/releases/download/v${docker_machine_version}/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && \\\n  chmod +x /tmp/docker-machine && \\\n  cp /tmp/docker-machine /usr/local/bin/docker-machine && \\\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n# Create a dummy machine so that the cert is generated properly\n# See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\ndocker-machine create --driver none --url localhost dummy-machine\n\n# Install jq if not exists\nif ! [ -x \"$(command -v jq)\" ]; then\n  yum install jq -y\nfi\n\ntoken=$(aws ssm get-parameters --names \"${secure_parameter_store_runner_token_key}\" --with-decryption --region \"${secure_parameter_store_region}\" | jq -r \".Parameters | .[0] | .Value\")\nif [[ `echo ${runners_token}` == \"__REPLACED_BY_USER_DATA__\" && `echo $token` == \"null\" ]]\nthen\n  token=$(curl --request POST -L \"${runners_gitlab_url}/api/v4/runners\" \\\n    --form \"token=${gitlab_runner_registration_token}\" \\\n    --form \"description=${giltab_runner_description}\" \\\n    --form \"locked=${gitlab_runner_locked_to_project}\" \\\n    --form \"run_untagged=${gitlab_runner_run_untagged}\" \\\n    --form \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n    --form \"access_level=${gitlab_runner_access_level}\" \\\n    | jq -r .token)\n  aws ssm put-parameter --overwrite --type SecureString  --name \"${secure_parameter_store_runner_token_key}\" --value $token --region \"${secure_parameter_store_region}\"\nfi\n\nsed -i.bak s/__REPLACED_BY_USER_DATA__/`echo $token`/g /etc/gitlab-runner/config.toml\n\nservice gitlab-runner restart\nchkconfig gitlab-runner on\n\n# vim: set ft=sh:\n",
-          "vars": {
-            "docker_machine_version": "0.16.2",
-            "giltab_runner_description": "runner default - auto",
-            "gitlab_runner_access_level": "not_protected",
-            "gitlab_runner_locked_to_project": "true",
-            "gitlab_runner_maximum_timeout": "3600",
-            "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
-            "gitlab_runner_run_untagged": "false",
-            "gitlab_runner_version": "12.3.0",
-            "runners_gitlab_url": "https://gitlab.com",
-            "runners_token": "__REPLACED_BY_USER_DATA__",
-            "secure_parameter_store_region": "ap-southeast-2",
-            "secure_parameter_store_runner_token_key": "gitlab-runner-runner-token"
-          }
-        },
-        "after_unknown": {
-          "id": true,
-          "rendered": true,
-          "vars": {
-            "runners_config": true
-          }
-        }
-      }
-    },
-    {
       "address": "module.runner.data.template_file.runners",
       "module_address": "module.runner",
       "mode": "data",
@@ -1791,9 +1737,20 @@
         "before": null,
         "after": {
           "filename": null,
-          "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\n${logging}\n\n${gitlab_runner}\n\n# vim: set ft=sh:\n",
+          "template": "#!/bin/bash -e\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n\nif [[ `echo ${user_data_trace_log}` == false ]] \nthen\n  set -x\nfi\n\n# Add current hostname to hosts file\ntee /etc/hosts <<EOL\n127.0.0.1   localhost localhost.localdomain `hostname`\nEOL\n\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum -y update  && break || sleep 60\ndone\n\necho 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\nservice awslogs start\nchkconfig awslogs on\n\nmkdir -p /etc/gitlab-runner\ncat > /etc/gitlab-runner/config.toml <<- EOF\n${runners_config}\nEOF\n\ncurl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\nyum install gitlab-runner-${gitlab_runner_version} -y\ncurl  --fail --retry 6 -L https://github.com/docker/machine/releases/download/v${docker_machine_version}/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && \\\n  chmod +x /tmp/docker-machine && \\\n  cp /tmp/docker-machine /usr/local/bin/docker-machine && \\\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n# Create a dummy machine so that the cert is generated properly\n# See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\ndocker-machine create --driver none --url localhost dummy-machine\n\n# Install jq if not exists\nif ! [ -x \"$(command -v jq)\" ]; then\n  yum install jq -y\nfi\n\ntoken=$(aws ssm get-parameters --names \"${secure_parameter_store_runner_token_key}\" --with-decryption --region \"${secure_parameter_store_region}\" | jq -r \".Parameters | .[0] | .Value\")\nif [[ `echo ${runners_token}` == \"__REPLACED_BY_USER_DATA__\" && `echo $token` == \"null\" ]]\nthen\n  token=$(curl --request POST -L \"${runners_gitlab_url}/api/v4/runners\" \\\n    --form \"token=${gitlab_runner_registration_token}\" \\\n    --form \"description=${giltab_runner_description}\" \\\n    --form \"locked=${gitlab_runner_locked_to_project}\" \\\n    --form \"run_untagged=${gitlab_runner_run_untagged}\" \\\n    --form \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n    --form \"access_level=${gitlab_runner_access_level}\" \\\n    | jq -r .token)\n  aws ssm put-parameter --overwrite --type SecureString  --name \"${secure_parameter_store_runner_token_key}\" --value $token --region \"${secure_parameter_store_region}\"\nfi\n\nsed -i.bak s/__REPLACED_BY_USER_DATA__/`echo $token`/g /etc/gitlab-runner/config.toml\n\nservice gitlab-runner restart\nchkconfig gitlab-runner on\n\n# vim: set ft=sh:\n",
           "vars": {
-            "logging": "echo 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\n\nservice awslogs start\nchkconfig awslogs on\n\n# vim: set ft=sh:\n",
+            "docker_machine_version": "0.16.2",
+            "giltab_runner_description": "runner default - auto",
+            "gitlab_runner_access_level": "not_protected",
+            "gitlab_runner_locked_to_project": "true",
+            "gitlab_runner_maximum_timeout": "3600",
+            "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
+            "gitlab_runner_run_untagged": "false",
+            "gitlab_runner_version": "12.3.0",
+            "runners_gitlab_url": "https://gitlab.com",
+            "runners_token": "__REPLACED_BY_USER_DATA__",
+            "secure_parameter_store_region": "ap-southeast-2",
+            "secure_parameter_store_runner_token_key": "gitlab-runner-runner-token",
             "user_data_trace_log": "false"
           }
         },
@@ -1801,7 +1758,7 @@
           "id": true,
           "rendered": true,
           "vars": {
-            "gitlab_runner": true
+            "runners_config": true
           }
         }
       }
@@ -2440,7 +2397,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 08:25:10.970968 +0000 UTC",
+              "id": "2019-10-13 08:43:33.178908 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2456,6 +2413,41 @@
           }
         ],
         "child_modules": [
+          {
+            "resources": [
+              {
+                "address": "data.aws_vpc_endpoint_service.s3",
+                "mode": "data",
+                "type": "aws_vpc_endpoint_service",
+                "name": "s3",
+                "index": 0,
+                "provider_name": "aws",
+                "schema_version": 0,
+                "values": {
+                  "acceptance_required": false,
+                  "availability_zones": [
+                    "ap-southeast-2a",
+                    "ap-southeast-2b",
+                    "ap-southeast-2c"
+                  ],
+                  "base_endpoint_dns_names": [
+                    "s3.ap-southeast-2.amazonaws.com"
+                  ],
+                  "id": "1802082413",
+                  "manages_vpc_endpoints": false,
+                  "owner": "amazon",
+                  "private_dns_name": "",
+                  "service": "s3",
+                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
+                  "service_name": "com.amazonaws.ap-southeast-2.s3",
+                  "service_type": "Gateway",
+                  "tags": {},
+                  "vpc_endpoint_policy_supported": true
+                }
+              }
+            ],
+            "address": "module.vpc"
+          },
           {
             "resources": [
               {
@@ -2678,21 +2670,6 @@
                 }
               },
               {
-                "address": "data.template_file.logging",
-                "mode": "data",
-                "type": "template_file",
-                "name": "logging",
-                "provider_name": "template",
-                "schema_version": 0,
-                "values": {
-                  "filename": null,
-                  "id": "300f82701df4b1e00b923ce1227a937864d5ba8bc91d62befe2b7443d0c0230c",
-                  "rendered": "echo 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\n\nservice awslogs start\nchkconfig awslogs on\n\n# vim: set ft=sh:\n",
-                  "template": "echo 'installing additional software for logging'\n# installing in a loop to ensure the cli is installed.\nfor i in {1..7}\ndo\n  echo \"Attempt: ---- \" $i\n  yum install -y aws-cli awslogs jq && break || sleep 60\ndone\n\n# Inject the CloudWatch Logs configuration file contents\ncat > /etc/awslogs/awslogs.conf <<- EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = {instanceId}/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = {instanceId}/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = {instanceId}/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\nEOF\n\n# Set the region to send CloudWatch Logs data to (the region where the instance is located)\nregion=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\nsed -i -e \"s/region = us-east-1/region = $region/g\" /etc/awslogs/awscli.conf\n\n# Replace instance id.\ninstanceId=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\nsed -i -e \"s/{instanceId}/$instanceId/g\" /etc/awslogs/awslogs.conf\n\n\nservice awslogs start\nchkconfig awslogs on\n\n# vim: set ft=sh:\n",
-                  "vars": null
-                }
-              },
-              {
                 "address": "data.template_file.service_linked_role",
                 "mode": "data",
                 "type": "template_file",
@@ -2776,7 +2753,7 @@
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 08:25:11.913982 +0000 UTC",
+                      "id": "2019-10-13 08:43:34.129564 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -2784,41 +2761,6 @@
                 "address": "module.runner.module.cache"
               }
             ]
-          },
-          {
-            "resources": [
-              {
-                "address": "data.aws_vpc_endpoint_service.s3",
-                "mode": "data",
-                "type": "aws_vpc_endpoint_service",
-                "name": "s3",
-                "index": 0,
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "acceptance_required": false,
-                  "availability_zones": [
-                    "ap-southeast-2a",
-                    "ap-southeast-2b",
-                    "ap-southeast-2c"
-                  ],
-                  "base_endpoint_dns_names": [
-                    "s3.ap-southeast-2.amazonaws.com"
-                  ],
-                  "id": "1802082413",
-                  "manages_vpc_endpoints": false,
-                  "owner": "amazon",
-                  "private_dns_name": "",
-                  "service": "s3",
-                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
-                  "service_name": "com.amazonaws.ap-southeast-2.s3",
-                  "service_type": "Gateway",
-                  "tags": {},
-                  "vpc_endpoint_policy_supported": true
-                }
-              }
-            ],
-            "address": "module.vpc"
           }
         ]
       }
@@ -3779,38 +3721,6 @@
                 "schema_version": 0
               },
               {
-                "address": "data.template_file.gitlab_runner",
-                "mode": "data",
-                "type": "template_file",
-                "name": "gitlab_runner",
-                "provider_config_key": "runner:template",
-                "expressions": {
-                  "template": {
-                    "references": [
-                      "path.module"
-                    ]
-                  },
-                  "vars": {
-                    "references": [
-                      "local.gitlab_runner_version",
-                      "local.docker_machine_version",
-                      "data.template_file.runners",
-                      "var.runners_gitlab_url",
-                      "var.runners_token",
-                      "local.secure_parameter_store_runner_token_key",
-                      "var.aws_region",
-                      "var.gitlab_runner_registration_config",
-                      "var.gitlab_runner_registration_config",
-                      "var.gitlab_runner_registration_config",
-                      "var.gitlab_runner_registration_config",
-                      "var.gitlab_runner_registration_config",
-                      "var.gitlab_runner_registration_config"
-                    ]
-                  }
-                },
-                "schema_version": 0
-              },
-              {
                 "address": "data.template_file.instance_docker_machine_policy",
                 "mode": "data",
                 "type": "template_file",
@@ -3871,21 +3781,6 @@
                 "schema_version": 0
               },
               {
-                "address": "data.template_file.logging",
-                "mode": "data",
-                "type": "template_file",
-                "name": "logging",
-                "provider_config_key": "runner:template",
-                "expressions": {
-                  "template": {
-                    "references": [
-                      "path.module"
-                    ]
-                  }
-                },
-                "schema_version": 0
-              },
-              {
                 "address": "data.template_file.runners",
                 "mode": "data",
                 "type": "template_file",
@@ -3899,39 +3794,39 @@
                   },
                   "vars": {
                     "references": [
-                      "var.aws_region",
-                      "var.runners_gitlab_url",
-                      "var.vpc_id",
-                      "var.subnet_id_runners",
-                      "var.aws_zone",
+                      "aws_iam_instance_profile.docker_machine",
+                      "aws_security_group.docker_machine",
+                      "data.template_file.services_volumes_tmpfs",
+                      "data.template_file.volumes_tmpfs",
+                      "data.aws_ami.docker-machine",
+                      "var.runners_environment_vars",
+                      "local.bucket_name",
                       "local.docker_machine_instance_type",
                       "local.docker_machine_spot_price_bid",
-                      "data.aws_ami.docker-machine",
-                      "aws_security_group.docker_machine",
-                      "var.runners_monitoring",
-                      "aws_iam_instance_profile.docker_machine",
-                      "var.runners_name",
-                      "var.runners_token",
-                      "var.runners_limit",
-                      "var.runners_concurrent",
                       "local.runners_image",
+                      "local.runners_max_builds_string",
                       "local.runners_privileged",
-                      "var.runners_shm_size",
                       "local.runners_pull_policy",
+                      "var.aws_region",
+                      "var.aws_zone",
+                      "var.runners_concurrent",
+                      "var.runners_gitlab_url",
                       "var.runners_idle_count",
                       "var.runners_idle_time",
-                      "local.runners_max_builds_string",
-                      "var.runners_off_peak_timezone",
+                      "var.runners_limit",
+                      "var.runners_monitoring",
+                      "var.runners_name",
                       "var.runners_off_peak_idle_count",
                       "var.runners_off_peak_idle_time",
                       "var.runners_off_peak_periods",
-                      "var.runners_root_size",
-                      "var.runners_environment_vars",
-                      "var.runners_request_concurrency",
+                      "var.runners_off_peak_timezone",
                       "var.runners_output_limit",
-                      "data.template_file.volumes_tmpfs",
-                      "data.template_file.services_volumes_tmpfs",
-                      "local.bucket_name"
+                      "var.runners_request_concurrency",
+                      "var.runners_root_size",
+                      "var.runners_shm_size",
+                      "var.runners_token",
+                      "var.subnet_id_runners",
+                      "var.vpc_id"
                     ]
                   }
                 },
@@ -4009,9 +3904,20 @@
                   },
                   "vars": {
                     "references": [
-                      "data.template_file.logging",
-                      "data.template_file.gitlab_runner",
-                      "var.enable_runner_user_data_trace_log"
+                      "data.template_file.runners",
+                      "local.docker_machine_version",
+                      "local.gitlab_runner_version",
+                      "local.secure_parameter_store_runner_token_key",
+                      "var.aws_region",
+                      "var.enable_runner_user_data_trace_log",
+                      "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_registration_config",
+                      "var.gitlab_runner_registration_config",
+                      "var.runners_gitlab_url",
+                      "var.runners_token"
                     ]
                   }
                 },
