@@ -185,12 +185,6 @@ variable "gitlab_runner_registration_config" {
   }
 }
 
-variable "secure_parameter_store_runner_token_key" {
-  description = "The key name used store the Gitlab runner token in Secure Parameter Store"
-  type        = string
-  default     = "runner-token"
-}
-
 variable "cache_bucket" {
   description = "Configuration to control the creation of the cache bucket. By default the bucket will be created and used as shared cache. To use the same cache cross multiple runners disable the cration of the cache and provice a policy and bucket name. See the public runner example for more details"
   type        = map
