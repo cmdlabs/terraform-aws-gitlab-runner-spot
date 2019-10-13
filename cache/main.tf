@@ -1,11 +1,8 @@
-data "aws_caller_identity" "current" {
-  count = var.create_cache_bucket ? 1 : 0
-}
+data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "build_cache" {
-  count = var.create_cache_bucket ? 1 : 0
-
   bucket = var.cache_bucket_name
+
   acl    = "private"
 
   force_destroy = true
@@ -35,21 +32,17 @@ resource "aws_s3_bucket" "build_cache" {
 }
 
 data "template_file" "docker_machine_cache_policy" {
-  count = var.create_cache_bucket ? 1 : 0
-
   template = file("${path.module}/policies/cache.json")
 
   vars = {
-    s3_cache_arn = aws_s3_bucket.build_cache[0].arn
+    s3_cache_arn = aws_s3_bucket.build_cache.arn
   }
 }
 
 resource "aws_iam_policy" "docker_machine_cache" {
-  count = var.create_cache_bucket ? 1 : 0
-
   name        = "gitlab-runner-docker-machine-cache"
   path        = "/"
   description = "Policy for docker machine instance to access cache"
 
-  policy = data.template_file.docker_machine_cache_policy[0].rendered
+  policy = data.template_file.docker_machine_cache_policy.rendered
 }

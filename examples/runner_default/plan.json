@@ -545,11 +545,10 @@
             {
               "resources": [
                 {
-                  "address": "module.runner.module.cache.aws_iam_policy.docker_machine_cache[0]",
+                  "address": "module.runner.module.cache.aws_iam_policy.docker_machine_cache",
                   "mode": "managed",
                   "type": "aws_iam_policy",
                   "name": "docker_machine_cache",
-                  "index": 0,
                   "provider_name": "aws",
                   "schema_version": 0,
                   "values": {
@@ -560,11 +559,10 @@
                   }
                 },
                 {
-                  "address": "module.runner.module.cache.aws_s3_bucket.build_cache[0]",
+                  "address": "module.runner.module.cache.aws_s3_bucket.build_cache",
                   "mode": "managed",
                   "type": "aws_s3_bucket",
                   "name": "build_cache",
-                  "index": 0,
                   "provider_name": "aws",
                   "schema_version": 0,
                   "values": {
@@ -619,11 +617,10 @@
                   }
                 },
                 {
-                  "address": "module.runner.module.cache.data.template_file.docker_machine_cache_policy[0]",
+                  "address": "module.runner.module.cache.data.template_file.docker_machine_cache_policy",
                   "mode": "data",
                   "type": "template_file",
                   "name": "docker_machine_cache_policy",
-                  "index": 0,
                   "provider_name": "template",
                   "schema_version": 0,
                   "values": {
@@ -1760,12 +1757,11 @@
       }
     },
     {
-      "address": "module.runner.module.cache.aws_iam_policy.docker_machine_cache[0]",
+      "address": "module.runner.module.cache.aws_iam_policy.docker_machine_cache",
       "module_address": "module.runner.module.cache",
       "mode": "managed",
       "type": "aws_iam_policy",
       "name": "docker_machine_cache",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -1786,12 +1782,11 @@
       }
     },
     {
-      "address": "module.runner.module.cache.aws_s3_bucket.build_cache[0]",
+      "address": "module.runner.module.cache.aws_s3_bucket.build_cache",
       "module_address": "module.runner.module.cache",
       "mode": "managed",
       "type": "aws_s3_bucket",
       "name": "build_cache",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -1892,12 +1887,11 @@
       }
     },
     {
-      "address": "module.runner.module.cache.data.template_file.docker_machine_cache_policy[0]",
+      "address": "module.runner.module.cache.data.template_file.docker_machine_cache_policy",
       "module_address": "module.runner.module.cache",
       "mode": "data",
       "type": "template_file",
       "name": "docker_machine_cache_policy",
-      "index": 0,
       "provider_name": "template",
       "change": {
         "actions": [
@@ -2393,7 +2387,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 08:56:02.955713 +0000 UTC",
+              "id": "2019-10-13 09:03:49.311576 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2670,13 +2664,12 @@
                     "mode": "data",
                     "type": "aws_caller_identity",
                     "name": "current",
-                    "index": 0,
                     "provider_name": "aws",
                     "schema_version": 0,
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 08:56:03.859064 +0000 UTC",
+                      "id": "2019-10-13 09:03:50.486029 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -3204,7 +3197,7 @@
                 "expressions": {
                   "policy_arn": {
                     "references": [
-                      "local.bucket_policy"
+                      "module.cache.policy_arn"
                     ]
                   },
                   "role": {
@@ -3742,7 +3735,7 @@
                       "aws_security_group.docker_machine",
                       "data.aws_ami.docker-machine",
                       "var.runners_environment_vars",
-                      "local.bucket_name",
+                      "var.cache_bucket_name",
                       "local.docker_machine_instance_type",
                       "local.docker_machine_spot_price_bid",
                       "local.runners_image",
@@ -3851,11 +3844,6 @@
                     "references": [
                       "var.cache_expiration_days"
                     ]
-                  },
-                  "create_cache_bucket": {
-                    "references": [
-                      "var.cache_bucket"
-                    ]
                   }
                 },
                 "module": {
@@ -3904,16 +3892,11 @@
                         },
                         "policy": {
                           "references": [
-                            "data.template_file.docker_machine_cache_policy[0]"
+                            "data.template_file.docker_machine_cache_policy"
                           ]
                         }
                       },
-                      "schema_version": 0,
-                      "count_expression": {
-                        "references": [
-                          "var.create_cache_bucket"
-                        ]
-                      }
+                      "schema_version": 0
                     },
                     {
                       "address": "aws_s3_bucket.build_cache",
@@ -3980,12 +3963,7 @@
                           }
                         ]
                       },
-                      "schema_version": 0,
-                      "count_expression": {
-                        "references": [
-                          "var.create_cache_bucket"
-                        ]
-                      }
+                      "schema_version": 0
                     },
                     {
                       "address": "data.aws_caller_identity.current",
@@ -3993,12 +3971,7 @@
                       "type": "aws_caller_identity",
                       "name": "current",
                       "provider_config_key": "cache:aws",
-                      "schema_version": 0,
-                      "count_expression": {
-                        "references": [
-                          "var.create_cache_bucket"
-                        ]
-                      }
+                      "schema_version": 0
                     },
                     {
                       "address": "data.template_file.docker_machine_cache_policy",
@@ -4014,16 +3987,11 @@
                         },
                         "vars": {
                           "references": [
-                            "aws_s3_bucket.build_cache[0]"
+                            "aws_s3_bucket.build_cache"
                           ]
                         }
                       },
-                      "schema_version": 0,
-                      "count_expression": {
-                        "references": [
-                          "var.create_cache_bucket"
-                        ]
-                      }
+                      "schema_version": 0
                     }
                   ],
                   "variables": {
@@ -4033,10 +4001,6 @@
                     "cache_expiration_days": {
                       "default": 1,
                       "description": "Number of days before cache objects expires."
-                    },
-                    "create_cache_bucket": {
-                      "default": "true",
-                      "description": "This module is by default included in the runner module. To disable the creation of the bucket this parameter can be disabled."
                     }
                   }
                 }
@@ -4049,14 +4013,6 @@
               "aws_zone": {
                 "default": "a",
                 "description": "AWS availability zone (typically 'a', 'b', or 'c'), will be used in the runner config.toml"
-              },
-              "cache_bucket": {
-                "default": {
-                  "bucket": "",
-                  "create": "true",
-                  "policy": ""
-                },
-                "description": "Configuration to control the creation of the cache bucket. By default the bucket will be created and used as shared cache. To use the same cache cross multiple runners disable the cration of the cache and provice a policy and bucket name. See the public runner example for more details"
               },
               "cache_bucket_name": {
                 "description": "The bucket name of the S3 cache bucket"

@@ -103,7 +103,7 @@ data "template_file" "runners" {
     runners_security_group_name    = aws_security_group.docker_machine.name
     runners_ami                    = data.aws_ami.docker-machine.id
     runners_environment_vars       = jsonencode(var.runners_environment_vars)
-    bucket_name                    = local.bucket_name
+    bucket_name                    = var.cache_bucket_name
     runners_instance_type          = local.docker_machine_instance_type
     runners_spot_price_bid         = local.docker_machine_spot_price_bid
     runners_image                  = local.runners_image
@@ -232,15 +232,9 @@ resource "aws_launch_configuration" "gitlab_runner_instance" {
 ################################################################################
 ### Create cache bucket
 ################################################################################
-locals {
-  bucket_name   = var.cache_bucket["create"] ? module.cache.bucket : var.cache_bucket["bucket"]
-  bucket_policy = var.cache_bucket["create"] ? module.cache.policy_arn : var.cache_bucket["policy"]
-}
-
 module "cache" {
   source = "./cache"
 
-  create_cache_bucket     = var.cache_bucket["create"]
   cache_bucket_name       = var.cache_bucket_name
   cache_expiration_days   = var.cache_expiration_days
 }
@@ -318,7 +312,7 @@ resource "aws_iam_role_policy_attachment" "instance_session_manager_aws_managed"
 
 resource "aws_iam_role_policy_attachment" "docker_machine_cache_instance" {
   role       = aws_iam_role.instance.name
-  policy_arn = local.bucket_policy
+  policy_arn = module.cache.policy_arn
 }
 
 ################################################################################
