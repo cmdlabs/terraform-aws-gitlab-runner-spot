@@ -256,14 +256,10 @@ resource "aws_launch_configuration" "gitlab_runner_instance" {
   instance_type        = local.instance_type
   iam_instance_profile = aws_iam_instance_profile.instance.name
 
-  dynamic "root_block_device" {
-    for_each = [var.runner_root_block_device]
-    content {
-      delete_on_termination = lookup(root_block_device.value, "delete_on_termination", true)
-      volume_type           = lookup(root_block_device.value, "volume_type", "gp2")
-      volume_size           = lookup(root_block_device.value, "volume_size", 8)
-      iops                  = lookup(root_block_device.value, "iops", null)
-    }
+  root_block_device {
+    delete_on_termination = true
+    volume_type           = "gp2"
+    volume_size           = 8
   }
 
   associate_public_ip_address = false

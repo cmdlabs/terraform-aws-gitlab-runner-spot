@@ -237,12 +237,6 @@ variable "schedule_config" {
   }
 }
 
-variable "runner_root_block_device" {
-  description = "The EC2 instance root block device configuration. Takes the following keys: `delete_on_termination`, `volume_type`, `volume_size`, `iops`"
-  type        = map(string)
-  default     = {}
-}
-
 variable "enable_runner_ssm_access" {
   description = "Add IAM policies to the runner agent instance to connect via the Session Manager"
   type        = bool
