@@ -93,7 +93,7 @@ then
     --form "maximum_timeout=${gitlab_runner_maximum_timeout}" \
     --form "access_level=${gitlab_runner_access_level}" \
     | jq -r .token)
-  aws ssm put-parameter --overwrite --type SecureString  --name "${runners_ssm_token_key}" --value $token --region "${ssm_region}"
+  aws ssm put-parameter --overwrite --type SecureString --name "${runners_ssm_token_key}" --value $token --region "${ssm_region}"
 fi
 
 sed -i.bak s/__REPLACED_BY_USER_DATA__/`echo $token`/g /etc/gitlab-runner/config.toml

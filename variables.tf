@@ -9,17 +9,22 @@ variable "vpc_id" {
 }
 
 variable "subnet_id_runners" {
-  description = "List of subnets used for hosting the gitlab-runners"
+  description = "Subnet used for hosting the GitLab runner"
   type        = string
 }
 
 variable "subnet_ids_gitlab_runner" {
-  description = "Subnet used for hosting the GitLab runner"
+  description = "List of subnets used for hosting the GitLab runners"
   type        = list(string)
 }
 
+variable "runners_gitlab_url" {
+  description = "URL of the GitLab instance to connect to"
+  type        = string
+}
+
 variable "aws_zone" {
-  description = "AWS availability zone (typically 'a', 'b', or 'c'), will be used in the runner config.toml"
+  description = "AWS availability zone (typically 'a', 'b', or 'c'), used in config.toml"
   type        = string
   default     = "a"
 }
@@ -31,83 +36,79 @@ variable "key_name" {
 }
 
 variable "runners_name" {
-  description = "Name of the runner, will be used in the runner config.toml"
+  description = "Name of the runner, used in config.toml"
   type        = string
 }
 
-variable "runners_gitlab_url" {
-  description = "URL of the GitLab instance to connect to"
-  type        = string
-}
-
+# DELETE.
 variable "runners_token" {
-  description = "Token for the runner, will be used in the runner config.toml"
+  description = "Token for the runner, used in config.toml"
   type        = string
   default     = "__REPLACED_BY_USER_DATA__"
 }
 
 variable "runners_limit" {
-  description = "Limit for the runners, will be used in the runner config.toml"
+  description = "Limit for the runners, used in config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_concurrent" {
-  description = "Concurrent value for the runners, will be used in the runner config.toml"
+  description = "Concurrent value for the runners, used in config.toml"
   type        = number
   default     = 10
 }
 
 variable "runners_idle_time" {
-  description = "Idle time of the runners, will be used in the runner config.toml"
+  description = "Idle time of the runners, used in config.toml"
   type        = number
   default     = 600
 }
 
 variable "runners_idle_count" {
-  description = "Idle count of the runners, will be used in the runner config.toml"
+  description = "Idle count of the runners, used in config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_max_builds" {
-  description = "Max builds for each runner after which it will be removed, will be used in the runner config.toml. By default set to 0, no maxBuilds will be set in the configuration"
+  description = "Max builds for each runner after which it will be removed, used in config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_shm_size" {
-  description = "shm_size for the runners, will be used in the runner config.toml"
+  description = "shm_size for the runners, used in config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_monitoring" {
-  description = "Enable detailed cloudwatch monitoring for spot instances"
+  description = "Enable detailed CloudWatch monitoring for spot instances"
   type        = bool
   default     = false
 }
 
 variable "runners_off_peak_timezone" {
-  description = "Off peak idle time zone of the runners, will be used in the runner config.toml"
+  description = "Off peak idle time zone of the runners, used in config.toml"
   type        = string
   default     = "Australia/Sydney"
 }
 
 variable "runners_off_peak_idle_count" {
-  description = "Off peak idle count of the runners, will be used in the runner config.toml"
+  description = "Off peak idle count of the runners, used in config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_off_peak_idle_time" {
-  description = "Off peak idle time of the runners, will be used in the runner config.toml"
+  description = "Off peak idle time of the runners, used in config.toml"
   type        = number
   default     = 0
 }
 
 variable "runners_off_peak_periods" {
-  description = "Off peak periods of the runners, will be used in the runner config.toml"
+  description = "Off peak periods of the runners, used in config.toml"
   type        = string
   default     = ""
 }
@@ -119,7 +120,7 @@ variable "runners_root_size" {
 }
 
 variable "runners_environment_vars" {
-  description = "Environment variables during build execution, e.g. KEY=Value, see runner-public example. Will be used in the runner config.toml"
+  description = "Environment variables during build execution as a list of strings like VAR1=value1, used in config.toml"
   type        = list(string)
   default     = []
 }
@@ -148,13 +149,13 @@ variable "cache_expiration_days" {
 }
 
 variable "enable_gitlab_runner_ssh_access" {
-  description = "Enables SSH Access to the gitlab runner instance"
+  description = "Enables SSH Access to the GitLab Runner instance"
   type        = bool
   default     = false
 }
 
 variable "gitlab_runner_ssh_cidr_blocks" {
-  description = "List of CIDR blocks to allow SSH Access to the gitlab runner instance"
+  description = "List of CIDR blocks to allow SSH Access to the GitLab Runner instance"
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }

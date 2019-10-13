@@ -105,32 +105,32 @@ The below outlines the current parameters and defaults.
 |------|-------------|:----:|:-------:|:--------:|
 |aws_region|AWS region|string|""|Yes|
 |vpc_id|The target VPC for the docker-machine and runner instances|string|""|Yes|
-|subnet_id_runners|List of subnets used for hosting the gitlab-runners|string|""|Yes|
-|subnet_ids_gitlab_runner|Subnet used for hosting the GitLab runner|list(string)|""|Yes|
-|aws_zone|AWS availability zone (typically 'a', 'b', or 'c'), will be used in the runner config.toml|string|a|No|
-|key_name|The name of the EC2 key pair to use|string|default|No|
-|runners_name|Name of the runner, will be used in the runner config.toml|string|""|Yes|
+|subnet_id_runners|Subnet used for hosting the GitLab runner|string|""|Yes|
+|subnet_ids_gitlab_runner|List of subnets used for hosting the GitLab runners|list(string)|""|Yes|
 |runners_gitlab_url|URL of the GitLab instance to connect to|string|""|Yes|
-|runners_token|Token for the runner, will be used in the runner config.toml|string|__REPLACED_BY_USER_DATA__|No|
-|runners_limit|Limit for the runners, will be used in the runner config.toml|number|0|No|
-|runners_concurrent|Concurrent value for the runners, will be used in the runner config.toml|number|10|No|
-|runners_idle_time|Idle time of the runners, will be used in the runner config.toml|number|600|No|
-|runners_idle_count|Idle count of the runners, will be used in the runner config.toml|number|0|No|
-|runners_max_builds|Max builds for each runner after which it will be removed, will be used in the runner config.toml. By default set to 0, no maxBuilds will be set in the configuration|number|0|No|
-|runners_shm_size|shm_size for the runners, will be used in the runner config.toml|number|0|No|
-|runners_monitoring|Enable detailed cloudwatch monitoring for spot instances|bool|false|No|
-|runners_off_peak_timezone|Off peak idle time zone of the runners, will be used in the runner config.toml|string|Australia/Sydney|No|
-|runners_off_peak_idle_count|Off peak idle count of the runners, will be used in the runner config.toml|number|0|No|
-|runners_off_peak_idle_time|Off peak idle time of the runners, will be used in the runner config.toml|number|0|No|
-|runners_off_peak_periods|Off peak periods of the runners, will be used in the runner config.toml|string|""|Yes|
+|aws_zone|AWS availability zone (typically 'a', 'b', or 'c'), used in config.toml|string|a|No|
+|key_name|The name of the EC2 key pair to use|string|default|No|
+|runners_name|Name of the runner, used in config.toml|string|""|Yes|
+|runners_token|Token for the runner, used in config.toml|string|__REPLACED_BY_USER_DATA__|No|
+|runners_limit|Limit for the runners, used in config.toml|number|0|No|
+|runners_concurrent|Concurrent value for the runners, used in config.toml|number|10|No|
+|runners_idle_time|Idle time of the runners, used in config.toml|number|600|No|
+|runners_idle_count|Idle count of the runners, used in config.toml|number|0|No|
+|runners_max_builds|Max builds for each runner after which it will be removed, used in config.toml|number|0|No|
+|runners_shm_size|shm_size for the runners, used in config.toml|number|0|No|
+|runners_monitoring|Enable detailed CloudWatch monitoring for spot instances|bool|false|No|
+|runners_off_peak_timezone|Off peak idle time zone of the runners, used in config.toml|string|Australia/Sydney|No|
+|runners_off_peak_idle_count|Off peak idle count of the runners, used in config.toml|number|0|No|
+|runners_off_peak_idle_time|Off peak idle time of the runners, used in config.toml|number|0|No|
+|runners_off_peak_periods|Off peak periods of the runners, used in config.toml|string|""|Yes|
 |runners_root_size|Runner instance root size in GB|number|16|No|
-|runners_environment_vars|Environment variables during build execution, e.g. KEY=Value, see runner-public example. Will be used in the runner config.toml|list(string)|[]|No|
+|runners_environment_vars|Environment variables during build execution as a list of strings like VAR1=value1, used in config.toml|list(string)|[]|No|
 |runners_request_concurrency|Limit number of concurrent requests for new jobs from GitLab (default 1)|number|1|No|
 |runners_output_limit|Sets the maximum build log size in kilobytes, by default set to 4096 (4MB)|number|4096|No|
 |cache_bucket_name|The bucket name of the S3 cache bucket|string|""|Yes|
 |cache_expiration_days|Number of days before cache objects expires|number|1|No|
-|enable_gitlab_runner_ssh_access|Enables SSH Access to the gitlab runner instance|bool|false|No|
-|gitlab_runner_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the gitlab runner instance|list(string)|[0.0.0.0/0]|No|
+|enable_gitlab_runner_ssh_access|Enables SSH Access to the GitLab Runner instance|bool|false|No|
+|gitlab_runner_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the GitLab Runner instance|list(string)|[0.0.0.0/0]|No|
 |docker_machine_docker_cidr_blocks|List of CIDR blocks to allow Docker Access to the docker machine runner instance|list(string)|[0.0.0.0/0]|No|
 |docker_machine_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the docker machine runner instance|list(string)|[0.0.0.0/0]|No|
 |gitlab_runner_registration_config||map(string)|(map)|No|
