@@ -11,9 +11,6 @@ locals {
   runners_pull_policy           = "always"
   runners_privileged            = true
 
-  // Ensure off peak is optional
-  runners_off_peak_periods_string = var.runners_off_peak_periods == "" ? "" : format("OffPeakPeriods = %s", var.runners_off_peak_periods)
-
   // Ensure max builds is optional
   runners_max_builds_string = var.runners_max_builds == 0 ? "" : format("MaxBuilds = %d", var.runners_max_builds)
 
@@ -170,27 +167,27 @@ data "template_file" "runners" {
     runners_monitoring          = var.runners_monitoring
     runners_instance_profile    = aws_iam_instance_profile.docker_machine.name
     runners_name                = var.runners_name
-    runners_token                     = var.runners_token
-    runners_limit                     = var.runners_limit
-    runners_concurrent                = var.runners_concurrent
-    runners_image                     = local.runners_image
-    runners_privileged                = local.runners_privileged
-    runners_shm_size                  = var.runners_shm_size
-    runners_pull_policy               = local.runners_pull_policy
-    runners_idle_count                = var.runners_idle_count
-    runners_idle_time                 = var.runners_idle_time
-    runners_max_builds                = local.runners_max_builds_string
-    runners_off_peak_timezone         = var.runners_off_peak_timezone
-    runners_off_peak_idle_count       = var.runners_off_peak_idle_count
-    runners_off_peak_idle_time        = var.runners_off_peak_idle_time
-    runners_off_peak_periods_string   = local.runners_off_peak_periods_string
-    runners_root_size                 = var.runners_root_size
-    runners_environment_vars          = jsonencode(var.runners_environment_vars)
-    runners_request_concurrency       = var.runners_request_concurrency
-    runners_output_limit              = var.runners_output_limit
-    runners_volumes_tmpfs             = chomp(join("", data.template_file.volumes_tmpfs.*.rendered))
-    runners_services_volumes_tmpfs    = chomp(join("", data.template_file.services_volumes_tmpfs.*.rendered))
-    bucket_name                       = local.bucket_name
+    runners_token                  = var.runners_token
+    runners_limit                  = var.runners_limit
+    runners_concurrent             = var.runners_concurrent
+    runners_image                  = local.runners_image
+    runners_privileged             = local.runners_privileged
+    runners_shm_size               = var.runners_shm_size
+    runners_pull_policy            = local.runners_pull_policy
+    runners_idle_count             = var.runners_idle_count
+    runners_idle_time              = var.runners_idle_time
+    runners_max_builds             = local.runners_max_builds_string
+    runners_off_peak_timezone      = var.runners_off_peak_timezone
+    runners_off_peak_idle_count    = var.runners_off_peak_idle_count
+    runners_off_peak_idle_time     = var.runners_off_peak_idle_time
+    runners_off_peak_periods       = var.runners_off_peak_periods
+    runners_root_size              = var.runners_root_size
+    runners_environment_vars       = jsonencode(var.runners_environment_vars)
+    runners_request_concurrency    = var.runners_request_concurrency
+    runners_output_limit           = var.runners_output_limit
+    runners_volumes_tmpfs          = chomp(join("", data.template_file.volumes_tmpfs.*.rendered))
+    runners_services_volumes_tmpfs = chomp(join("", data.template_file.services_volumes_tmpfs.*.rendered))
+    bucket_name                    = local.bucket_name
   }
 }
 

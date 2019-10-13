@@ -53,4 +53,6 @@ check_interval = 0
     OffPeakTimezone = "${runners_off_peak_timezone}"
     OffPeakIdleCount = ${runners_off_peak_idle_count}
     OffPeakIdleTime = ${runners_off_peak_idle_time}
-    ${runners_off_peak_periods_string}
+%{ if runners_off_peak_periods != "" ~}
+    OffPeakPeriods = ${runners_off_peak_periods}
+%{ endif ~}
