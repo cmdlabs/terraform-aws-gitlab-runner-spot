@@ -109,11 +109,6 @@ The below outlines the current parameters and defaults.
 |subnet_ids_gitlab_runner|Subnet used for hosting the GitLab runner|list(string)|""|Yes|
 |aws_zone|AWS availability zone (typically 'a', 'b', or 'c'), will be used in the runner config.toml|string|a|No|
 |key_name|The name of the EC2 key pair to use|string|default|No|
-|instance_type|Instance type used for the GitLab runner|string|t3.micro|No|
-|runner_instance_spot_price|By setting a spot price bid price the runner agent will be created via a spot request. Be aware that spot instances can be stopped by AWS|string|""|Yes|
-|docker_machine_instance_type|Instance type used for the instances hosting docker-machine|string|m5a.large|No|
-|docker_machine_spot_price_bid|Spot price bid|string|0.06|No|
-|docker_machine_version|Version of docker-machine|string|0.16.2|No|
 |runners_name|Name of the runner, will be used in the runner config.toml|string|""|Yes|
 |runners_gitlab_url|URL of the GitLab instance to connect to|string|""|Yes|
 |runners_token|Token for the runner, will be used in the runner config.toml|string|__REPLACED_BY_USER_DATA__|No|
@@ -122,58 +117,25 @@ The below outlines the current parameters and defaults.
 |runners_idle_time|Idle time of the runners, will be used in the runner config.toml|number|600|No|
 |runners_idle_count|Idle count of the runners, will be used in the runner config.toml|number|0|No|
 |runners_max_builds|Max builds for each runner after which it will be removed, will be used in the runner config.toml. By default set to 0, no maxBuilds will be set in the configuration|number|0|No|
-|runners_image|Image to run builds, will be used in the runner config.toml|string|docker:18.03.1-ce|No|
-|runners_privileged|Runners will run in privileged mode, will be used in the runner config.toml|bool|true|No|
-|runners_additional_volumes|Additional volumes that will be used in the runner config.toml, e.g Docker socket|list|[]|No|
 |runners_shm_size|shm_size for the runners, will be used in the runner config.toml|number|0|No|
-|runners_pull_policy|pull_policy for the runners, will be used in the runner config.toml|string|always|No|
 |runners_monitoring|Enable detailed cloudwatch monitoring for spot instances|bool|false|No|
-|runners_off_peak_timezone|Off peak idle time zone of the runners, will be used in the runner config.toml|string|""|Yes|
+|runners_off_peak_timezone|Off peak idle time zone of the runners, will be used in the runner config.toml|string|Australia/Sydney|No|
 |runners_off_peak_idle_count|Off peak idle count of the runners, will be used in the runner config.toml|number|0|No|
 |runners_off_peak_idle_time|Off peak idle time of the runners, will be used in the runner config.toml|number|0|No|
 |runners_off_peak_periods|Off peak periods of the runners, will be used in the runner config.toml|string|""|Yes|
 |runners_root_size|Runner instance root size in GB|number|16|No|
-|create_runners_iam_instance_profile|Boolean to control the creation of the runners IAM instance profile|bool|true|No|
-|runners_iam_instance_profile_name|IAM instance profile name of the runners, will be used in the runner config.toml|string|""|Yes|
 |runners_environment_vars|Environment variables during build execution, e.g. KEY=Value, see runner-public example. Will be used in the runner config.toml|list(string)|[]|No|
-|runners_pre_build_script|Script to execute in the pipeline just before the build, will be used in the runner config.toml|string|""|Yes|
-|runners_post_build_script|Commands to be executed on the Runner just after executing the build, but before executing after_script. |string|""|Yes|
-|runners_pre_clone_script|Commands to be executed on the Runner before cloning the Git repository. this can be used to adjust the Git client configuration first, for example. |string|""|Yes|
 |runners_request_concurrency|Limit number of concurrent requests for new jobs from GitLab (default 1)|number|1|No|
 |runners_output_limit|Sets the maximum build log size in kilobytes, by default set to 4096 (4MB)|number|4096|No|
-|userdata_pre_install|User-data script snippet to insert before GitLab runner install|string|""|Yes|
-|userdata_post_install|User-data script snippet to insert after GitLab runner install|string|""|Yes|
-|docker_machine_user|Username of the user used to create the spot instances that host docker-machine|string|docker-machine|No|
-|cache_bucket_prefix|Prefix for s3 cache bucket name|string|""|Yes|
-|cache_bucket_name_include_account_id|Boolean to add current account ID to cache bucket name|bool|true|No|
-|cache_bucket_versioning|Boolean used to enable versioning on the cache bucket, false by default|bool|false|No|
+|cache_bucket_name|The bucket name of the S3 cache bucket|string|""|Yes|
 |cache_expiration_days|Number of days before cache objects expires|number|1|No|
-|cache_shared|Enables cache sharing between runners, false by default|bool|false|No|
-|gitlab_runner_version|Version of the GitLab runner|string|12.3.0|No|
 |enable_gitlab_runner_ssh_access|Enables SSH Access to the gitlab runner instance|bool|false|No|
 |gitlab_runner_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the gitlab runner instance|list(string)|[0.0.0.0/0]|No|
 |docker_machine_docker_cidr_blocks|List of CIDR blocks to allow Docker Access to the docker machine runner instance|list(string)|[0.0.0.0/0]|No|
 |docker_machine_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the docker machine runner instance|list(string)|[0.0.0.0/0]|No|
-|enable_cloudwatch_logging|Boolean used to enable or disable the CloudWatch logging|bool|true|No|
-|allow_iam_service_linked_role_creation|Boolean used to control attaching the policy to a runner instance to create service linked roles|bool|true|No|
-|instance_role_json|Default runner instance override policy, expected to be in JSON format|string|""|Yes|
-|docker_machine_role_json|Docker machine runner instance override policy, expected to be in JSON format|string|""|Yes|
-|ami_filter|List of maps used to create the AMI filter for the Gitlab runner agent AMI. Currently Amazon Linux 2 `amzn2-ami-hvm-2.0.????????-x86_64-ebs` looks to *not* be working for this configuration|map(list(string))|(map)|No|
-|ami_owners|The list of owners used to select the AMI of Gitlab runner agent instances|list(string)|[amazon]|No|
-|runner_ami_filter|List of maps used to create the AMI filter for the Gitlab runner docker-machine AMI|map(list(string))|(map)|No|
-|runner_ami_owners|The list of owners used to select the AMI of Gitlab runner docker-machine instances|list(string)|[099720109477]|No|
 |gitlab_runner_registration_config||map(string)|(map)|No|
-|secure_parameter_store_runner_token_key|The key name used store the Gitlab runner token in Secure Parameter Store|string|runner-token|No|
-|enable_manage_gitlab_token|Boolean to enable the management of the GitLab token in SSM. If `true` the token will be stored in SSM, which means the SSM property is a terraform managed resource. If `false` the Gitlab token will be stored in the SSM by the user-data script during creation of the the instance. However the SSM parameter is not managed by terraform and will remain in SSM after a `terraform destroy`|bool|true|No|
-|overrides|This maps provides the possibility to override some defaults. The following attributes are supported: `name_sg` overwrite the `Name` tag for all security groups created by this module. `name_runner_agent_instance` override the `Name` tag for the ec2 instance defined in the auto launch configuration. `name_docker_machine_runners` ovverrid the `Name` tag spot instances created by the runner agent|map(string)|(map)|No|
-|cache_bucket|Configuration to control the creation of the cache bucket. By default the bucket will be created and used as shared cache. To use the same cache cross multiple runners disable the cration of the cache and provice a policy and bucket name. See the public runner example for more details|map|(map)|No|
 |enable_runner_user_data_trace_log|Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token|bool|false|No|
-|enable_schedule|Flag used to enable/disable auto scaling group schedule for the runner instance. |bool|false|No|
 |schedule_config|Map containing the configuration of the ASG scale-in and scale-up for the runner instance. Will only be used if enable_schedule is set to true. |map|(map)|No|
-|runner_root_block_device|The EC2 instance root block device configuration. Takes the following keys: `delete_on_termination`, `volume_type`, `volume_size`, `iops`|map(string)|{}|No|
-|enable_runner_ssm_access|Add IAM policies to the runner agent instance to connect via the Session Manager|bool|false|No|
-|runners_volumes_tmpfs|Mount temporary file systems to the main containers. Must consist of pairs of strings e.g. \|"list"|[]|No|
-|runners_services_volumes_tmpfs|Mount temporary file systems to service containers. Must consist of pairs of strings e.g. \|"list"|[]|No|
 
 ### Outputs
 
@@ -194,6 +156,13 @@ The below outlines the current parameters and defaults.
 To create a Gitlab Runner:
 
 ```tf
+variable "enable_gitlab_runner_ssh_access" {}
+variable "registration_token" {}
+
+variable "bucket_name" {
+  default = "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0"
+}
+
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -221,41 +190,30 @@ module "runner" {
 
   aws_region = "ap-southeast-2"
 
+  cache_bucket_name = var.bucket_name
+
   vpc_id                   = module.vpc.vpc_id
   subnet_ids_gitlab_runner = module.vpc.private_subnets
   subnet_id_runners        = element(module.vpc.private_subnets, 0)
 
   runners_name             = "test-runner"
   runners_gitlab_url       = "https://gitlab.com"
-  enable_runner_ssm_access = true
-
-  docker_machine_spot_price_bid = "0.06"
 
   gitlab_runner_registration_config = {
-    registration_token = "GBpeL612xfp3DtEjzZsx"
+    registration_token = var.registration_token
     description        = "runner default - auto"
     locked_to_project  = "true"
     run_untagged       = "false"
     maximum_timeout    = "3600"
+    access_level       = "not_protected"
   }
 
   runners_off_peak_timezone   = "Australia/Sydney"
   runners_off_peak_idle_count = 0
   runners_off_peak_idle_time  = 60
+  runners_off_peak_periods    = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
 
-  runners_privileged         = "true"
-  runners_additional_volumes = ["/certs/client"]
-
-  runners_volumes_tmpfs = [
-    { "/var/opt/cache" = "rw,noexec" },
-  ]
-
-  runners_services_volumes_tmpfs = [
-    { "/var/lib/mysql" = "rw,noexec" },
-  ]
-
-  # working 9 to 5 :)
-  runners_off_peak_periods = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
+  enable_gitlab_runner_ssh_access = var.enable_gitlab_runner_ssh_access
 }
 ```
 

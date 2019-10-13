@@ -1,6 +1,3 @@
-# To debug these tests
-#   export TF_VAR_enable_gitlab_runner_ssh_access=true
-
 variable "enable_gitlab_runner_ssh_access" {}
 variable "registration_token" {}
 
