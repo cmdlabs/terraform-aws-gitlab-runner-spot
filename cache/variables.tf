@@ -3,12 +3,6 @@ variable "cache_bucket_name" {
   description = "The bucket name of the S3 cache bucket"
 }
 
-variable "cache_bucket_versioning" {
-  description = "Boolean used to enable versioning on the cache bucket, false by default."
-  type        = string
-  default     = "false"
-}
-
 variable "cache_expiration_days" {
   description = "Number of days before cache objects expires."
   type        = number

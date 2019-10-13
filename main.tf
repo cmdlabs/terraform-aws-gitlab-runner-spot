@@ -191,7 +191,6 @@ data "template_file" "runners" {
     runners_volumes_tmpfs             = chomp(join("", data.template_file.volumes_tmpfs.*.rendered))
     runners_services_volumes_tmpfs    = chomp(join("", data.template_file.services_volumes_tmpfs.*.rendered))
     bucket_name                       = local.bucket_name
-    shared_cache                      = var.cache_shared
   }
 }
 
@@ -286,7 +285,6 @@ module "cache" {
 
   create_cache_bucket     = var.cache_bucket["create"]
   cache_bucket_name       = var.cache_bucket_name
-  cache_bucket_versioning = var.cache_bucket_versioning
   cache_expiration_days   = var.cache_expiration_days
 }
 

@@ -23,7 +23,7 @@ check_interval = 0
     ${runners_services_volumes_tmpfs}
   [runners.cache]
     Type = "s3"
-    Shared = ${shared_cache}
+    Shared = false
     [runners.cache.s3]
       ServerAddress = "s3.amazonaws.com"
       BucketName = "${bucket_name}"

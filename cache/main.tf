@@ -10,10 +10,6 @@ resource "aws_s3_bucket" "build_cache" {
 
   force_destroy = true
 
-  versioning {
-    enabled = var.cache_bucket_versioning
-  }
-
   lifecycle_rule {
     id      = "clear"
     enabled = true
