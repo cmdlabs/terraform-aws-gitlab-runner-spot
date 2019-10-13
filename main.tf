@@ -1,17 +1,13 @@
 locals {
   instance_type                 = "t3.micro"
-
   docker_machine_instance_type  = "m5a.large"
   docker_machine_spot_price_bid = "0.06"
   docker_machine_version        = "0.16.2"
-
   gitlab_runner_version         = "12.3.0"
-
   runners_image                 = "docker:18.03.1-ce"
   runners_pull_policy           = "always"
   runners_privileged            = true
-
-  secure_parameter_store_runner_token_key = "gitlab-runner-runner-token"
+  runners_ssm_token_key         = "gitlab-runner-runner-token"
 }
 
 resource "aws_security_group" "runner" {
@@ -85,7 +81,7 @@ resource "aws_security_group_rule" "out_all" {
 
 # Parameter value is managed by the user-data script of the gitlab runner instance
 resource "aws_ssm_parameter" "runner_registration_token" {
-  name  = local.secure_parameter_store_runner_token_key
+  name  = local.runners_ssm_token_key
   type  = "SecureString"
   value = "null"
 
@@ -98,37 +94,37 @@ data "template_file" "runners" {
   template = file("${path.module}/template/runner-config.tpl")
 
   vars = {
-    runners_instance_profile       = aws_iam_instance_profile.docker_machine.name
-    runners_security_group_name    = aws_security_group.docker_machine.name
-    runners_ami                    = data.aws_ami.docker-machine.id
-    runners_environment_vars       = jsonencode(var.runners_environment_vars)
-    bucket_name                    = var.cache_bucket_name
-    runners_instance_type          = local.docker_machine_instance_type
-    runners_spot_price_bid         = local.docker_machine_spot_price_bid
-    runners_image                  = local.runners_image
-    runners_max_builds             = var.runners_max_builds
-    runners_privileged             = local.runners_privileged
-    runners_pull_policy            = local.runners_pull_policy
-    aws_region                     = var.aws_region
-    runners_aws_zone               = var.aws_zone
-    runners_concurrent             = var.runners_concurrent
-    gitlab_url                     = var.runners_gitlab_url
-    runners_idle_count             = var.runners_idle_count
-    runners_idle_time              = var.runners_idle_time
-    runners_limit                  = var.runners_limit
-    runners_monitoring             = var.runners_monitoring
-    runners_name                   = var.runners_name
-    runners_off_peak_idle_count    = var.runners_off_peak_idle_count
-    runners_off_peak_idle_time     = var.runners_off_peak_idle_time
-    runners_off_peak_periods       = var.runners_off_peak_periods
-    runners_off_peak_timezone      = var.runners_off_peak_timezone
-    runners_output_limit           = var.runners_output_limit
-    runners_request_concurrency    = var.runners_request_concurrency
-    runners_root_size              = var.runners_root_size
-    runners_shm_size               = var.runners_shm_size
-    runners_token                  = var.runners_token
-    runners_subnet_id              = var.subnet_id_runners
-    runners_vpc_id                 = var.vpc_id
+    aws_region                  = var.aws_region
+    bucket_name                 = var.cache_bucket_name
+    gitlab_url                  = var.runners_gitlab_url
+    runners_ami                 = data.aws_ami.docker-machine.id
+    runners_aws_zone            = var.aws_zone
+    runners_concurrent          = var.runners_concurrent
+    runners_environment_vars    = jsonencode(var.runners_environment_vars)
+    runners_idle_count          = var.runners_idle_count
+    runners_idle_time           = var.runners_idle_time
+    runners_image               = local.runners_image
+    runners_instance_profile    = aws_iam_instance_profile.docker_machine.name
+    runners_instance_type       = local.docker_machine_instance_type
+    runners_limit               = var.runners_limit
+    runners_max_builds          = var.runners_max_builds
+    runners_monitoring          = var.runners_monitoring
+    runners_name                = var.runners_name
+    runners_off_peak_idle_count = var.runners_off_peak_idle_count
+    runners_off_peak_idle_time  = var.runners_off_peak_idle_time
+    runners_off_peak_periods    = var.runners_off_peak_periods
+    runners_off_peak_timezone   = var.runners_off_peak_timezone
+    runners_output_limit        = var.runners_output_limit
+    runners_privileged          = local.runners_privileged
+    runners_pull_policy         = local.runners_pull_policy
+    runners_request_concurrency = var.runners_request_concurrency
+    runners_root_size           = var.runners_root_size
+    runners_security_group_name = aws_security_group.docker_machine.name
+    runners_shm_size            = var.runners_shm_size
+    runners_spot_price_bid      = local.docker_machine_spot_price_bid
+    runners_subnet_id           = var.subnet_id_runners
+    runners_token               = var.runners_token
+    runners_vpc_id              = var.vpc_id
   }
 }
 
@@ -136,20 +132,20 @@ data "template_file" "user_data" {
   template = file("${path.module}/template/user-data.sh.tpl")
 
   vars = {
-    runners_config                          = data.template_file.runners.rendered
-    docker_machine_version                  = local.docker_machine_version
-    gitlab_runner_version                   = local.gitlab_runner_version
-    secure_parameter_store_runner_token_key = local.secure_parameter_store_runner_token_key
-    secure_parameter_store_region           = var.aws_region
-    user_data_trace_log                     = var.enable_runner_user_data_trace_log
-    gitlab_runner_access_level              = var.gitlab_runner_registration_config["access_level"]
-    giltab_runner_description               = var.gitlab_runner_registration_config["description"]
-    gitlab_runner_locked_to_project         = var.gitlab_runner_registration_config["locked_to_project"]
-    gitlab_runner_maximum_timeout           = var.gitlab_runner_registration_config["maximum_timeout"]
-    gitlab_runner_registration_token        = var.gitlab_runner_registration_config["registration_token"]
-    gitlab_runner_run_untagged              = var.gitlab_runner_registration_config["run_untagged"]
-    runners_gitlab_url                      = var.runners_gitlab_url
-    runners_token                           = var.runners_token
+    docker_machine_version           = local.docker_machine_version
+    giltab_runner_description        = var.gitlab_runner_registration_config["description"]
+    gitlab_runner_access_level       = var.gitlab_runner_registration_config["access_level"]
+    gitlab_runner_locked_to_project  = var.gitlab_runner_registration_config["locked_to_project"]
+    gitlab_runner_maximum_timeout    = var.gitlab_runner_registration_config["maximum_timeout"]
+    gitlab_runner_registration_token = var.gitlab_runner_registration_config["registration_token"]
+    gitlab_runner_run_untagged       = var.gitlab_runner_registration_config["run_untagged"]
+    gitlab_runner_version            = local.gitlab_runner_version
+    runners_config                   = data.template_file.runners.rendered
+    runners_gitlab_url               = var.runners_gitlab_url
+    runners_ssm_token_key            = local.runners_ssm_token_key
+    runners_token                    = var.runners_token
+    ssm_region                       = var.aws_region
+    user_data_trace_log              = var.enable_runner_user_data_trace_log
   }
 }
 
