@@ -11,7 +11,6 @@ locals {
   runners_pull_policy           = "always"
   runners_privileged            = true
 
-  // Define key for runner token for SSM
   secure_parameter_store_runner_token_key = "gitlab-runner-runner-token"
 }
 
