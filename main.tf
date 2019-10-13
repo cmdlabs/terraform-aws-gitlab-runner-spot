@@ -11,9 +11,6 @@ locals {
   runners_pull_policy           = "always"
   runners_privileged            = true
 
-  // Ensure max builds is optional
-  runners_max_builds_string = var.runners_max_builds == 0 ? "" : format("MaxBuilds = %d", var.runners_max_builds)
-
   // Define key for runner token for SSM
   secure_parameter_store_runner_token_key = "gitlab-runner-runner-token"
 }
@@ -130,7 +127,7 @@ data "template_file" "runners" {
     runners_instance_type          = local.docker_machine_instance_type
     runners_spot_price_bid         = local.docker_machine_spot_price_bid
     runners_image                  = local.runners_image
-    runners_max_builds             = local.runners_max_builds_string
+    runners_max_builds             = var.runners_max_builds
     runners_privileged             = local.runners_privileged
     runners_pull_policy            = local.runners_pull_policy
     aws_region                     = var.aws_region
