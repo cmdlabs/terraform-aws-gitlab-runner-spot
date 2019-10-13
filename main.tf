@@ -99,7 +99,7 @@ resource "aws_ssm_parameter" "runner_registration_token" {
 }
 
 data "template_file" "user_data" {
-  template = file("${path.module}/template/user-data.tpl")
+  template = file("${path.module}/template/user-data.sh.tpl")
 
   vars = {
     logging             = data.template_file.logging.rendered
@@ -109,11 +109,11 @@ data "template_file" "user_data" {
 }
 
 data "template_file" "logging" {
-  template = file("${path.module}/template/logging.tpl")
+  template = file("${path.module}/template/logging.sh.tpl")
 }
 
 data "template_file" "gitlab_runner" {
-  template = file("${path.module}/template/gitlab-runner.tpl")
+  template = file("${path.module}/template/gitlab-runner.sh.tpl")
 
   vars = {
     gitlab_runner_version                   = local.gitlab_runner_version
