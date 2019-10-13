@@ -95,32 +95,12 @@ resource "aws_ssm_parameter" "runner_registration_token" {
   }
 }
 
-data "template_file" "services_volumes_tmpfs" {
-  template = file("${path.module}/template/volumes.tpl")
-  count    = length(var.runners_services_volumes_tmpfs)
-  vars = {
-    volume  = element(keys(var.runners_services_volumes_tmpfs[count.index]), 0)
-    options = element(values(var.runners_services_volumes_tmpfs[count.index]), 0)
-  }
-}
-
-data "template_file" "volumes_tmpfs" {
-  template = file("${path.module}/template/volumes.tpl")
-  count    = length(var.runners_volumes_tmpfs)
-  vars = {
-    volume  = element(keys(var.runners_volumes_tmpfs[count.index]), 0)
-    options = element(values(var.runners_volumes_tmpfs[count.index]), 0)
-  }
-}
-
 data "template_file" "runners" {
   template = file("${path.module}/template/runner-config.tpl")
 
   vars = {
     runners_instance_profile       = aws_iam_instance_profile.docker_machine.name
     runners_security_group_name    = aws_security_group.docker_machine.name
-    runners_services_volumes_tmpfs = chomp(join("", data.template_file.services_volumes_tmpfs.*.rendered))
-    runners_volumes_tmpfs          = chomp(join("", data.template_file.volumes_tmpfs.*.rendered))
     runners_ami                    = data.aws_ami.docker-machine.id
     runners_environment_vars       = jsonencode(var.runners_environment_vars)
     bucket_name                    = local.bucket_name

@@ -506,11 +506,9 @@
                   "runners_pull_policy": "always",
                   "runners_request_concurrency": "1",
                   "runners_root_size": "16",
-                  "runners_services_volumes_tmpfs": "\"/var/lib/mysql\" = \"rw,noexec\"",
                   "runners_shm_size": "0",
                   "runners_spot_price_bid": "0.06",
-                  "runners_token": "__REPLACED_BY_USER_DATA__",
-                  "runners_volumes_tmpfs": "\"/var/opt/cache\" = \"rw,noexec\""
+                  "runners_token": "__REPLACED_BY_USER_DATA__"
                 }
               }
             },
@@ -1705,11 +1703,9 @@
             "runners_pull_policy": "always",
             "runners_request_concurrency": "1",
             "runners_root_size": "16",
-            "runners_services_volumes_tmpfs": "\"/var/lib/mysql\" = \"rw,noexec\"",
             "runners_shm_size": "0",
             "runners_spot_price_bid": "0.06",
-            "runners_token": "__REPLACED_BY_USER_DATA__",
-            "runners_volumes_tmpfs": "\"/var/opt/cache\" = \"rw,noexec\""
+            "runners_token": "__REPLACED_BY_USER_DATA__"
           }
         },
         "after_unknown": {
@@ -2397,7 +2393,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 08:50:57.883644 +0000 UTC",
+              "id": "2019-10-13 08:56:02.955713 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2650,25 +2646,6 @@
                 }
               },
               {
-                "address": "data.template_file.services_volumes_tmpfs",
-                "mode": "data",
-                "type": "template_file",
-                "name": "services_volumes_tmpfs",
-                "index": 0,
-                "provider_name": "template",
-                "schema_version": 0,
-                "values": {
-                  "filename": null,
-                  "id": "8a19b8aeab067addf9174238e22adbc434c000f8a89c915482a57f9a25187cf4",
-                  "rendered": "\"/var/lib/mysql\" = \"rw,noexec\"",
-                  "template": "\"${volume}\" = \"${options}\"",
-                  "vars": {
-                    "options": "rw,noexec",
-                    "volume": "/var/lib/mysql"
-                  }
-                }
-              },
-              {
                 "address": "data.template_file.ssm_policy",
                 "mode": "data",
                 "type": "template_file",
@@ -2681,25 +2658,6 @@
                   "rendered": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:PutParameter\"\n            ],\n            \"Resource\": \"*\"\n        },\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:GetParameters\"\n            ],\n            \"Resource\": \"arn:aws:ssm:*\"\n        }\n    ]\n}",
                   "template": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:PutParameter\"\n            ],\n            \"Resource\": \"*\"\n        },\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:GetParameters\"\n            ],\n            \"Resource\": \"arn:aws:ssm:*\"\n        }\n    ]\n}",
                   "vars": null
-                }
-              },
-              {
-                "address": "data.template_file.volumes_tmpfs",
-                "mode": "data",
-                "type": "template_file",
-                "name": "volumes_tmpfs",
-                "index": 0,
-                "provider_name": "template",
-                "schema_version": 0,
-                "values": {
-                  "filename": null,
-                  "id": "bfa88e0b1b63346357137e048c1cdccf098142ae6307bb43f2f11fce8d2ac0dd",
-                  "rendered": "\"/var/opt/cache\" = \"rw,noexec\"",
-                  "template": "\"${volume}\" = \"${options}\"",
-                  "vars": {
-                    "options": "rw,noexec",
-                    "volume": "/var/opt/cache"
-                  }
                 }
               }
             ],
@@ -2718,7 +2676,7 @@
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 08:50:58.774767 +0000 UTC",
+                      "id": "2019-10-13 08:56:03.859064 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -2825,20 +2783,6 @@
             },
             "runners_off_peak_timezone": {
               "constant_value": "Australia/Sydney"
-            },
-            "runners_services_volumes_tmpfs": {
-              "constant_value": [
-                {
-                  "/var/lib/mysql": "rw,noexec"
-                }
-              ]
-            },
-            "runners_volumes_tmpfs": {
-              "constant_value": [
-                {
-                  "/var/opt/cache": "rw,noexec"
-                }
-              ]
             },
             "subnet_id_runners": {
               "references": [
@@ -3796,8 +3740,6 @@
                     "references": [
                       "aws_iam_instance_profile.docker_machine",
                       "aws_security_group.docker_machine",
-                      "data.template_file.services_volumes_tmpfs",
-                      "data.template_file.volumes_tmpfs",
                       "data.aws_ami.docker-machine",
                       "var.runners_environment_vars",
                       "local.bucket_name",
@@ -3848,34 +3790,6 @@
                 "schema_version": 0
               },
               {
-                "address": "data.template_file.services_volumes_tmpfs",
-                "mode": "data",
-                "type": "template_file",
-                "name": "services_volumes_tmpfs",
-                "provider_config_key": "runner:template",
-                "expressions": {
-                  "template": {
-                    "references": [
-                      "path.module"
-                    ]
-                  },
-                  "vars": {
-                    "references": [
-                      "var.runners_services_volumes_tmpfs",
-                      "count.index",
-                      "var.runners_services_volumes_tmpfs",
-                      "count.index"
-                    ]
-                  }
-                },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.runners_services_volumes_tmpfs"
-                  ]
-                }
-              },
-              {
                 "address": "data.template_file.ssm_policy",
                 "mode": "data",
                 "type": "template_file",
@@ -3922,34 +3836,6 @@
                   }
                 },
                 "schema_version": 0
-              },
-              {
-                "address": "data.template_file.volumes_tmpfs",
-                "mode": "data",
-                "type": "template_file",
-                "name": "volumes_tmpfs",
-                "provider_config_key": "runner:template",
-                "expressions": {
-                  "template": {
-                    "references": [
-                      "path.module"
-                    ]
-                  },
-                  "vars": {
-                    "references": [
-                      "var.runners_volumes_tmpfs",
-                      "count.index",
-                      "var.runners_volumes_tmpfs",
-                      "count.index"
-                    ]
-                  }
-                },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.runners_volumes_tmpfs"
-                  ]
-                }
               }
             ],
             "module_calls": {
@@ -4282,10 +4168,6 @@
                 "default": 16,
                 "description": "Runner instance root size in GB"
               },
-              "runners_services_volumes_tmpfs": {
-                "default": [],
-                "description": "Mount temporary file systems to service containers. Must consist of pairs of strings e.g. \"/var/lib/mysql\" = \"rw,noexec\", see example"
-              },
               "runners_shm_size": {
                 "default": 0,
                 "description": "shm_size for the runners, will be used in the runner config.toml"
@@ -4293,10 +4175,6 @@
               "runners_token": {
                 "default": "__REPLACED_BY_USER_DATA__",
                 "description": "Token for the runner, will be used in the runner config.toml"
-              },
-              "runners_volumes_tmpfs": {
-                "default": [],
-                "description": "Mount temporary file systems to the main containers. Must consist of pairs of strings e.g. \"/var/lib/mysql\" = \"rw,noexec\", see example"
               },
               "schedule_config": {
                 "default": {
