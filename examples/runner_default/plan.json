@@ -164,11 +164,10 @@
               }
             },
             {
-              "address": "module.runner.aws_iam_policy.ssm[0]",
+              "address": "module.runner.aws_iam_policy.ssm",
               "mode": "managed",
               "type": "aws_iam_policy",
               "name": "ssm",
-              "index": 0,
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
@@ -288,11 +287,10 @@
               }
             },
             {
-              "address": "module.runner.aws_iam_role_policy_attachment.ssm[0]",
+              "address": "module.runner.aws_iam_role_policy_attachment.ssm",
               "mode": "managed",
               "type": "aws_iam_role_policy_attachment",
               "name": "ssm",
-              "index": 0,
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
@@ -1150,12 +1148,11 @@
       }
     },
     {
-      "address": "module.runner.aws_iam_policy.ssm[0]",
+      "address": "module.runner.aws_iam_policy.ssm",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_iam_policy",
       "name": "ssm",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -1366,12 +1363,11 @@
       }
     },
     {
-      "address": "module.runner.aws_iam_role_policy_attachment.ssm[0]",
+      "address": "module.runner.aws_iam_role_policy_attachment.ssm",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_iam_role_policy_attachment",
       "name": "ssm",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -2442,7 +2438,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 06:43:09.766135 +0000 UTC",
+              "id": "2019-10-13 06:53:35.900611 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2733,7 +2729,6 @@
                 "mode": "data",
                 "type": "template_file",
                 "name": "ssm_policy",
-                "index": 0,
                 "provider_name": "template",
                 "schema_version": 0,
                 "values": {
@@ -2779,7 +2774,7 @@
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 06:43:10.971286 +0000 UTC",
+                      "id": "2019-10-13 06:53:36.966554 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -3247,16 +3242,11 @@
                   },
                   "policy": {
                     "references": [
-                      "data.template_file.ssm_policy[0]"
+                      "data.template_file.ssm_policy"
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_manage_gitlab_token"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_iam_role.docker_machine",
@@ -3424,7 +3414,7 @@
                 "expressions": {
                   "policy_arn": {
                     "references": [
-                      "aws_iam_policy.ssm[0]"
+                      "aws_iam_policy.ssm"
                     ]
                   },
                   "role": {
@@ -3433,12 +3423,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_manage_gitlab_token"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_launch_configuration.gitlab_runner_instance",
@@ -4006,12 +3991,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_manage_gitlab_token"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "data.template_file.user_data",
@@ -4305,10 +4285,6 @@
               "enable_gitlab_runner_ssh_access": {
                 "default": false,
                 "description": "Enables SSH Access to the gitlab runner instance"
-              },
-              "enable_manage_gitlab_token": {
-                "default": true,
-                "description": "Boolean to enable the management of the GitLab token in SSM. If `true` the token will be stored in SSM, which means the SSM property is a terraform managed resource. If `false` the Gitlab token will be stored in the SSM by the user-data script during creation of the the instance. However the SSM parameter is not managed by terraform and will remain in SSM after a `terraform destroy`"
               },
               "enable_runner_user_data_trace_log": {
                 "default": false,

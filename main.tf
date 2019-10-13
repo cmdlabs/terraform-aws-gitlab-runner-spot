@@ -402,29 +402,27 @@ resource "aws_iam_role_policy_attachment" "service_linked_role" {
 ### AWS Systems Manager access to store runner token once registered
 ################################################################################
 data "template_file" "ssm_policy" {
-  count = var.enable_manage_gitlab_token ? 1 : 0
-
   template = file(
     "${path.module}/policies/instance-secure-parameter-role-policy.json",
   )
 }
 
 resource "aws_iam_policy" "ssm" {
-  count = var.enable_manage_gitlab_token ? 1 : 0
-
   name        = "gitlab-runner-ssm"
   path        = "/"
   description = "Policy for runner token param access via SSM"
 
-  policy = data.template_file.ssm_policy[0].rendered
+  policy = data.template_file.ssm_policy.rendered
 }
 
 resource "aws_iam_role_policy_attachment" "ssm" {
-  count = var.enable_manage_gitlab_token ? 1 : 0
-
   role       = aws_iam_role.instance.name
-  policy_arn = aws_iam_policy.ssm[0].arn
+  policy_arn = aws_iam_policy.ssm.arn
 }
+
+################################################################################
+### CloudWatch logging
+################################################################################
 data "template_file" "instance_profile" {
   template = file("${path.module}/policies/instance-logging-policy.json")
 }
