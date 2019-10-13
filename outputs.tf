@@ -5,12 +5,12 @@ output "runner_as_group_name" {
 
 output "runner_cache_bucket_arn" {
   description = "ARN of the S3 for the build cache."
-  value       = module.cache.arn
+  value       = aws_s3_bucket.build_cache.arn
 }
 
 output "runner_cache_bucket_name" {
   description = "Name of the S3 for the build cache."
-  value       = module.cache.bucket
+  value       = aws_s3_bucket.build_cache.bucket
 }
 
 output "runner_agent_role_arn" {
