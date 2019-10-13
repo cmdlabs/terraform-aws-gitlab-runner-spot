@@ -134,11 +134,10 @@
               }
             },
             {
-              "address": "module.runner.aws_iam_policy.instance_session_manager_policy[0]",
+              "address": "module.runner.aws_iam_policy.instance_session_manager_policy",
               "mode": "managed",
               "type": "aws_iam_policy",
               "name": "instance_session_manager_policy",
-              "index": 0,
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
@@ -255,11 +254,10 @@
               }
             },
             {
-              "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_aws_managed[0]",
+              "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_aws_managed",
               "mode": "managed",
               "type": "aws_iam_role_policy_attachment",
               "name": "instance_session_manager_aws_managed",
-              "index": 0,
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
@@ -268,11 +266,10 @@
               }
             },
             {
-              "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_policy[0]",
+              "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_policy",
               "mode": "managed",
               "type": "aws_iam_role_policy_attachment",
               "name": "instance_session_manager_policy",
-              "index": 0,
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
@@ -1103,12 +1100,11 @@
       }
     },
     {
-      "address": "module.runner.aws_iam_policy.instance_session_manager_policy[0]",
+      "address": "module.runner.aws_iam_policy.instance_session_manager_policy",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_iam_policy",
       "name": "instance_session_manager_policy",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -1307,12 +1303,11 @@
       }
     },
     {
-      "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_aws_managed[0]",
+      "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_aws_managed",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_iam_role_policy_attachment",
       "name": "instance_session_manager_aws_managed",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -1329,12 +1324,11 @@
       }
     },
     {
-      "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_policy[0]",
+      "address": "module.runner.aws_iam_role_policy_attachment.instance_session_manager_policy",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_iam_role_policy_attachment",
       "name": "instance_session_manager_policy",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -2448,7 +2442,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 06:31:06.996802 +0000 UTC",
+              "id": "2019-10-13 06:43:09.766135 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2464,41 +2458,6 @@
           }
         ],
         "child_modules": [
-          {
-            "resources": [
-              {
-                "address": "data.aws_vpc_endpoint_service.s3",
-                "mode": "data",
-                "type": "aws_vpc_endpoint_service",
-                "name": "s3",
-                "index": 0,
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "acceptance_required": false,
-                  "availability_zones": [
-                    "ap-southeast-2a",
-                    "ap-southeast-2b",
-                    "ap-southeast-2c"
-                  ],
-                  "base_endpoint_dns_names": [
-                    "s3.ap-southeast-2.amazonaws.com"
-                  ],
-                  "id": "1802082413",
-                  "manages_vpc_endpoints": false,
-                  "owner": "amazon",
-                  "private_dns_name": "",
-                  "service": "s3",
-                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
-                  "service_name": "com.amazonaws.ap-southeast-2.s3",
-                  "service_type": "Gateway",
-                  "tags": {},
-                  "vpc_endpoint_policy_supported": true
-                }
-              }
-            ],
-            "address": "module.vpc"
-          },
           {
             "resources": [
               {
@@ -2710,7 +2669,6 @@
                 "mode": "data",
                 "type": "template_file",
                 "name": "instance_session_manager_policy",
-                "index": 0,
                 "provider_name": "template",
                 "schema_version": 0,
                 "values": {
@@ -2821,7 +2779,7 @@
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 06:31:09.1802 +0000 UTC",
+                      "id": "2019-10-13 06:43:10.971286 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -2829,6 +2787,41 @@
                 "address": "module.runner.module.cache"
               }
             ]
+          },
+          {
+            "resources": [
+              {
+                "address": "data.aws_vpc_endpoint_service.s3",
+                "mode": "data",
+                "type": "aws_vpc_endpoint_service",
+                "name": "s3",
+                "index": 0,
+                "provider_name": "aws",
+                "schema_version": 0,
+                "values": {
+                  "acceptance_required": false,
+                  "availability_zones": [
+                    "ap-southeast-2a",
+                    "ap-southeast-2b",
+                    "ap-southeast-2c"
+                  ],
+                  "base_endpoint_dns_names": [
+                    "s3.ap-southeast-2.amazonaws.com"
+                  ],
+                  "id": "1802082413",
+                  "manages_vpc_endpoints": false,
+                  "owner": "amazon",
+                  "private_dns_name": "",
+                  "service": "s3",
+                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
+                  "service_name": "com.amazonaws.ap-southeast-2.s3",
+                  "service_type": "Gateway",
+                  "tags": {},
+                  "vpc_endpoint_policy_supported": true
+                }
+              }
+            ],
+            "address": "module.vpc"
           }
         ]
       }
@@ -2862,9 +2855,6 @@
               "references": [
                 "var.bucket_name"
               ]
-            },
-            "enable_runner_ssm_access": {
-              "constant_value": true
             },
             "gitlab_runner_registration_config": {
               "constant_value": {
@@ -3209,16 +3199,11 @@
                   },
                   "policy": {
                     "references": [
-                      "data.template_file.instance_session_manager_policy[0]"
+                      "data.template_file.instance_session_manager_policy"
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_runner_ssm_access"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_iam_policy.service_linked_role",
@@ -3388,12 +3373,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_runner_ssm_access"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_iam_role_policy_attachment.instance_session_manager_policy",
@@ -3404,7 +3384,7 @@
                 "expressions": {
                   "policy_arn": {
                     "references": [
-                      "aws_iam_policy.instance_session_manager_policy[0]"
+                      "aws_iam_policy.instance_session_manager_policy"
                     ]
                   },
                   "role": {
@@ -3413,12 +3393,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_runner_ssm_access"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_iam_role_policy_attachment.service_linked_role",
@@ -3906,12 +3881,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.enable_runner_ssm_access"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "data.template_file.logging",
@@ -4339,10 +4309,6 @@
               "enable_manage_gitlab_token": {
                 "default": true,
                 "description": "Boolean to enable the management of the GitLab token in SSM. If `true` the token will be stored in SSM, which means the SSM property is a terraform managed resource. If `false` the Gitlab token will be stored in the SSM by the user-data script during creation of the the instance. However the SSM parameter is not managed by terraform and will remain in SSM after a `terraform destroy`"
-              },
-              "enable_runner_ssm_access": {
-                "default": false,
-                "description": "Add IAM policies to the runner agent instance to connect via the Session Manager"
               },
               "enable_runner_user_data_trace_log": {
                 "default": false,

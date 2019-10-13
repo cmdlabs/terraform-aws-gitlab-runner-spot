@@ -37,7 +37,6 @@ module "runner" {
 
   runners_name             = "test-runner"
   runners_gitlab_url       = "https://gitlab.com"
-  enable_runner_ssm_access = true
 
   gitlab_runner_registration_config = {
     registration_token = "GBpeL612xfp3DtEjzZsx"

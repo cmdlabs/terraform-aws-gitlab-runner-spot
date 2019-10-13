@@ -225,12 +225,6 @@ variable "schedule_config" {
   }
 }
 
-variable "enable_runner_ssm_access" {
-  description = "Add IAM policies to the runner agent instance to connect via the Session Manager"
-  type        = bool
-  default     = false
-}
-
 variable "runners_volumes_tmpfs" {
   description = "Mount temporary file systems to the main containers. Must consist of pairs of strings e.g. \"/var/lib/mysql\" = \"rw,noexec\", see example"
   type        = "list"

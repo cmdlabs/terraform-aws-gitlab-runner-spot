@@ -329,37 +329,28 @@ resource "aws_iam_role_policy_attachment" "instance_docker_machine_policy" {
 ################################################################################
 
 data "template_file" "instance_session_manager_policy" {
-  count = var.enable_runner_ssm_access ? 1 : 0
-
   template = file(
     "${path.module}/policies/instance-session-manager-policy.json",
   )
 }
 
 resource "aws_iam_policy" "instance_session_manager_policy" {
-  count = var.enable_runner_ssm_access ? 1 : 0
-
   name        = "gitlab-runner-session-manager"
   path        = "/"
   description = "Policy session manager."
 
-  policy = data.template_file.instance_session_manager_policy[0].rendered
+  policy = data.template_file.instance_session_manager_policy.rendered
 }
 
 resource "aws_iam_role_policy_attachment" "instance_session_manager_policy" {
-  count = var.enable_runner_ssm_access ? 1 : 0
-
   role       = aws_iam_role.instance.name
-  policy_arn = aws_iam_policy.instance_session_manager_policy[0].arn
+  policy_arn = aws_iam_policy.instance_session_manager_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "instance_session_manager_aws_managed" {
-  count = var.enable_runner_ssm_access ? 1 : 0
-
   role       = aws_iam_role.instance.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
-
 
 ################################################################################
 ### Policy for the docker machine instance to access cache
