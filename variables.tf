@@ -40,13 +40,6 @@ variable "runners_name" {
   type        = string
 }
 
-# DELETE.
-variable "runners_token" {
-  description = "Token for the runner, used in config.toml"
-  type        = string
-  default     = "__REPLACED_BY_USER_DATA__"
-}
-
 variable "runners_limit" {
   description = "Limit for the runners, used in config.toml"
   type        = number

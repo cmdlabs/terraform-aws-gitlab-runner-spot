@@ -123,7 +123,6 @@ data "template_file" "runners" {
     runners_shm_size            = var.runners_shm_size
     runners_spot_price_bid      = local.docker_machine_spot_price_bid
     runners_subnet_id           = var.subnet_id_runners
-    runners_token               = var.runners_token
     runners_vpc_id              = var.vpc_id
   }
 }
@@ -143,7 +142,6 @@ data "template_file" "user_data" {
     runners_config                   = data.template_file.runners.rendered
     runners_gitlab_url               = var.runners_gitlab_url
     runners_ssm_token_key            = local.runners_ssm_token_key
-    runners_token                    = var.runners_token
     ssm_region                       = var.aws_region
     user_data_trace_log              = var.enable_runner_user_data_trace_log
   }

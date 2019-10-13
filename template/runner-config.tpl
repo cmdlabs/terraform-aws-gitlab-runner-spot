@@ -4,7 +4,7 @@ check_interval = 0
 [[runners]]
   name = "${runners_name}"
   url = "${gitlab_url}"
-  token = "${runners_token}"
+  token = "__TO_BE_REPLACED_BY_USER_DATA__"
   executor = "docker+machine"
   environment = ${runners_environment_vars}
   request_concurrency = ${runners_request_concurrency}

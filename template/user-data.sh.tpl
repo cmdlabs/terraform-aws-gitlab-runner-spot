@@ -83,7 +83,7 @@ if ! [ -x "$(command -v jq)" ]; then
 fi
 
 token=$(aws ssm get-parameters --names "${runners_ssm_token_key}" --with-decryption --region "${ssm_region}" | jq -r ".Parameters | .[0] | .Value")
-if [[ `echo ${runners_token}` == "__REPLACED_BY_USER_DATA__" && `echo $token` == "null" ]]
+if [[ `echo $token` == "null" ]]
 then
   token=$(curl --request POST -L "${runners_gitlab_url}/api/v4/runners" \
     --form "token=${gitlab_runner_registration_token}" \
@@ -96,7 +96,7 @@ then
   aws ssm put-parameter --overwrite --type SecureString --name "${runners_ssm_token_key}" --value $token --region "${ssm_region}"
 fi
 
-sed -i.bak s/__REPLACED_BY_USER_DATA__/`echo $token`/g /etc/gitlab-runner/config.toml
+sed -i.bak s/__TO_BE_REPLACED_BY_USER_DATA__/`echo $token`/g /etc/gitlab-runner/config.toml
 
 service gitlab-runner restart
 chkconfig gitlab-runner on
