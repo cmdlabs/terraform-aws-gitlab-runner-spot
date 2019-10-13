@@ -171,18 +171,6 @@ variable "docker_machine_ssh_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "instance_role_json" {
-  description = "Default runner instance override policy, expected to be in JSON format"
-  type        = string
-  default     = ""
-}
-
-variable "docker_machine_role_json" {
-  description = "Docker machine runner instance override policy, expected to be in JSON format"
-  type        = string
-  default     = ""
-}
-
 variable "gitlab_runner_registration_config" {
   description = "Configuration used to register the runner. See the README for an example, or reference the examples in the examples directory of this repo"
   type        = map(string)

@@ -2448,7 +2448,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 05:43:25.479548 +0000 UTC",
+              "id": "2019-10-13 06:31:06.996802 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2821,7 +2821,7 @@
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 05:43:26.35474 +0000 UTC",
+                      "id": "2019-10-13 06:31:09.1802 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -3810,8 +3810,6 @@
                 "expressions": {
                   "template": {
                     "references": [
-                      "var.docker_machine_role_json",
-                      "var.docker_machine_role_json",
                       "path.module"
                     ]
                   }
@@ -3889,8 +3887,6 @@
                 "expressions": {
                   "template": {
                     "references": [
-                      "var.instance_role_json",
-                      "var.instance_role_json",
                       "path.module"
                     ]
                   }
@@ -4330,10 +4326,6 @@
                 ],
                 "description": "List of CIDR blocks to allow Docker Access to the docker machine runner instance"
               },
-              "docker_machine_role_json": {
-                "default": "",
-                "description": "Docker machine runner instance override policy, expected to be in JSON format"
-              },
               "docker_machine_ssh_cidr_blocks": {
                 "default": [
                   "0.0.0.0/0"
@@ -4372,10 +4364,6 @@
                   "0.0.0.0/0"
                 ],
                 "description": "List of CIDR blocks to allow SSH Access to the gitlab runner instance"
-              },
-              "instance_role_json": {
-                "default": "",
-                "description": "Default runner instance override policy, expected to be in JSON format"
               },
               "key_name": {
                 "default": "default",
