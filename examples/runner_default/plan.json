@@ -150,11 +150,10 @@
               }
             },
             {
-              "address": "module.runner.aws_iam_policy.service_linked_role[0]",
+              "address": "module.runner.aws_iam_policy.service_linked_role",
               "mode": "managed",
               "type": "aws_iam_policy",
               "name": "service_linked_role",
-              "index": 0,
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
@@ -281,11 +280,10 @@
               }
             },
             {
-              "address": "module.runner.aws_iam_role_policy_attachment.service_linked_role[0]",
+              "address": "module.runner.aws_iam_role_policy_attachment.service_linked_role",
               "mode": "managed",
               "type": "aws_iam_role_policy_attachment",
               "name": "service_linked_role",
-              "index": 0,
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
@@ -1131,12 +1129,11 @@
       }
     },
     {
-      "address": "module.runner.aws_iam_policy.service_linked_role[0]",
+      "address": "module.runner.aws_iam_policy.service_linked_role",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_iam_policy",
       "name": "service_linked_role",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -1354,12 +1351,11 @@
       }
     },
     {
-      "address": "module.runner.aws_iam_role_policy_attachment.service_linked_role[0]",
+      "address": "module.runner.aws_iam_role_policy_attachment.service_linked_role",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_iam_role_policy_attachment",
       "name": "service_linked_role",
-      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -2452,7 +2448,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-13 05:03:58.053019 +0000 UTC",
+              "id": "2019-10-13 05:16:30.321553 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2710,7 +2706,6 @@
                 "mode": "data",
                 "type": "template_file",
                 "name": "service_linked_role",
-                "index": 0,
                 "provider_name": "template",
                 "schema_version": 0,
                 "values": {
@@ -2791,7 +2786,7 @@
                     "values": {
                       "account_id": "885164491973",
                       "arn": "arn:aws:iam::885164491973:user/alex",
-                      "id": "2019-10-13 05:03:58.929787 +0000 UTC",
+                      "id": "2019-10-13 05:16:31.329582 +0000 UTC",
                       "user_id": "AIDAIA2HJENE7W7DDPY5G"
                     }
                   }
@@ -3243,16 +3238,11 @@
                   },
                   "policy": {
                     "references": [
-                      "data.template_file.service_linked_role[0]"
+                      "data.template_file.service_linked_role"
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.allow_iam_service_linked_role_creation"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_iam_policy.ssm",
@@ -3439,7 +3429,7 @@
                 "expressions": {
                   "policy_arn": {
                     "references": [
-                      "aws_iam_policy.service_linked_role[0]"
+                      "aws_iam_policy.service_linked_role"
                     ]
                   },
                   "role": {
@@ -3448,12 +3438,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.allow_iam_service_linked_role_creation"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "aws_iam_role_policy_attachment.ssm",
@@ -3999,12 +3984,7 @@
                     ]
                   }
                 },
-                "schema_version": 0,
-                "count_expression": {
-                  "references": [
-                    "var.allow_iam_service_linked_role_creation"
-                  ]
-                }
+                "schema_version": 0
               },
               {
                 "address": "data.template_file.services_volumes_tmpfs",
@@ -4309,10 +4289,6 @@
               }
             },
             "variables": {
-              "allow_iam_service_linked_role_creation": {
-                "default": true,
-                "description": "Boolean used to control attaching the policy to a runner instance to create service linked roles"
-              },
               "aws_region": {
                 "description": "AWS region"
               },

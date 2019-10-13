@@ -392,31 +392,23 @@ resource "aws_iam_instance_profile" "docker_machine" {
 }
 
 ################################################################################
-### Service linked policy, optional
+### Service linked policy
 ################################################################################
 data "template_file" "service_linked_role" {
-  count = var.allow_iam_service_linked_role_creation ? 1 : 0
-
-  template = file(
-    "${path.module}/policies/service-linked-role-create-policy.json",
-  )
+  template = file("${path.module}/policies/service-linked-role-create-policy.json")
 }
 
 resource "aws_iam_policy" "service_linked_role" {
-  count = var.allow_iam_service_linked_role_creation ? 1 : 0
-
   name        = "gitlab-runner-service_linked_role"
   path        = "/"
   description = "Policy for creation of service linked roles."
 
-  policy = data.template_file.service_linked_role[0].rendered
+  policy = data.template_file.service_linked_role.rendered
 }
 
 resource "aws_iam_role_policy_attachment" "service_linked_role" {
-  count = var.allow_iam_service_linked_role_creation ? 1 : 0
-
   role       = aws_iam_role.instance.name
-  policy_arn = aws_iam_policy.service_linked_role[0].arn
+  policy_arn = aws_iam_policy.service_linked_role.arn
 }
 
 ################################################################################

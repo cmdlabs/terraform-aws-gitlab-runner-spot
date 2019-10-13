@@ -171,12 +171,6 @@ variable "docker_machine_ssh_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "allow_iam_service_linked_role_creation" {
-  description = "Boolean used to control attaching the policy to a runner instance to create service linked roles"
-  type        = bool
-  default     = true
-}
-
 variable "instance_role_json" {
   description = "Default runner instance override policy, expected to be in JSON format"
   type        = string
