@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+awslogs_conf='/etc/awslogs/awslogs.conf'
+awscli_conf='/etc/awslogs/awscli.conf'
+config_toml='/etc/gitlab-runner/config.toml'
+
 update_hosts_file() {
   echo "\
 127.0.0.1   localhost localhost.localdomain $(hostname)" \
@@ -11,15 +15,18 @@ update_system() {
 }
 
 install_deps() {
-  echo 'installing additional software for logging'
   yum -y install aws-cli awslogs jq
 }
 
 configure_cloudwatch() {
-  local instance_id=$(curl -s \
-    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)
+  local instance_id region
 
-  cat > /etc/awslogs/awslogs.conf <<EOF
+  read -r instance_id region <<< "$(
+    curl -s https://169.254.169.254/latest/dynamic/instance-identity/document \
+      | jq -r '[.instanceId, .region] | @tsv'
+  )"
+
+  cat > "$awslogs_conf" <<EOF
 [general]
 state_file = /var/lib/awslogs/agent-state
 
@@ -43,12 +50,9 @@ log_group_name = gitlab-runner-log-group
 initial_position = start_of_file
 EOF
 
-  local region=$(curl -s \
-    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
-
   sed -i '
     s/region = us-east-1/region = '"$region"'/
-  ' /etc/awslogs/awscli.conf
+  ' "$awscli_conf"
 
   service awslogs start
   chkconfig awslogs on
@@ -56,7 +60,7 @@ EOF
 
 generate_config_toml() {
   mkdir -p /etc/gitlab-runner
-  cat > /etc/gitlab-runner/config.toml <<EOF
+  cat > "$config_toml" <<EOF
 ${runners_config}
 EOF
 }
@@ -81,20 +85,22 @@ register_runner() {
     --with-decryption --region "${ssm_region}" | jq -r '.Parameters[].Value')
 
   if [ "$token" == "null" ] ; then
-    token=$(curl --request POST -L "${runners_gitlab_url}/api/v4/runners" \
-        --form "token=${gitlab_runner_registration_token}" \
-        --form "description=${giltab_runner_description}" \
-        --form "locked=${gitlab_runner_locked_to_project}" \
-        --form "run_untagged=${gitlab_runner_run_untagged}" \
-        --form "maximum_timeout=${gitlab_runner_maximum_timeout}" \
-        --form "access_level=${gitlab_runner_access_level}" \
-      | jq -r .token)
+    token=$(
+      curl -X POST -L "${runners_gitlab_url}/api/v4/runners" \
+        -F "token=${gitlab_runner_registration_token}" \
+        -F "description=${giltab_runner_description}" \
+        -F "locked=${gitlab_runner_locked_to_project}" \
+        -F "run_untagged=${gitlab_runner_run_untagged}" \
+        -F "maximum_timeout=${gitlab_runner_maximum_timeout}" \
+        -F "access_level=${gitlab_runner_access_level}" \
+      | jq -r .token
+    )
 
     aws ssm put-parameter --overwrite --type SecureString --name \
       "${runners_ssm_token_key}" --value "$token" --region "${ssm_region}"
   fi
 
-  sed -i 's/##TOKEN##/'"$token"'/' /etc/gitlab-runner/config.toml
+  sed -i 's/##TOKEN##/'"$token"'/' "$config_toml"
 }
 
 start_gitlab_runner() {
