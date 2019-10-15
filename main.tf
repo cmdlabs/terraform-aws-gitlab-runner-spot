@@ -100,7 +100,7 @@ data "template_file" "runners" {
     runners_ami                 = data.aws_ami.docker-machine.id
     runners_aws_zone            = var.aws_zone
     runners_concurrent          = var.runners_concurrent
-    runners_environment_vars    = jsonencode(var.runners_environment_vars)
+    runners_environment         = jsonencode(var.runners_environment)
     runners_idle_count          = var.runners_idle_count
     runners_idle_time           = var.runners_idle_time
     runners_image               = local.runners_image

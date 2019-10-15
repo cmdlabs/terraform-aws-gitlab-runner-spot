@@ -570,7 +570,7 @@
               "schema_version": 0,
               "values": {
                 "filename": null,
-                "template": "concurrent = ${runners_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment_vars}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_image}\"\n    privileged = ${runners_privileged}\n    disable_cache = false\n    shm_size = ${runners_shm_size}\n    pull_policy = \"${runners_pull_policy}\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_idle_count}\n    IdleTime = ${runners_idle_time}\n%{ if runners_max_builds != 0 ~}\n    MaxBuilds = ${runners_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${runners_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${runners_aws_zone}\",\n      \"amazonec2-vpc-id=${runners_vpc_id}\",\n      \"amazonec2-subnet-id=${runners_subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${runners_spot_price_bid}\",\n      \"amazonec2-security-group=${runners_security_group_name}\",\n      \"amazonec2-monitoring=${runners_monitoring}\",\n      \"amazonec2-iam-instance-profile=${runners_instance_profile},\n      \"amazonec2-root-size=${runners_root_size}\",\n      \"amazonec2-ami=${runners_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_off_peak_idle_time}\n%{ if runners_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_off_peak_periods}\n%{ endif ~}\n",
+                "template": "concurrent = ${runners_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_image}\"\n    privileged = ${runners_privileged}\n    disable_cache = false\n    shm_size = ${runners_shm_size}\n    pull_policy = \"${runners_pull_policy}\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_idle_count}\n    IdleTime = ${runners_idle_time}\n%{ if runners_max_builds != 0 ~}\n    MaxBuilds = ${runners_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${runners_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${runners_aws_zone}\",\n      \"amazonec2-vpc-id=${runners_vpc_id}\",\n      \"amazonec2-subnet-id=${runners_subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${runners_spot_price_bid}\",\n      \"amazonec2-security-group=${runners_security_group_name}\",\n      \"amazonec2-monitoring=${runners_monitoring}\",\n      \"amazonec2-iam-instance-profile=${runners_instance_profile},\n      \"amazonec2-root-size=${runners_root_size}\",\n      \"amazonec2-ami=${runners_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_off_peak_idle_time}\n%{ if runners_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_off_peak_periods}\n%{ endif ~}\n",
                 "vars": {
                   "aws_region": "ap-southeast-2",
                   "bucket_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
@@ -578,7 +578,7 @@
                   "runners_ami": "ami-0328aad0f6218c429",
                   "runners_aws_zone": "a",
                   "runners_concurrent": "10",
-                  "runners_environment_vars": "[]",
+                  "runners_environment": "[]",
                   "runners_idle_count": "0",
                   "runners_idle_time": "600",
                   "runners_image": "docker:18.03.1-ce",
@@ -1826,7 +1826,7 @@
         "before": null,
         "after": {
           "filename": null,
-          "template": "concurrent = ${runners_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment_vars}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_image}\"\n    privileged = ${runners_privileged}\n    disable_cache = false\n    shm_size = ${runners_shm_size}\n    pull_policy = \"${runners_pull_policy}\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_idle_count}\n    IdleTime = ${runners_idle_time}\n%{ if runners_max_builds != 0 ~}\n    MaxBuilds = ${runners_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${runners_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${runners_aws_zone}\",\n      \"amazonec2-vpc-id=${runners_vpc_id}\",\n      \"amazonec2-subnet-id=${runners_subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${runners_spot_price_bid}\",\n      \"amazonec2-security-group=${runners_security_group_name}\",\n      \"amazonec2-monitoring=${runners_monitoring}\",\n      \"amazonec2-iam-instance-profile=${runners_instance_profile},\n      \"amazonec2-root-size=${runners_root_size}\",\n      \"amazonec2-ami=${runners_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_off_peak_idle_time}\n%{ if runners_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_off_peak_periods}\n%{ endif ~}\n",
+          "template": "concurrent = ${runners_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_image}\"\n    privileged = ${runners_privileged}\n    disable_cache = false\n    shm_size = ${runners_shm_size}\n    pull_policy = \"${runners_pull_policy}\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_idle_count}\n    IdleTime = ${runners_idle_time}\n%{ if runners_max_builds != 0 ~}\n    MaxBuilds = ${runners_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${runners_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${runners_aws_zone}\",\n      \"amazonec2-vpc-id=${runners_vpc_id}\",\n      \"amazonec2-subnet-id=${runners_subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${runners_spot_price_bid}\",\n      \"amazonec2-security-group=${runners_security_group_name}\",\n      \"amazonec2-monitoring=${runners_monitoring}\",\n      \"amazonec2-iam-instance-profile=${runners_instance_profile},\n      \"amazonec2-root-size=${runners_root_size}\",\n      \"amazonec2-ami=${runners_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_off_peak_idle_time}\n%{ if runners_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_off_peak_periods}\n%{ endif ~}\n",
           "vars": {
             "aws_region": "ap-southeast-2",
             "bucket_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
@@ -1834,7 +1834,7 @@
             "runners_ami": "ami-0328aad0f6218c429",
             "runners_aws_zone": "a",
             "runners_concurrent": "10",
-            "runners_environment_vars": "[]",
+            "runners_environment": "[]",
             "runners_idle_count": "0",
             "runners_idle_time": "600",
             "runners_image": "docker:18.03.1-ce",
@@ -2382,7 +2382,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-15 08:05:35.274503 +0000 UTC",
+              "id": "2019-10-15 08:25:37.532165 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2554,7 +2554,7 @@
                 "values": {
                   "account_id": "885164491973",
                   "arn": "arn:aws:iam::885164491973:user/alex",
-                  "id": "2019-10-15 08:05:36.325398 +0000 UTC",
+                  "id": "2019-10-15 08:25:38.59501 +0000 UTC",
                   "user_id": "AIDAIA2HJENE7W7DDPY5G"
                 }
               },
@@ -3846,7 +3846,7 @@
                       "data.aws_ami.docker-machine",
                       "var.aws_zone",
                       "var.runners_concurrent",
-                      "var.runners_environment_vars",
+                      "var.runners_environment",
                       "var.runners_idle_count",
                       "var.runners_idle_time",
                       "local.runners_image",
@@ -3998,9 +3998,9 @@
                 "default": 10,
                 "description": "Concurrent value for the runners, used in config.toml"
               },
-              "runners_environment_vars": {
+              "runners_environment": {
                 "default": [],
-                "description": "Environment variables during build execution as a list of strings like VAR1=value1, used in config.toml"
+                "description": "Append or overwrite environment variables"
               },
               "runners_idle_count": {
                 "default": 0,

@@ -28,6 +28,12 @@ variable "runners_url" {
   type        = string
 }
 
+variable "runners_environment" {
+  description = "Append or overwrite environment variables"
+  type        = list(string)
+  default     = []
+}
+
 variable "aws_zone" {
   description = "AWS availability zone (typically 'a', 'b', or 'c'), used in config.toml"
   type        = string
@@ -110,12 +116,6 @@ variable "runners_root_size" {
   description = "Runner instance root size in GB"
   type        = number
   default     = 16
-}
-
-variable "runners_environment_vars" {
-  description = "Environment variables during build execution as a list of strings like VAR1=value1, used in config.toml"
-  type        = list(string)
-  default     = []
 }
 
 variable "runners_request_concurrency" {
