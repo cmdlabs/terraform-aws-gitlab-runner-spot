@@ -18,8 +18,13 @@ variable "subnet_ids_gitlab_runner" {
   type        = list(string)
 }
 
-variable "runners_gitlab_url" {
-  description = "URL of the GitLab instance to connect to"
+variable "runners_name" {
+  description = "The Runner's description, just informatory"
+  type        = string
+}
+
+variable "runners_url" {
+  description = "The GitLab URL for the instance to connect to"
   type        = string
 }
 
@@ -33,11 +38,6 @@ variable "key_name" {
   description = "The name of the EC2 key pair to use"
   type        = string
   default     = "default"
-}
-
-variable "runners_name" {
-  description = "Name of the runner, used in config.toml"
-  type        = string
 }
 
 variable "runners_limit" {

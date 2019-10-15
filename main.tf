@@ -96,7 +96,7 @@ data "template_file" "runners" {
   vars = {
     aws_region                  = var.aws_region
     bucket_name                 = var.cache_bucket_name
-    gitlab_url                  = var.runners_gitlab_url
+    gitlab_url                  = var.runners_url
     runners_ami                 = data.aws_ami.docker-machine.id
     runners_aws_zone            = var.aws_zone
     runners_concurrent          = var.runners_concurrent
@@ -140,8 +140,8 @@ data "template_file" "user_data" {
     gitlab_runner_run_untagged       = var.gitlab_runner_registration_config["run_untagged"]
     gitlab_runner_version            = local.gitlab_runner_version
     runners_config                   = data.template_file.runners.rendered
-    runners_gitlab_url               = var.runners_gitlab_url
     runners_ssm_token_key            = local.runners_ssm_token_key
+    runners_url                      = var.runners_url
     ssm_region                       = var.aws_region
     user_data_trace_log              = var.enable_runner_user_data_trace_log
   }

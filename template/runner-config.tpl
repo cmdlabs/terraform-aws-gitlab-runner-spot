@@ -3,7 +3,7 @@ check_interval = 0
 
 [[runners]]
   name = "${runners_name}"
-  url = "${gitlab_url}"
+  url = "${runners_url}"
   token = "##TOKEN##"
   executor = "docker+machine"
   environment = ${runners_environment_vars}

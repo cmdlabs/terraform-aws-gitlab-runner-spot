@@ -42,7 +42,7 @@ module "runner" {
   subnet_id_runners        = element(module.vpc.private_subnets, 0)
 
   runners_name             = "test-runner"
-  runners_gitlab_url       = "https://gitlab.com"
+  runners_url              = "https://gitlab.com"
 
   gitlab_runner_registration_config = {
     registration_token = var.registration_token
