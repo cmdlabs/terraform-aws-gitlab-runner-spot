@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
-
-[ "${enable_user_data_xtrace}" == "true" ] && set -x
-
 update_hosts_file() {
   echo "\
 127.0.0.1   localhost localhost.localdomain $(hostname)" \

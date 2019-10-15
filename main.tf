@@ -128,7 +128,6 @@ data "template_file" "user_data" {
 
   vars = {
     docker_machine_version           = local.docker_machine_version
-    enable_user_data_xtrace          = var.enable_user_data_xtrace
     giltab_runner_description        = var.gitlab_runner_registration_config["description"]
     gitlab_runner_access_level       = var.gitlab_runner_registration_config["access_level"]
     gitlab_runner_locked_to_project  = var.gitlab_runner_registration_config["locked_to_project"]

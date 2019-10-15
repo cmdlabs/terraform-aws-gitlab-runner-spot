@@ -42,12 +42,6 @@ variable "ssh_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "enable_user_data_xtrace" {
-  description = "Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token"
-  type        = bool
-  default     = false
-}
-
 variable "gitlab_runner_registration_config" {
   description = "Configuration used to register the runner"
   type        = map(string)
