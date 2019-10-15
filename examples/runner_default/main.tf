@@ -1,6 +1,6 @@
 variable "registration_token" {}
 
-variable "enable_gitlab_runner_ssh_access" {
+variable "enable_ssh_access" {
   default = false
 }
 
@@ -35,14 +35,14 @@ module "runner" {
 
   aws_region = "ap-southeast-2"
 
-  cache_bucket_name = var.bucket_name
+  runners_cache_bucket_name = var.bucket_name
 
-  vpc_id                   = module.vpc.vpc_id
-  subnet_ids_gitlab_runner = module.vpc.private_subnets
-  subnet_id_runners        = element(module.vpc.private_subnets, 0)
+  vpc_id       = module.vpc.vpc_id
+  subnet_ids   = module.vpc.private_subnets
+  subnet_id    = module.vpc.private_subnets[0]
 
-  runners_name             = "test-runner"
-  runners_url              = "https://gitlab.com"
+  runners_name = "test-runner"
+  runners_url  = "https://gitlab.com"
 
   gitlab_runner_registration_config = {
     registration_token = var.registration_token
@@ -53,10 +53,10 @@ module "runner" {
     access_level       = "not_protected"
   }
 
-  runners_off_peak_timezone   = "Australia/Sydney"
-  runners_off_peak_idle_count = 0
-  runners_off_peak_idle_time  = 60
-  runners_off_peak_periods    = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
+  runners_machine_off_peak_timezone   = "Australia/Sydney"
+  runners_machine_off_peak_idle_count = 0
+  runners_machine_off_peak_idle_time  = 60
+  runners_machine_off_peak_periods    = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
 
-  enable_gitlab_runner_ssh_access = var.enable_gitlab_runner_ssh_access
+  enable_ssh_access = var.enable_ssh_access
 }

@@ -73,38 +73,33 @@ The below outlines the current parameters and defaults.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-------:|:--------:|
-|aws_region|AWS region|string|""|Yes|
+|aws_region|Name of S3 region for the runner cache and SSM|string|""|Yes|
+|aws_availability_zone|AWS availability zone ('a', 'b', 'c' etc)|string|a|No|
 |vpc_id|The target VPC for the docker-machine and runner instances|string|""|Yes|
-|subnet_id_runners|Subnet used for hosting the GitLab runner|string|""|Yes|
-|subnet_ids_gitlab_runner|List of subnets used for hosting the GitLab runners|list(string)|""|Yes|
-|runners_gitlab_url|URL of the GitLab instance to connect to|string|""|Yes|
-|aws_zone|AWS availability zone (typically 'a', 'b', or 'c'), used in config.toml|string|a|No|
+|subnet_id|Subnet used for hosting the GitLab runner|string|""|Yes|
+|subnet_ids|List of subnets used for hosting the GitLab runners|list(string)|""|Yes|
 |key_name|The name of the EC2 key pair to use|string|default|No|
-|runners_name|Name of the runner, used in config.toml|string|""|Yes|
-|runners_limit|Limit for the runners, used in config.toml|number|0|No|
-|runners_concurrent|Concurrent value for the runners, used in config.toml|number|10|No|
-|runners_idle_time|Idle time of the runners, used in config.toml|number|600|No|
-|runners_idle_count|Idle count of the runners, used in config.toml|number|0|No|
-|runners_max_builds|Max builds for each runner after which it will be removed, used in config.toml|number|0|No|
-|runners_shm_size|shm_size for the runners, used in config.toml|number|0|No|
-|runners_monitoring|Enable detailed CloudWatch monitoring for spot instances|bool|false|No|
-|runners_off_peak_timezone|Off peak idle time zone of the runners, used in config.toml|string|Australia/Sydney|No|
-|runners_off_peak_idle_count|Off peak idle count of the runners, used in config.toml|number|0|No|
-|runners_off_peak_idle_time|Off peak idle time of the runners, used in config.toml|number|0|No|
-|runners_off_peak_periods|Off peak periods of the runners, used in config.toml|string|""|Yes|
-|runners_root_size|Runner instance root size in GB|number|16|No|
-|runners_environment_vars|Environment variables during build execution as a list of strings like VAR1=value1, used in config.toml|list(string)|[]|No|
-|runners_request_concurrency|Limit number of concurrent requests for new jobs from GitLab (default 1)|number|1|No|
-|runners_output_limit|Sets the maximum build log size in kilobytes, by default set to 4096 (4MB)|number|4096|No|
-|cache_bucket_name|The bucket name of the S3 cache bucket|string|""|Yes|
-|cache_expiration_days|Number of days before cache objects expires|number|1|No|
-|enable_gitlab_runner_ssh_access|Enables SSH Access to the GitLab Runner instance|bool|false|No|
-|gitlab_runner_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the GitLab Runner instance|list(string)|[0.0.0.0/0]|No|
-|docker_machine_docker_cidr_blocks|List of CIDR blocks to allow Docker Access to the docker machine runner instance|list(string)|[0.0.0.0/0]|No|
-|docker_machine_ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to the docker machine runner instance|list(string)|[0.0.0.0/0]|No|
+|enable_ssh_access|Enables SSH access to the GitLab Runner instance|bool|false|No|
+|ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to docker machine and the GitLab Runner|list(string)|[0.0.0.0/0]|No|
+|enable_user_data_xtrace|Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token|bool|false|No|
 |gitlab_runner_registration_config||map(string)|(map)|No|
-|enable_runner_user_data_trace_log|Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token|bool|false|No|
 |schedule_config|Map containing the configuration of the ASG scale-in and scale-up for the runner instance|map|(map)|No|
+|globals_concurrent|Concurrent value for the runners|number|10|No|
+|runners_name|The Runner's description, just informatory|string|""|Yes|
+|runners_url|The GitLab URL for the instance to connect to|string|""|Yes|
+|runners_environment|Append or overwrite environment variables|list(string)|[]|No|
+|runners_request_concurrency|Limit number of concurrent requests for new jobs from GitLab|number|1|No|
+|runners_output_limit|Set maximum build log size in KB|number|4096|No|
+|runners_limit|Limit how many jobs can be handled concurrently by this token|number|0|No|
+|runners_docker_shm_size|Shared memory size for images (in bytes)|number|0|No|
+|runners_cache_bucket_name|Name of the storage bucket where runner cache will be stored|string|""|Yes|
+|runners_machine_idle_count|Number of machines that need to be created and waiting in Idle state|number|0|No|
+|runners_machine_idle_time|Time (in seconds) for machine to be in Idle state before it is removed|number|600|No|
+|runners_machine_max_builds|Builds count after which machine will be removed|number|0|No|
+|runners_machine_off_peak_timezone|Off peak idle time zone of the runners|string|Australia/Sydney|No|
+|runners_machine_off_peak_idle_count|Off peak idle count of the runners|number|0|No|
+|runners_machine_off_peak_idle_time|Off peak idle time of the runners|number|0|No|
+|runners_machine_off_peak_periods|Off peak periods of the runners|string|""|Yes|
 
 ### Outputs
 
@@ -127,7 +122,7 @@ To create a Gitlab Runner:
 ```tf
 variable "registration_token" {}
 
-variable "enable_gitlab_runner_ssh_access" {
+variable "enable_ssh_access" {
   default = false
 }
 
@@ -162,14 +157,14 @@ module "runner" {
 
   aws_region = "ap-southeast-2"
 
-  cache_bucket_name = var.bucket_name
+  runners_cache_bucket_name = var.bucket_name
 
-  vpc_id                   = module.vpc.vpc_id
-  subnet_ids_gitlab_runner = module.vpc.private_subnets
-  subnet_id_runners        = element(module.vpc.private_subnets, 0)
+  vpc_id       = module.vpc.vpc_id
+  subnet_ids   = module.vpc.private_subnets
+  subnet_id    = module.vpc.private_subnets[0]
 
-  runners_name             = "test-runner"
-  runners_gitlab_url       = "https://gitlab.com"
+  runners_name = "test-runner"
+  runners_url  = "https://gitlab.com"
 
   gitlab_runner_registration_config = {
     registration_token = var.registration_token
@@ -180,12 +175,12 @@ module "runner" {
     access_level       = "not_protected"
   }
 
-  runners_off_peak_timezone   = "Australia/Sydney"
-  runners_off_peak_idle_count = 0
-  runners_off_peak_idle_time  = 60
-  runners_off_peak_periods    = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
+  runners_machine_off_peak_timezone   = "Australia/Sydney"
+  runners_machine_off_peak_idle_count = 0
+  runners_machine_off_peak_idle_time  = 60
+  runners_machine_off_peak_periods    = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
 
-  enable_gitlab_runner_ssh_access = var.enable_gitlab_runner_ssh_access
+  enable_ssh_access = var.enable_ssh_access
 }
 ```
 

@@ -2,7 +2,7 @@
 
 exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
 
-[ "${user_data_trace_log}" == "false" ] && set -x
+[ "${enable_user_data_xtrace}" == "true" ] && set -x
 
 update_hosts_file() {
   echo "\

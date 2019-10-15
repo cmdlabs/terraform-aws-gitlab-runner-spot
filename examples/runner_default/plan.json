@@ -5,8 +5,8 @@
     "bucket_name": {
       "value": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0"
     },
-    "enable_gitlab_runner_ssh_access": {
-      "value": "false"
+    "enable_ssh_access": {
+      "value": false
     },
     "registration_token": {
       "value": "GBpeL612xfp3DtEjzZsx"
@@ -570,35 +570,32 @@
               "schema_version": 0,
               "values": {
                 "filename": null,
-                "template": "concurrent = ${runners_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_image}\"\n    privileged = ${runners_privileged}\n    disable_cache = false\n    shm_size = ${runners_shm_size}\n    pull_policy = \"${runners_pull_policy}\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_idle_count}\n    IdleTime = ${runners_idle_time}\n%{ if runners_max_builds != 0 ~}\n    MaxBuilds = ${runners_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${runners_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${runners_aws_zone}\",\n      \"amazonec2-vpc-id=${runners_vpc_id}\",\n      \"amazonec2-subnet-id=${runners_subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${runners_spot_price_bid}\",\n      \"amazonec2-security-group=${runners_security_group_name}\",\n      \"amazonec2-monitoring=${runners_monitoring}\",\n      \"amazonec2-iam-instance-profile=${runners_instance_profile},\n      \"amazonec2-root-size=${runners_root_size}\",\n      \"amazonec2-ami=${runners_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_off_peak_idle_time}\n%{ if runners_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_off_peak_periods}\n%{ endif ~}\n",
+                "template": "concurrent = ${runners_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_docker_image}\"\n    privileged = true\n    disable_cache = false\n    shm_size = ${runners_docker_shm_size}\n    pull_policy = \"always\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${runners_cache_bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_machine_idle_count}\n    IdleTime = ${runners_machine_idle_time}\n%{ if runners_max_builds != 0 ~}\n    MaxBuilds = ${runners_machine_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${docker_machine_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${aws_availability_zone}\",\n      \"amazonec2-vpc-id=${vpc_id}\",\n      \"amazonec2-subnet-id=${subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${docker_machine_spot_price}\",\n      \"amazonec2-security-group=${docker_machine_security_group}\",\n      \"amazonec2-monitoring=false\",\n      \"amazonec2-iam-instance-profile=${docker_machine_iam_instance_profile},\n      \"amazonec2-root-size=${docker_machine_root_size}\",\n      \"amazonec2-ami=${docker_machine_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_machine_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_machine_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_machine_off_peak_idle_time}\n%{ if runners_machine_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_machine_off_peak_periods}\n%{ endif ~}\n",
                 "vars": {
+                  "aws_availability_zone": "a",
                   "aws_region": "ap-southeast-2",
-                  "bucket_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-                  "gitlab_url": "https://gitlab.com",
-                  "runners_ami": "ami-0328aad0f6218c429",
-                  "runners_aws_zone": "a",
-                  "runners_concurrent": "10",
+                  "docker_machine_ami": "ami-0328aad0f6218c429",
+                  "docker_machine_iam_instance_profile": "gitlab-runner-docker-machine-profile",
+                  "docker_machine_instance_type": "m5a.large",
+                  "docker_machine_root_size": "16",
+                  "docker_machine_spot_price": "0.06",
+                  "globals_concurrent": "10",
+                  "runners_cache_bucket_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
+                  "runners_docker_image": "docker:18.03.1-ce",
+                  "runners_docker_shm_size": "0",
                   "runners_environment": "[]",
-                  "runners_idle_count": "0",
-                  "runners_idle_time": "600",
-                  "runners_image": "docker:18.03.1-ce",
-                  "runners_instance_profile": "gitlab-runner-docker-machine-profile",
-                  "runners_instance_type": "m5a.large",
                   "runners_limit": "0",
-                  "runners_max_builds": "0",
-                  "runners_monitoring": "false",
+                  "runners_machine_idle_count": "0",
+                  "runners_machine_idle_time": "600",
+                  "runners_machine_max_builds": "0",
+                  "runners_machine_off_peak_idle_count": "0",
+                  "runners_machine_off_peak_idle_time": "60",
+                  "runners_machine_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]",
+                  "runners_machine_off_peak_timezone": "Australia/Sydney",
                   "runners_name": "test-runner",
-                  "runners_off_peak_idle_count": "0",
-                  "runners_off_peak_idle_time": "60",
-                  "runners_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]",
-                  "runners_off_peak_timezone": "Australia/Sydney",
                   "runners_output_limit": "4096",
-                  "runners_privileged": "true",
-                  "runners_pull_policy": "always",
                   "runners_request_concurrency": "1",
-                  "runners_root_size": "16",
-                  "runners_shm_size": "0",
-                  "runners_spot_price_bid": "0.06"
+                  "runners_url": "https://gitlab.com"
                 }
               }
             },
@@ -611,9 +608,10 @@
               "schema_version": 0,
               "values": {
                 "filename": null,
-                "template": "#!/usr/bin/env bash\n\nexec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1\n\n[ \"${user_data_trace_log}\" == \"false\" ] && set -x\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  echo 'installing additional software for logging'\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id=$(curl -s \\\n    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\n\n  cat > /etc/awslogs/awslogs.conf <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  local region=$(curl -s \\\n    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' /etc/awslogs/awscli.conf\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > /etc/gitlab-runner/config.toml <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${ssm_region}\" | jq -r '.Parameters[].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    token=$(curl --request POST -L \"${runners_gitlab_url}/api/v4/runners\" \\\n        --form \"token=${gitlab_runner_registration_token}\" \\\n        --form \"description=${giltab_runner_description}\" \\\n        --form \"locked=${gitlab_runner_locked_to_project}\" \\\n        --form \"run_untagged=${gitlab_runner_run_untagged}\" \\\n        --form \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        --form \"access_level=${gitlab_runner_access_level}\" \\\n      | jq -r .token)\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${ssm_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' /etc/gitlab-runner/config.toml\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"${BASH_SOURCE[0]}\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+                "template": "#!/usr/bin/env bash\n\nexec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1\n\n[ \"${enable_user_data_xtrace}\" == \"true\" ] && set -x\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  echo 'installing additional software for logging'\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id=$(curl -s \\\n    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\n\n  cat > /etc/awslogs/awslogs.conf <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  local region=$(curl -s \\\n    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' /etc/awslogs/awscli.conf\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > /etc/gitlab-runner/config.toml <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${ssm_region}\" | jq -r '.Parameters[].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    token=$(curl --request POST -L \"${runners_gitlab_url}/api/v4/runners\" \\\n        --form \"token=${gitlab_runner_registration_token}\" \\\n        --form \"description=${giltab_runner_description}\" \\\n        --form \"locked=${gitlab_runner_locked_to_project}\" \\\n        --form \"run_untagged=${gitlab_runner_run_untagged}\" \\\n        --form \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        --form \"access_level=${gitlab_runner_access_level}\" \\\n      | jq -r .token)\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${ssm_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' /etc/gitlab-runner/config.toml\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"${BASH_SOURCE[0]}\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
                 "vars": {
                   "docker_machine_version": "0.16.2",
+                  "enable_user_data_xtrace": "false",
                   "giltab_runner_description": "runner default - auto",
                   "gitlab_runner_access_level": "not_protected",
                   "gitlab_runner_locked_to_project": "true",
@@ -623,8 +621,7 @@
                   "gitlab_runner_version": "12.3.0",
                   "runners_ssm_token_key": "gitlab-runner-runner-token",
                   "runners_url": "https://gitlab.com",
-                  "ssm_region": "ap-southeast-2",
-                  "user_data_trace_log": "false"
+                  "ssm_region": "ap-southeast-2"
                 }
               }
             }
@@ -1826,44 +1823,41 @@
         "before": null,
         "after": {
           "filename": null,
-          "template": "concurrent = ${runners_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_image}\"\n    privileged = ${runners_privileged}\n    disable_cache = false\n    shm_size = ${runners_shm_size}\n    pull_policy = \"${runners_pull_policy}\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_idle_count}\n    IdleTime = ${runners_idle_time}\n%{ if runners_max_builds != 0 ~}\n    MaxBuilds = ${runners_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${runners_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${runners_aws_zone}\",\n      \"amazonec2-vpc-id=${runners_vpc_id}\",\n      \"amazonec2-subnet-id=${runners_subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${runners_spot_price_bid}\",\n      \"amazonec2-security-group=${runners_security_group_name}\",\n      \"amazonec2-monitoring=${runners_monitoring}\",\n      \"amazonec2-iam-instance-profile=${runners_instance_profile},\n      \"amazonec2-root-size=${runners_root_size}\",\n      \"amazonec2-ami=${runners_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_off_peak_idle_time}\n%{ if runners_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_off_peak_periods}\n%{ endif ~}\n",
+          "template": "concurrent = ${runners_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_docker_image}\"\n    privileged = true\n    disable_cache = false\n    shm_size = ${runners_docker_shm_size}\n    pull_policy = \"always\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${runners_cache_bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_machine_idle_count}\n    IdleTime = ${runners_machine_idle_time}\n%{ if runners_max_builds != 0 ~}\n    MaxBuilds = ${runners_machine_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${docker_machine_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${aws_availability_zone}\",\n      \"amazonec2-vpc-id=${vpc_id}\",\n      \"amazonec2-subnet-id=${subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${docker_machine_spot_price}\",\n      \"amazonec2-security-group=${docker_machine_security_group}\",\n      \"amazonec2-monitoring=false\",\n      \"amazonec2-iam-instance-profile=${docker_machine_iam_instance_profile},\n      \"amazonec2-root-size=${docker_machine_root_size}\",\n      \"amazonec2-ami=${docker_machine_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_machine_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_machine_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_machine_off_peak_idle_time}\n%{ if runners_machine_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_machine_off_peak_periods}\n%{ endif ~}\n",
           "vars": {
+            "aws_availability_zone": "a",
             "aws_region": "ap-southeast-2",
-            "bucket_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-            "gitlab_url": "https://gitlab.com",
-            "runners_ami": "ami-0328aad0f6218c429",
-            "runners_aws_zone": "a",
-            "runners_concurrent": "10",
+            "docker_machine_ami": "ami-0328aad0f6218c429",
+            "docker_machine_iam_instance_profile": "gitlab-runner-docker-machine-profile",
+            "docker_machine_instance_type": "m5a.large",
+            "docker_machine_root_size": "16",
+            "docker_machine_spot_price": "0.06",
+            "globals_concurrent": "10",
+            "runners_cache_bucket_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
+            "runners_docker_image": "docker:18.03.1-ce",
+            "runners_docker_shm_size": "0",
             "runners_environment": "[]",
-            "runners_idle_count": "0",
-            "runners_idle_time": "600",
-            "runners_image": "docker:18.03.1-ce",
-            "runners_instance_profile": "gitlab-runner-docker-machine-profile",
-            "runners_instance_type": "m5a.large",
             "runners_limit": "0",
-            "runners_max_builds": "0",
-            "runners_monitoring": "false",
+            "runners_machine_idle_count": "0",
+            "runners_machine_idle_time": "600",
+            "runners_machine_max_builds": "0",
+            "runners_machine_off_peak_idle_count": "0",
+            "runners_machine_off_peak_idle_time": "60",
+            "runners_machine_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]",
+            "runners_machine_off_peak_timezone": "Australia/Sydney",
             "runners_name": "test-runner",
-            "runners_off_peak_idle_count": "0",
-            "runners_off_peak_idle_time": "60",
-            "runners_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]",
-            "runners_off_peak_timezone": "Australia/Sydney",
             "runners_output_limit": "4096",
-            "runners_privileged": "true",
-            "runners_pull_policy": "always",
             "runners_request_concurrency": "1",
-            "runners_root_size": "16",
-            "runners_shm_size": "0",
-            "runners_spot_price_bid": "0.06"
+            "runners_url": "https://gitlab.com"
           }
         },
         "after_unknown": {
           "id": true,
           "rendered": true,
           "vars": {
-            "runners_security_group_name": true,
-            "runners_subnet_id": true,
-            "runners_vpc_id": true
+            "docker_machine_security_group": true,
+            "subnet_id": true,
+            "vpc_id": true
           }
         }
       }
@@ -1882,9 +1876,10 @@
         "before": null,
         "after": {
           "filename": null,
-          "template": "#!/usr/bin/env bash\n\nexec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1\n\n[ \"${user_data_trace_log}\" == \"false\" ] && set -x\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  echo 'installing additional software for logging'\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id=$(curl -s \\\n    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\n\n  cat > /etc/awslogs/awslogs.conf <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  local region=$(curl -s \\\n    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' /etc/awslogs/awscli.conf\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > /etc/gitlab-runner/config.toml <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${ssm_region}\" | jq -r '.Parameters[].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    token=$(curl --request POST -L \"${runners_gitlab_url}/api/v4/runners\" \\\n        --form \"token=${gitlab_runner_registration_token}\" \\\n        --form \"description=${giltab_runner_description}\" \\\n        --form \"locked=${gitlab_runner_locked_to_project}\" \\\n        --form \"run_untagged=${gitlab_runner_run_untagged}\" \\\n        --form \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        --form \"access_level=${gitlab_runner_access_level}\" \\\n      | jq -r .token)\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${ssm_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' /etc/gitlab-runner/config.toml\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"${BASH_SOURCE[0]}\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+          "template": "#!/usr/bin/env bash\n\nexec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1\n\n[ \"${enable_user_data_xtrace}\" == \"true\" ] && set -x\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  echo 'installing additional software for logging'\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id=$(curl -s \\\n    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)\n\n  cat > /etc/awslogs/awslogs.conf <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  local region=$(curl -s \\\n    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' /etc/awslogs/awscli.conf\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > /etc/gitlab-runner/config.toml <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${ssm_region}\" | jq -r '.Parameters[].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    token=$(curl --request POST -L \"${runners_gitlab_url}/api/v4/runners\" \\\n        --form \"token=${gitlab_runner_registration_token}\" \\\n        --form \"description=${giltab_runner_description}\" \\\n        --form \"locked=${gitlab_runner_locked_to_project}\" \\\n        --form \"run_untagged=${gitlab_runner_run_untagged}\" \\\n        --form \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        --form \"access_level=${gitlab_runner_access_level}\" \\\n      | jq -r .token)\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${ssm_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' /etc/gitlab-runner/config.toml\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"${BASH_SOURCE[0]}\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
           "vars": {
             "docker_machine_version": "0.16.2",
+            "enable_user_data_xtrace": "false",
             "giltab_runner_description": "runner default - auto",
             "gitlab_runner_access_level": "not_protected",
             "gitlab_runner_locked_to_project": "true",
@@ -1894,8 +1889,7 @@
             "gitlab_runner_version": "12.3.0",
             "runners_ssm_token_key": "gitlab-runner-runner-token",
             "runners_url": "https://gitlab.com",
-            "ssm_region": "ap-southeast-2",
-            "user_data_trace_log": "false"
+            "ssm_region": "ap-southeast-2"
           }
         },
         "after_unknown": {
@@ -2382,7 +2376,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-15 08:25:37.532165 +0000 UTC",
+              "id": "2019-10-15 10:27:40.842959 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2398,6 +2392,41 @@
           }
         ],
         "child_modules": [
+          {
+            "resources": [
+              {
+                "address": "data.aws_vpc_endpoint_service.s3",
+                "mode": "data",
+                "type": "aws_vpc_endpoint_service",
+                "name": "s3",
+                "index": 0,
+                "provider_name": "aws",
+                "schema_version": 0,
+                "values": {
+                  "acceptance_required": false,
+                  "availability_zones": [
+                    "ap-southeast-2a",
+                    "ap-southeast-2b",
+                    "ap-southeast-2c"
+                  ],
+                  "base_endpoint_dns_names": [
+                    "s3.ap-southeast-2.amazonaws.com"
+                  ],
+                  "id": "1802082413",
+                  "manages_vpc_endpoints": false,
+                  "owner": "amazon",
+                  "private_dns_name": "",
+                  "service": "s3",
+                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
+                  "service_name": "com.amazonaws.ap-southeast-2.s3",
+                  "service_type": "Gateway",
+                  "tags": {},
+                  "vpc_endpoint_policy_supported": true
+                }
+              }
+            ],
+            "address": "module.vpc"
+          },
           {
             "resources": [
               {
@@ -2554,7 +2583,7 @@
                 "values": {
                   "account_id": "885164491973",
                   "arn": "arn:aws:iam::885164491973:user/alex",
-                  "id": "2019-10-15 08:25:38.59501 +0000 UTC",
+                  "id": "2019-10-15 10:27:41.903271 +0000 UTC",
                   "user_id": "AIDAIA2HJENE7W7DDPY5G"
                 }
               },
@@ -2665,41 +2694,6 @@
               }
             ],
             "address": "module.runner"
-          },
-          {
-            "resources": [
-              {
-                "address": "data.aws_vpc_endpoint_service.s3",
-                "mode": "data",
-                "type": "aws_vpc_endpoint_service",
-                "name": "s3",
-                "index": 0,
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "acceptance_required": false,
-                  "availability_zones": [
-                    "ap-southeast-2a",
-                    "ap-southeast-2b",
-                    "ap-southeast-2c"
-                  ],
-                  "base_endpoint_dns_names": [
-                    "s3.ap-southeast-2.amazonaws.com"
-                  ],
-                  "id": "1802082413",
-                  "manages_vpc_endpoints": false,
-                  "owner": "amazon",
-                  "private_dns_name": "",
-                  "service": "s3",
-                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
-                  "service_name": "com.amazonaws.ap-southeast-2.s3",
-                  "service_type": "Gateway",
-                  "tags": {},
-                  "vpc_endpoint_policy_supported": true
-                }
-              }
-            ],
-            "address": "module.vpc"
           }
         ]
       }
@@ -2729,14 +2723,9 @@
             "aws_region": {
               "constant_value": "ap-southeast-2"
             },
-            "cache_bucket_name": {
+            "enable_ssh_access": {
               "references": [
-                "var.bucket_name"
-              ]
-            },
-            "enable_gitlab_runner_ssh_access": {
-              "references": [
-                "var.enable_gitlab_runner_ssh_access"
+                "var.enable_ssh_access"
               ]
             },
             "gitlab_runner_registration_config": {
@@ -2747,30 +2736,35 @@
             "key_name": {
               "constant_value": "default"
             },
-            "runners_name": {
-              "constant_value": "test-runner"
+            "runners_cache_bucket_name": {
+              "references": [
+                "var.bucket_name"
+              ]
             },
-            "runners_off_peak_idle_count": {
+            "runners_machine_off_peak_idle_count": {
               "constant_value": 0
             },
-            "runners_off_peak_idle_time": {
+            "runners_machine_off_peak_idle_time": {
               "constant_value": 60
             },
-            "runners_off_peak_periods": {
+            "runners_machine_off_peak_periods": {
               "constant_value": "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
             },
-            "runners_off_peak_timezone": {
+            "runners_machine_off_peak_timezone": {
               "constant_value": "Australia/Sydney"
+            },
+            "runners_name": {
+              "constant_value": "test-runner"
             },
             "runners_url": {
               "constant_value": "https://gitlab.com"
             },
-            "subnet_id_runners": {
+            "subnet_id": {
               "references": [
                 "module.vpc.private_subnets"
               ]
             },
-            "subnet_ids_gitlab_runner": {
+            "subnet_ids": {
               "references": [
                 "module.vpc.private_subnets"
               ]
@@ -2886,7 +2880,7 @@
                   },
                   "vpc_zone_identifier": {
                     "references": [
-                      "var.subnet_ids_gitlab_runner"
+                      "var.subnet_ids"
                     ]
                   }
                 },
@@ -3327,7 +3321,7 @@
                 "expressions": {
                   "associate_public_ip_address": {
                     "references": [
-                      "var.enable_gitlab_runner_ssh_access"
+                      "var.enable_ssh_access"
                     ]
                   },
                   "iam_instance_profile": {
@@ -3388,7 +3382,7 @@
                   },
                   "bucket": {
                     "references": [
-                      "var.cache_bucket_name"
+                      "var.runners_cache_bucket_name"
                     ]
                   },
                   "force_destroy": {
@@ -3402,9 +3396,7 @@
                       "expiration": [
                         {
                           "days": {
-                            "references": [
-                              "var.cache_expiration_days"
-                            ]
+                            "constant_value": 1
                           }
                         }
                       ],
@@ -3414,9 +3406,7 @@
                       "noncurrent_version_expiration": [
                         {
                           "days": {
-                            "references": [
-                              "var.cache_expiration_days"
-                            ]
+                            "constant_value": 1
                           }
                         }
                       ],
@@ -3550,7 +3540,7 @@
                 "expressions": {
                   "cidr_blocks": {
                     "references": [
-                      "var.docker_machine_ssh_cidr_blocks"
+                      "var.ssh_cidr_blocks"
                     ]
                   },
                   "from_port": {
@@ -3614,7 +3604,7 @@
                 "expressions": {
                   "cidr_blocks": {
                     "references": [
-                      "var.gitlab_runner_ssh_cidr_blocks"
+                      "var.ssh_cidr_blocks"
                     ]
                   },
                   "from_port": {
@@ -3638,7 +3628,7 @@
                 "schema_version": 2,
                 "count_expression": {
                   "references": [
-                    "var.enable_gitlab_runner_ssh_access"
+                    "var.enable_ssh_access"
                   ]
                 }
               },
@@ -3841,35 +3831,32 @@
                   "vars": {
                     "references": [
                       "var.aws_region",
-                      "var.cache_bucket_name",
+                      "var.aws_availability_zone",
+                      "var.vpc_id",
+                      "var.subnet_id",
+                      "var.globals_concurrent",
+                      "var.runners_name",
                       "var.runners_url",
-                      "data.aws_ami.docker-machine",
-                      "var.aws_zone",
-                      "var.runners_concurrent",
                       "var.runners_environment",
-                      "var.runners_idle_count",
-                      "var.runners_idle_time",
-                      "local.runners_image",
+                      "var.runners_request_concurrency",
+                      "var.runners_output_limit",
+                      "var.runners_limit",
+                      "local.runners_docker_image",
+                      "var.runners_docker_shm_size",
+                      "var.runners_cache_bucket_name",
+                      "var.runners_machine_idle_count",
+                      "var.runners_machine_idle_time",
+                      "var.runners_machine_max_builds",
                       "aws_iam_instance_profile.docker_machine",
                       "local.docker_machine_instance_type",
-                      "var.runners_limit",
-                      "var.runners_max_builds",
-                      "var.runners_monitoring",
-                      "var.runners_name",
-                      "var.runners_off_peak_idle_count",
-                      "var.runners_off_peak_idle_time",
-                      "var.runners_off_peak_periods",
-                      "var.runners_off_peak_timezone",
-                      "var.runners_output_limit",
-                      "local.runners_privileged",
-                      "local.runners_pull_policy",
-                      "var.runners_request_concurrency",
-                      "var.runners_root_size",
+                      "local.docker_machine_spot_price",
                       "aws_security_group.docker_machine",
-                      "var.runners_shm_size",
-                      "local.docker_machine_spot_price_bid",
-                      "var.subnet_id_runners",
-                      "var.vpc_id"
+                      "local.docker_machine_root_size",
+                      "data.aws_ami.docker-machine",
+                      "var.runners_machine_off_peak_idle_count",
+                      "var.runners_machine_off_peak_idle_time",
+                      "var.runners_machine_off_peak_periods",
+                      "var.runners_machine_off_peak_timezone"
                     ]
                   }
                 },
@@ -3920,6 +3907,7 @@
                   "vars": {
                     "references": [
                       "local.docker_machine_version",
+                      "var.enable_user_data_xtrace",
                       "var.gitlab_runner_registration_config",
                       "var.gitlab_runner_registration_config",
                       "var.gitlab_runner_registration_config",
@@ -3930,8 +3918,7 @@
                       "data.template_file.runners",
                       "local.runners_ssm_token_key",
                       "var.runners_url",
-                      "var.aws_region",
-                      "var.enable_runner_user_data_trace_log"
+                      "var.aws_region"
                     ]
                   }
                 },
@@ -3939,37 +3926,18 @@
               }
             ],
             "variables": {
-              "aws_region": {
-                "description": "AWS region"
-              },
-              "aws_zone": {
+              "aws_availability_zone": {
                 "default": "a",
-                "description": "AWS availability zone (typically 'a', 'b', or 'c'), used in config.toml"
+                "description": "AWS availability zone ('a', 'b', 'c' etc)"
               },
-              "cache_bucket_name": {
-                "description": "The bucket name of the S3 cache bucket"
+              "aws_region": {
+                "description": "Name of S3 region for the runner cache and SSM"
               },
-              "cache_expiration_days": {
-                "default": 1,
-                "description": "Number of days before cache objects expires"
-              },
-              "docker_machine_docker_cidr_blocks": {
-                "default": [
-                  "0.0.0.0/0"
-                ],
-                "description": "List of CIDR blocks to allow Docker Access to the docker machine runner instance"
-              },
-              "docker_machine_ssh_cidr_blocks": {
-                "default": [
-                  "0.0.0.0/0"
-                ],
-                "description": "List of CIDR blocks to allow SSH Access to the docker machine runner instance"
-              },
-              "enable_gitlab_runner_ssh_access": {
+              "enable_ssh_access": {
                 "default": false,
-                "description": "Enables SSH Access to the GitLab Runner instance"
+                "description": "Enables SSH access to the GitLab Runner instance"
               },
-              "enable_runner_user_data_trace_log": {
+              "enable_user_data_xtrace": {
                 "default": false,
                 "description": "Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token"
               },
@@ -3984,78 +3952,67 @@
                 },
                 "description": "Configuration used to register the runner"
               },
-              "gitlab_runner_ssh_cidr_blocks": {
-                "default": [
-                  "0.0.0.0/0"
-                ],
-                "description": "List of CIDR blocks to allow SSH Access to the GitLab Runner instance"
+              "globals_concurrent": {
+                "default": 10,
+                "description": "Concurrent value for the runners"
               },
               "key_name": {
                 "default": "default",
                 "description": "The name of the EC2 key pair to use"
               },
-              "runners_concurrent": {
-                "default": 10,
-                "description": "Concurrent value for the runners, used in config.toml"
+              "runners_cache_bucket_name": {
+                "description": "Name of the storage bucket where runner cache will be stored"
+              },
+              "runners_docker_shm_size": {
+                "default": 0,
+                "description": "Shared memory size for images (in bytes)"
               },
               "runners_environment": {
                 "default": [],
                 "description": "Append or overwrite environment variables"
               },
-              "runners_idle_count": {
-                "default": 0,
-                "description": "Idle count of the runners, used in config.toml"
-              },
-              "runners_idle_time": {
-                "default": 600,
-                "description": "Idle time of the runners, used in config.toml"
-              },
               "runners_limit": {
                 "default": 0,
-                "description": "Limit for the runners, used in config.toml"
+                "description": "Limit how many jobs can be handled concurrently by this token"
               },
-              "runners_max_builds": {
+              "runners_machine_idle_count": {
                 "default": 0,
-                "description": "Max builds for each runner after which it will be removed, used in config.toml"
+                "description": "Number of machines that need to be created and waiting in Idle state"
               },
-              "runners_monitoring": {
-                "default": false,
-                "description": "Enable detailed CloudWatch monitoring for spot instances"
+              "runners_machine_idle_time": {
+                "default": 600,
+                "description": "Time (in seconds) for machine to be in Idle state before it is removed"
+              },
+              "runners_machine_max_builds": {
+                "default": 0,
+                "description": "Builds count after which machine will be removed"
+              },
+              "runners_machine_off_peak_idle_count": {
+                "default": 0,
+                "description": "Off peak idle count of the runners"
+              },
+              "runners_machine_off_peak_idle_time": {
+                "default": 0,
+                "description": "Off peak idle time of the runners"
+              },
+              "runners_machine_off_peak_periods": {
+                "default": "",
+                "description": "Off peak periods of the runners"
+              },
+              "runners_machine_off_peak_timezone": {
+                "default": "Australia/Sydney",
+                "description": "Off peak idle time zone of the runners"
               },
               "runners_name": {
                 "description": "The Runner's description, just informatory"
               },
-              "runners_off_peak_idle_count": {
-                "default": 0,
-                "description": "Off peak idle count of the runners, used in config.toml"
-              },
-              "runners_off_peak_idle_time": {
-                "default": 0,
-                "description": "Off peak idle time of the runners, used in config.toml"
-              },
-              "runners_off_peak_periods": {
-                "default": "",
-                "description": "Off peak periods of the runners, used in config.toml"
-              },
-              "runners_off_peak_timezone": {
-                "default": "Australia/Sydney",
-                "description": "Off peak idle time zone of the runners, used in config.toml"
-              },
               "runners_output_limit": {
                 "default": 4096,
-                "description": "Sets the maximum build log size in kilobytes, by default set to 4096 (4MB)"
+                "description": "Set maximum build log size in KB"
               },
               "runners_request_concurrency": {
                 "default": 1,
-                "description": "Limit number of concurrent requests for new jobs from GitLab (default 1)"
-              },
-              "runners_root_size": {
-                "default": 16,
-                "description": "Runner instance root size in GB"
-              },
-              "runners_shm_size": {
-                "default": 0,
-                "description": "shm_size for the runners, used in config.toml"
+                "description": "Limit number of concurrent requests for new jobs from GitLab"
               },
               "runners_url": {
                 "description": "The GitLab URL for the instance to connect to"
@@ -4069,10 +4026,16 @@
                 },
                 "description": "Map containing the configuration of the ASG scale-in and scale-up for the runner instance"
               },
-              "subnet_id_runners": {
+              "ssh_cidr_blocks": {
+                "default": [
+                  "0.0.0.0/0"
+                ],
+                "description": "List of CIDR blocks to allow SSH Access to docker machine and the GitLab Runner"
+              },
+              "subnet_id": {
                 "description": "Subnet used for hosting the GitLab runner"
               },
-              "subnet_ids_gitlab_runner": {
+              "subnet_ids": {
                 "description": "List of subnets used for hosting the GitLab runners"
               },
               "vpc_id": {
@@ -9661,7 +9624,7 @@
         "bucket_name": {
           "default": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0"
         },
-        "enable_gitlab_runner_ssh_access": {
+        "enable_ssh_access": {
           "default": false
         },
         "registration_token": {}

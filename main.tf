@@ -1,12 +1,11 @@
 locals {
   instance_type                 = "t3.micro"
   docker_machine_instance_type  = "m5a.large"
-  docker_machine_spot_price_bid = "0.06"
+  docker_machine_spot_price     = "0.06"
   docker_machine_version        = "0.16.2"
+  docker_machine_root_size      = 16
   gitlab_runner_version         = "12.3.0"
-  runners_image                 = "docker:18.03.1-ce"
-  runners_pull_policy           = "always"
-  runners_privileged            = true
+  runners_docker_image          = "docker:18.03.1-ce"
   runners_ssm_token_key         = "gitlab-runner-runner-token"
 }
 
@@ -23,13 +22,13 @@ resource "aws_security_group" "runner" {
 }
 
 resource "aws_security_group_rule" "runner_ssh" {
-  count = var.enable_gitlab_runner_ssh_access ? 1 : 0
+  count = var.enable_ssh_access ? 1 : 0
 
   type        = "ingress"
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
-  cidr_blocks = var.gitlab_runner_ssh_cidr_blocks
+  cidr_blocks = var.ssh_cidr_blocks
 
   security_group_id = aws_security_group.runner.id
 }
@@ -64,7 +63,7 @@ resource "aws_security_group_rule" "docker_machine_ssh" {
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
-  cidr_blocks = var.docker_machine_ssh_cidr_blocks
+  cidr_blocks = var.ssh_cidr_blocks
 
   security_group_id = aws_security_group.docker_machine.id
 }
@@ -95,35 +94,32 @@ data "template_file" "runners" {
 
   vars = {
     aws_region                  = var.aws_region
-    bucket_name                 = var.cache_bucket_name
-    gitlab_url                  = var.runners_url
-    runners_ami                 = data.aws_ami.docker-machine.id
-    runners_aws_zone            = var.aws_zone
-    runners_concurrent          = var.runners_concurrent
-    runners_environment         = jsonencode(var.runners_environment)
-    runners_idle_count          = var.runners_idle_count
-    runners_idle_time           = var.runners_idle_time
-    runners_image               = local.runners_image
-    runners_instance_profile    = aws_iam_instance_profile.docker_machine.name
-    runners_instance_type       = local.docker_machine_instance_type
-    runners_limit               = var.runners_limit
-    runners_max_builds          = var.runners_max_builds
-    runners_monitoring          = var.runners_monitoring
+    aws_availability_zone       = var.aws_availability_zone
+    vpc_id                      = var.vpc_id
+    subnet_id                   = var.subnet_id
+    globals_concurrent          = var.globals_concurrent
     runners_name                = var.runners_name
-    runners_off_peak_idle_count = var.runners_off_peak_idle_count
-    runners_off_peak_idle_time  = var.runners_off_peak_idle_time
-    runners_off_peak_periods    = var.runners_off_peak_periods
-    runners_off_peak_timezone   = var.runners_off_peak_timezone
-    runners_output_limit        = var.runners_output_limit
-    runners_privileged          = local.runners_privileged
-    runners_pull_policy         = local.runners_pull_policy
+    runners_url                 = var.runners_url
+    runners_environment         = jsonencode(var.runners_environment)
     runners_request_concurrency = var.runners_request_concurrency
-    runners_root_size           = var.runners_root_size
-    runners_security_group_name = aws_security_group.docker_machine.name
-    runners_shm_size            = var.runners_shm_size
-    runners_spot_price_bid      = local.docker_machine_spot_price_bid
-    runners_subnet_id           = var.subnet_id_runners
-    runners_vpc_id              = var.vpc_id
+    runners_output_limit        = var.runners_output_limit
+    runners_limit               = var.runners_limit
+    runners_docker_image        = local.runners_docker_image
+    runners_docker_shm_size     = var.runners_docker_shm_size
+    runners_cache_bucket_name   = var.runners_cache_bucket_name
+    runners_machine_idle_count  = var.runners_machine_idle_count
+    runners_machine_idle_time   = var.runners_machine_idle_time
+    runners_machine_max_builds  = var.runners_machine_max_builds
+    docker_machine_iam_instance_profile = aws_iam_instance_profile.docker_machine.name
+    docker_machine_instance_type = local.docker_machine_instance_type
+    docker_machine_spot_price   = local.docker_machine_spot_price
+    docker_machine_security_group = aws_security_group.docker_machine.name
+    docker_machine_root_size    = local.docker_machine_root_size
+    docker_machine_ami          = data.aws_ami.docker-machine.id
+    runners_machine_off_peak_idle_count = var.runners_machine_off_peak_idle_count
+    runners_machine_off_peak_idle_time  = var.runners_machine_off_peak_idle_time
+    runners_machine_off_peak_periods    = var.runners_machine_off_peak_periods
+    runners_machine_off_peak_timezone   = var.runners_machine_off_peak_timezone
   }
 }
 
@@ -132,6 +128,7 @@ data "template_file" "user_data" {
 
   vars = {
     docker_machine_version           = local.docker_machine_version
+    enable_user_data_xtrace          = var.enable_user_data_xtrace
     giltab_runner_description        = var.gitlab_runner_registration_config["description"]
     gitlab_runner_access_level       = var.gitlab_runner_registration_config["access_level"]
     gitlab_runner_locked_to_project  = var.gitlab_runner_registration_config["locked_to_project"]
@@ -143,7 +140,6 @@ data "template_file" "user_data" {
     runners_ssm_token_key            = local.runners_ssm_token_key
     runners_url                      = var.runners_url
     ssm_region                       = var.aws_region
-    user_data_trace_log              = var.enable_runner_user_data_trace_log
   }
 }
 
@@ -160,7 +156,7 @@ data "aws_ami" "docker-machine" {
 
 resource "aws_autoscaling_group" "gitlab_runner_instance" {
   name                = "gitlab-runner-as-group"
-  vpc_zone_identifier = var.subnet_ids_gitlab_runner
+  vpc_zone_identifier = var.subnet_ids
 
   min_size                  = "1"
   max_size                  = "1"
@@ -215,7 +211,7 @@ resource "aws_launch_configuration" "gitlab_runner_instance" {
     volume_size           = 8
   }
 
-  associate_public_ip_address = var.enable_gitlab_runner_ssh_access
+  associate_public_ip_address = var.enable_ssh_access
 
   lifecycle {
     create_before_destroy = true
@@ -228,7 +224,7 @@ resource "aws_launch_configuration" "gitlab_runner_instance" {
 data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "build_cache" {
-  bucket = var.cache_bucket_name
+  bucket = var.runners_cache_bucket_name
 
   acl    = "private"
 
@@ -241,11 +237,11 @@ resource "aws_s3_bucket" "build_cache" {
     prefix = "runner/"
 
     expiration {
-      days = var.cache_expiration_days
+      days = 1
     }
 
     noncurrent_version_expiration {
-      days = var.cache_expiration_days
+      days = 1
     }
   }
 
