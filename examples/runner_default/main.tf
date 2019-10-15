@@ -56,7 +56,10 @@ module "runner" {
   runners_machine_off_peak_timezone   = "Australia/Sydney"
   runners_machine_off_peak_idle_count = 0
   runners_machine_off_peak_idle_time  = 60
-  runners_machine_off_peak_periods    = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
+  runners_machine_off_peak_periods    = [
+    "* * 0-9,17-23 * * mon-fri *",
+    "* * * * * sat,sun *"
+  ]
 
   enable_ssh_access = var.enable_ssh_access
 }

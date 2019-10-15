@@ -590,7 +590,7 @@
                   "runners_machine_max_builds": "0",
                   "runners_machine_off_peak_idle_count": "0",
                   "runners_machine_off_peak_idle_time": "60",
-                  "runners_machine_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]",
+                  "runners_machine_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\",\"* * * * * sat,sun *\"]",
                   "runners_machine_off_peak_timezone": "Australia/Sydney",
                   "runners_name": "test-runner",
                   "runners_output_limit": "4096",
@@ -1843,7 +1843,7 @@
             "runners_machine_max_builds": "0",
             "runners_machine_off_peak_idle_count": "0",
             "runners_machine_off_peak_idle_time": "60",
-            "runners_machine_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]",
+            "runners_machine_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\",\"* * * * * sat,sun *\"]",
             "runners_machine_off_peak_timezone": "Australia/Sydney",
             "runners_name": "test-runner",
             "runners_output_limit": "4096",
@@ -2376,7 +2376,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-15 10:27:40.842959 +0000 UTC",
+              "id": "2019-10-15 11:23:26.84295 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2392,41 +2392,6 @@
           }
         ],
         "child_modules": [
-          {
-            "resources": [
-              {
-                "address": "data.aws_vpc_endpoint_service.s3",
-                "mode": "data",
-                "type": "aws_vpc_endpoint_service",
-                "name": "s3",
-                "index": 0,
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "acceptance_required": false,
-                  "availability_zones": [
-                    "ap-southeast-2a",
-                    "ap-southeast-2b",
-                    "ap-southeast-2c"
-                  ],
-                  "base_endpoint_dns_names": [
-                    "s3.ap-southeast-2.amazonaws.com"
-                  ],
-                  "id": "1802082413",
-                  "manages_vpc_endpoints": false,
-                  "owner": "amazon",
-                  "private_dns_name": "",
-                  "service": "s3",
-                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
-                  "service_name": "com.amazonaws.ap-southeast-2.s3",
-                  "service_type": "Gateway",
-                  "tags": {},
-                  "vpc_endpoint_policy_supported": true
-                }
-              }
-            ],
-            "address": "module.vpc"
-          },
           {
             "resources": [
               {
@@ -2583,7 +2548,7 @@
                 "values": {
                   "account_id": "885164491973",
                   "arn": "arn:aws:iam::885164491973:user/alex",
-                  "id": "2019-10-15 10:27:41.903271 +0000 UTC",
+                  "id": "2019-10-15 11:23:27.725163 +0000 UTC",
                   "user_id": "AIDAIA2HJENE7W7DDPY5G"
                 }
               },
@@ -2694,6 +2659,41 @@
               }
             ],
             "address": "module.runner"
+          },
+          {
+            "resources": [
+              {
+                "address": "data.aws_vpc_endpoint_service.s3",
+                "mode": "data",
+                "type": "aws_vpc_endpoint_service",
+                "name": "s3",
+                "index": 0,
+                "provider_name": "aws",
+                "schema_version": 0,
+                "values": {
+                  "acceptance_required": false,
+                  "availability_zones": [
+                    "ap-southeast-2a",
+                    "ap-southeast-2b",
+                    "ap-southeast-2c"
+                  ],
+                  "base_endpoint_dns_names": [
+                    "s3.ap-southeast-2.amazonaws.com"
+                  ],
+                  "id": "1802082413",
+                  "manages_vpc_endpoints": false,
+                  "owner": "amazon",
+                  "private_dns_name": "",
+                  "service": "s3",
+                  "service_id": "vpce-svc-0aa3c284dcb4652c2",
+                  "service_name": "com.amazonaws.ap-southeast-2.s3",
+                  "service_type": "Gateway",
+                  "tags": {},
+                  "vpc_endpoint_policy_supported": true
+                }
+              }
+            ],
+            "address": "module.vpc"
           }
         ]
       }
@@ -2748,7 +2748,10 @@
               "constant_value": 60
             },
             "runners_machine_off_peak_periods": {
-              "constant_value": "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
+              "constant_value": [
+                "* * 0-9,17-23 * * mon-fri *",
+                "* * * * * sat,sun *"
+              ]
             },
             "runners_machine_off_peak_timezone": {
               "constant_value": "Australia/Sydney"
@@ -3996,8 +3999,8 @@
                 "description": "Off peak idle time of the runners"
               },
               "runners_machine_off_peak_periods": {
-                "default": "",
-                "description": "Off peak periods of the runners"
+                "default": [],
+                "description": "Time periods when the scheduler is in the OffPeak mode. A list of cron-style patterns"
               },
               "runners_machine_off_peak_timezone": {
                 "default": "Australia/Sydney",

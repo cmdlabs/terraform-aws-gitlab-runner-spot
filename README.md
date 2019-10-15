@@ -99,7 +99,7 @@ The below outlines the current parameters and defaults.
 |runners_machine_off_peak_timezone|Off peak idle time zone of the runners|string|Australia/Sydney|No|
 |runners_machine_off_peak_idle_count|Off peak idle count of the runners|number|0|No|
 |runners_machine_off_peak_idle_time|Off peak idle time of the runners|number|0|No|
-|runners_machine_off_peak_periods|Off peak periods of the runners|string|""|Yes|
+|runners_machine_off_peak_periods|Time periods when the scheduler is in the OffPeak mode. A list of cron-style patterns|list(string)|[]|No|
 
 ### Outputs
 
@@ -178,7 +178,10 @@ module "runner" {
   runners_machine_off_peak_timezone   = "Australia/Sydney"
   runners_machine_off_peak_idle_count = 0
   runners_machine_off_peak_idle_time  = 60
-  runners_machine_off_peak_periods    = "[\"* * 0-9,17-23 * * mon-fri *\", \"* * * * * sat,sun *\"]"
+  runners_machine_off_peak_periods    = [
+    "* * 0-9,17-23 * * mon-fri *",
+    "* * * * * sat,sun *"
+  ]
 
   enable_ssh_access = var.enable_ssh_access
 }

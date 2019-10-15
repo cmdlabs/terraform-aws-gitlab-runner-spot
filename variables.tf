@@ -160,7 +160,7 @@ variable "runners_machine_off_peak_idle_time" {
 }
 
 variable "runners_machine_off_peak_periods" {
-  description = "Off peak periods of the runners"
-  type        = string
-  default     = ""
+  description = "Time periods when the scheduler is in the OffPeak mode. A list of cron-style patterns"
+  type        = list(string)
+  default     = []
 }

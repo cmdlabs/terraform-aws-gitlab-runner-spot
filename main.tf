@@ -118,7 +118,7 @@ data "template_file" "runners" {
     docker_machine_ami          = data.aws_ami.docker-machine.id
     runners_machine_off_peak_idle_count = var.runners_machine_off_peak_idle_count
     runners_machine_off_peak_idle_time  = var.runners_machine_off_peak_idle_time
-    runners_machine_off_peak_periods    = var.runners_machine_off_peak_periods
+    runners_machine_off_peak_periods    = jsonencode(var.runners_machine_off_peak_periods)
     runners_machine_off_peak_timezone   = var.runners_machine_off_peak_timezone
   }
 }
