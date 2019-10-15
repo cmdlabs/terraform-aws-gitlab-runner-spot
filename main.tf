@@ -7,6 +7,7 @@ locals {
   gitlab_runner_version         = "12.3.0"
   runners_docker_image          = "docker:18.03.1-ce"
   runners_ssm_token_key         = "gitlab-runner-runner-token"
+  canonical_account_id          = "099720109477"
 }
 
 resource "aws_security_group" "runner" {
@@ -150,7 +151,7 @@ data "aws_ami" "docker-machine" {
     values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
   }
 
-  owners = ["099720109477"] # Canonical.
+  owners = [local.canonical_account_id]
 }
 
 resource "aws_autoscaling_group" "gitlab_runner_instance" {
