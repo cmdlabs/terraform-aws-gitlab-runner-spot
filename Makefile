@@ -1,4 +1,5 @@
-.PHONY: docs check
+.PHONY: docs check unit
+.DEFAULT_GOAL := all
 docs:
 	ruby erb/docs.rb
 
@@ -7,3 +8,5 @@ check:
 
 unit:
 	bash shunit2/test_user_data.sh
+
+all: check unit

@@ -81,7 +81,6 @@ The below outlines the current parameters and defaults.
 |key_name|The name of the EC2 key pair to use|string|default|No|
 |enable_ssh_access|Enables SSH access to the GitLab Runner instance|bool|false|No|
 |ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to docker machine and the GitLab Runner|list(string)|[0.0.0.0/0]|No|
-|enable_user_data_xtrace|Enable bash xtrace for the user data script that creates the EC2 instance for the runner agent. Be aware this could log sensitive data such as you GitLab runner token|bool|false|No|
 |gitlab_runner_registration_config||map(string)|(map)|No|
 |schedule_config|Map containing the configuration of the ASG scale-in and scale-up for the runner instance|map|(map)|No|
 |globals_concurrent|Concurrent value for the runners|number|10|No|

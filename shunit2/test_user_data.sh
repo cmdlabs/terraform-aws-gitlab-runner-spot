@@ -17,7 +17,7 @@ script_under_test='template/user-data.sh.tpl'
 aws() {
   echo "${FUNCNAME[0]} $*" >> commands_log
   case "${FUNCNAME[0]} $*" in
-  "aws ssm get-parameters --names $runners_ssm_token_key --with-decryption --region $ssm_region")
+  "aws ssm get-parameters --names $runners_ssm_token_key --with-decryption --region $aws_region")
     echo '{"Parameters":[{"Value":"SECRETTOKEN"}]}' ;;
   *)
     echo "No response for >>> ${FUNCNAME[0]} $*" >> unknown_commands
@@ -30,7 +30,7 @@ curl() {
   case "${FUNCNAME[0]} $*" in
   "curl -s https://169.254.169.254/latest/dynamic/instance-identity/document")
     echo '{"instanceId":"i-11111111","region":"ap-southeast-2"}' ;;
-  "curl -X POST -L $runners_gitlab_url/api/v4/runners -F token=$gitlab_runner_registration_token -F description=$giltab_runner_description -F locked=$gitlab_runner_locked_to_project -F run_untagged=$gitlab_runner_run_untagged -F maximum_timeout=$gitlab_runner_maximum_timeout -F access_level=$gitlab_runner_access_level")
+  "curl -X POST -L $runners_url/api/v4/runners -F token=$gitlab_runner_registration_token -F description=$gitlab_runner_description -F locked=$gitlab_runner_locked_to_project -F run_untagged=$gitlab_runner_run_untagged -F maximum_timeout=$gitlab_runner_maximum_timeout -F access_level=$gitlab_runner_access_level")
     echo '{"token":"ANOTHERSECRETTOKEN"}' ;;
   *)
     echo "No response for >>> ${FUNCNAME[0]} $*" >> unknown_commands
@@ -73,10 +73,10 @@ baz qux baz qux
 EOF
 
   runners_ssm_token_key='/mykey'
-  ssm_region='ap-southeast-2'
-  runners_gitlab_url='https://gitlab.com'
+  aws_region='ap-southeast-2'
+  runners_url='https://gitlab.com'
   gitlab_runner_registration_token='XXXXXXXX'
-  giltab_runner_description='my runner'
+  gitlab_runner_description='my runner'
   gitlab_runner_locked_to_project='true'
   gitlab_runner_run_untagged='true'
   gitlab_runner_maximum_timeout='10'

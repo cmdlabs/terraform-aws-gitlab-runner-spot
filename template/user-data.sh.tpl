@@ -82,13 +82,13 @@ install_gitlab_runner() {
 
 register_runner() {
   token=$(aws ssm get-parameters --names "${runners_ssm_token_key}" \
-    --with-decryption --region "${ssm_region}" | jq -r '.Parameters[].Value')
+    --with-decryption --region "${aws_region}" | jq -r '.Parameters[].Value')
 
   if [ "$token" == "null" ] ; then
     token=$(
-      curl -X POST -L "${runners_gitlab_url}/api/v4/runners" \
+      curl -X POST -L "${runners_url}/api/v4/runners" \
         -F "token=${gitlab_runner_registration_token}" \
-        -F "description=${giltab_runner_description}" \
+        -F "description=${gitlab_runner_description}" \
         -F "locked=${gitlab_runner_locked_to_project}" \
         -F "run_untagged=${gitlab_runner_run_untagged}" \
         -F "maximum_timeout=${gitlab_runner_maximum_timeout}" \
@@ -97,7 +97,7 @@ register_runner() {
     )
 
     aws ssm put-parameter --overwrite --type SecureString --name \
-      "${runners_ssm_token_key}" --value "$token" --region "${ssm_region}"
+      "${runners_ssm_token_key}" --value "$token" --region "${aws_region}"
   fi
 
   sed -i 's/##TOKEN##/'"$token"'/' "$config_toml"

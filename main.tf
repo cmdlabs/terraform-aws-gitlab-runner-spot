@@ -128,8 +128,9 @@ data "template_file" "user_data" {
   template = file("${path.module}/template/user-data.sh.tpl")
 
   vars = {
+    aws_region                       = var.aws_region
     docker_machine_version           = local.docker_machine_version
-    giltab_runner_description        = var.gitlab_runner_registration_config["description"]
+    gitlab_runner_description        = var.gitlab_runner_registration_config["description"]
     gitlab_runner_access_level       = var.gitlab_runner_registration_config["access_level"]
     gitlab_runner_locked_to_project  = var.gitlab_runner_registration_config["locked_to_project"]
     gitlab_runner_maximum_timeout    = var.gitlab_runner_registration_config["maximum_timeout"]
@@ -139,7 +140,6 @@ data "template_file" "user_data" {
     runners_config                   = data.template_file.runners.rendered
     runners_ssm_token_key            = local.runners_ssm_token_key
     runners_url                      = var.runners_url
-    ssm_region                       = var.aws_region
   }
 }
 
