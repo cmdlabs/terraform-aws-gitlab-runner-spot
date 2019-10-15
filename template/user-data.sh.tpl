@@ -20,38 +20,38 @@ install_deps() {
 }
 
 configure_cloudwatch() {
-  cat > /etc/awslogs/awslogs.conf <<'EOF'
+  local instance_id=$(curl -s \
+    https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)
+
+  cat > /etc/awslogs/awslogs.conf <<EOF
 [general]
 state_file = /var/lib/awslogs/agent-state
 
 [/var/log/dmesg]
 file = /var/log/dmesg
-log_stream_name = {instanceId}/dmesg
+log_stream_name = $instance_id/dmesg
 log_group_name = gitlab-runner-log-group
 initial_position = start_of_file
 
 [/var/log/messages]
 file = /var/log/messages
-log_stream_name = {instanceId}/messages
+log_stream_name = $instance_id/messages
 log_group_name = gitlab-runner-log-group
 datetime_format = %b %d %H:%M:%S
 initial_position = start_of_file
 
 [/var/log/user-data.log]
 file = /var/log/user-data.log
-log_stream_name = {instanceId}/user-data
+log_stream_name = $instance_id/user-data
 log_group_name = gitlab-runner-log-group
 initial_position = start_of_file
 EOF
 
-  region=$(curl -s \
+  local region=$(curl -s \
     https://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
-  instance_id=$(curl -s \
-    169.254.169.254/latest/dynamic/instance-identity/document | jq -r .instanceId)
 
   sed -i '
     s/region = us-east-1/region = '"$region"'/
-    s/{instanceId}/'"$instance_id"'/
   ' /etc/awslogs/awscli.conf
 
   service awslogs start
@@ -98,7 +98,7 @@ register_runner() {
       "${runners_ssm_token_key}" --value "$token" --region "${ssm_region}"
   fi
 
-  sed -i 's/__TO_BE_REPLACED_BY_USER_DATA__/'"$token"'/' /etc/gitlab-runner/config.toml
+  sed -i 's/##TOKEN##/'"$token"'/' /etc/gitlab-runner/config.toml
 }
 
 start_gitlab_runner() {
