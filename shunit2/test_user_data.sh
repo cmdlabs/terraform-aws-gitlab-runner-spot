@@ -80,4 +80,40 @@ EOF
   rm -f "$config_toml"
 }
 
+testRegisterRunnerWithError() {
+  aws() {
+    case "${FUNCNAME[0]} $*" in
+
+    "aws ssm get-parameters --names $runners_ssm_token_key --with-decryption --region $aws_region")
+      echo '{"InvalidParameters":["'"$runners_ssm_token_key"'"],"Parameters":[]}' ;;
+
+    esac
+  }
+
+  curl() { echo '{"message":{"tags_list":["can not be empty when runner is not allowed to pick untagged jobs"]}}' ; }
+
+  config_toml='./test_config.toml'
+
+  cat > "$config_toml" <<EOF
+foo bar foo bar
+this line has ##TOKEN## in it
+baz qux baz qux
+EOF
+
+  runners_ssm_token_key='/mykey'
+  aws_region='ap-southeast-2'
+  runners_url='https://gitlab.com'
+  gitlab_runner_registration_token='XXXXXXXX'
+  gitlab_runner_description='my runner'
+  gitlab_runner_locked_to_project='true'
+  gitlab_runner_maximum_timeout='10'
+  gitlab_runner_access_level='debug'
+
+  register_runner
+
+  assertTrue "$config_toml has been unexpectedly edited" "grep -q '##TOKEN##' $config_toml"
+
+  rm -f "$config_toml"
+}
+
 . shunit2
