@@ -119,7 +119,7 @@ main() {
   start_gitlab_runner
 }
 
-if [ "$0" == "${BASH_SOURCE[0]}" ] ; then
+if [ "$0" == "$BASH_SOURCE" ] ; then
   main
 fi
 
