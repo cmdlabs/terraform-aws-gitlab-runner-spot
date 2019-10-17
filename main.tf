@@ -135,7 +135,6 @@ data "template_file" "user_data" {
     gitlab_runner_locked_to_project  = var.gitlab_runner_registration_config["locked_to_project"]
     gitlab_runner_maximum_timeout    = var.gitlab_runner_registration_config["maximum_timeout"]
     gitlab_runner_registration_token = var.gitlab_runner_registration_config["registration_token"]
-    gitlab_runner_run_untagged       = var.gitlab_runner_registration_config["run_untagged"]
     gitlab_runner_version            = local.gitlab_runner_version
     runners_config                   = data.template_file.runners.rendered
     runners_ssm_token_key            = local.runners_ssm_token_key

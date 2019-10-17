@@ -85,16 +85,22 @@ register_runner() {
     --with-decryption --region "${aws_region}" | jq -r '.Parameters[0].Value')
 
   if [ "$token" == "null" ] ; then
-    token=$(
+    response=$(
       curl -X POST -L "${runners_url}/api/v4/runners" \
         -F "token=${gitlab_runner_registration_token}" \
         -F "description=${gitlab_runner_description}" \
         -F "locked=${gitlab_runner_locked_to_project}" \
-        -F "run_untagged=${gitlab_runner_run_untagged}" \
         -F "maximum_timeout=${gitlab_runner_maximum_timeout}" \
         -F "access_level=${gitlab_runner_access_level}" \
-      | jq -r .token
     )
+
+    token=$(jq -r .token <<< "$response")
+
+    if [ "$token" == "null" ] ; then
+      echo "Received the following error:"
+      echo "$response"
+      return
+    fi
 
     aws ssm put-parameter --overwrite --type SecureString --name \
       "${runners_ssm_token_key}" --value "$token" --region "${aws_region}"

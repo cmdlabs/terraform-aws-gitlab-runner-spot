@@ -50,7 +50,6 @@ variable "gitlab_runner_registration_config" {
     registration_token = ""
     description        = ""
     locked_to_project  = ""
-    run_untagged       = ""
     maximum_timeout    = ""
     access_level       = ""
   }
