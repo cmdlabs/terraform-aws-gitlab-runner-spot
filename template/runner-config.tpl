@@ -44,7 +44,7 @@ check_interval = 0
       "amazonec2-spot-price=${docker_machine_spot_price}",
       "amazonec2-security-group=${docker_machine_security_group}",
       "amazonec2-monitoring=false",
-      "amazonec2-iam-instance-profile=${docker_machine_iam_instance_profile},
+      "amazonec2-iam-instance-profile=${docker_machine_iam_instance_profile}",
       "amazonec2-root-size=${docker_machine_root_size}",
       "amazonec2-ami=${docker_machine_ami}"
     ]
