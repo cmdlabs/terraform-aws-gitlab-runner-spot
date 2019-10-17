@@ -1,4 +1,4 @@
-concurrent = ${runners_concurrent}
+concurrent = ${globals_concurrent}
 check_interval = 0
 
 [[runners]]
@@ -28,7 +28,7 @@ check_interval = 0
   [runners.machine]
     IdleCount = ${runners_machine_idle_count}
     IdleTime = ${runners_machine_idle_time}
-%{ if runners_max_builds != 0 ~}
+%{ if runners_machine_max_builds != 0 ~}
     MaxBuilds = ${runners_machine_max_builds}
 %{ endif ~}
     MachineDriver = "amazonec2"
