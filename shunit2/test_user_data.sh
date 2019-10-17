@@ -14,18 +14,6 @@ fi
 
 script_under_test='template/user-data.sh.tpl'
 
-aws() {
-  case "${FUNCNAME[0]} $*" in
-
-  "aws ssm get-parameters --names $runners_ssm_token_key --with-decryption --region $aws_region")
-    echo '{"Parameters":[{"Value":"SECRETTOKEN"}]}' ;;
-
-  "aws ssm put-parameter --overwrite --type SecureString --name $runners_ssm_token_key --value $token --region $aws_region")
-    echo '{"Version":"1"}' ;;
-
-  esac
-}
-
 setUp() {
   . "$script_under_test"
 }
@@ -53,7 +41,19 @@ EOF
   rm -f "$awslogs_conf" "$awscli_conf"
 }
 
-testRegisterRunner() {
+testRegisterRunnerTokenNull() {
+  aws() {
+    case "${FUNCNAME[0]} $*" in
+
+    "aws ssm get-parameters --names $runners_ssm_token_key --with-decryption --region $aws_region")
+      echo '{"InvalidParameters":["'"$runners_ssm_token_key"'"],"Parameters":[]}' ;;
+
+    "aws ssm put-parameter --overwrite --type SecureString --name $runners_ssm_token_key --value $token --region $aws_region")
+      echo '{"Version":"1"}' ;;
+
+    esac
+  }
+
   curl() { echo '{"token":"ANOTHERSECRETTOKEN"}' ; }
 
   config_toml='./test_config.toml'
@@ -75,7 +75,7 @@ EOF
 
   register_runner
 
-  assertTrue "$config_toml does not have secret token in it" "grep -q SECRETTOKEN $config_toml"
+  assertTrue "$config_toml does not have secret token in it" "grep -q ANOTHERSECRETTOKEN $config_toml"
 
   rm -f "$config_toml"
 }

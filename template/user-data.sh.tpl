@@ -82,7 +82,7 @@ install_gitlab_runner() {
 
 register_runner() {
   token=$(aws ssm get-parameters --names "${runners_ssm_token_key}" \
-    --with-decryption --region "${aws_region}" | jq -r '.Parameters[].Value')
+    --with-decryption --region "${aws_region}" | jq -r '.Parameters[0].Value')
 
   if [ "$token" == "null" ] ; then
     token=$(
