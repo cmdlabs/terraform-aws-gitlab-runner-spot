@@ -133,20 +133,9 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-module "vpc" {
-  source  = "git@github.com:cmdlabs/terraform-aws-gitlab-runner.git"
-  version = "2.5"
-
-  name = "vpc-gitlab-runner"
-  cidr = "10.0.0.0/16"
-
-  azs             = [data.aws_availability_zones.available.names[0]]
-  private_subnets = ["10.0.1.0/24"]
-  public_subnets  = ["10.0.101.0/24"]
-
-  enable_nat_gateway = true
-  single_nat_gateway = true
-  enable_s3_endpoint = true
+variable "vpc_id" {}
+variable "subnet_ids" {
+  type = list(string)
 }
 
 module "runner" {
@@ -158,9 +147,9 @@ module "runner" {
 
   runners_cache_bucket_name = var.bucket_name
 
-  vpc_id       = module.vpc.vpc_id
-  subnet_ids   = module.vpc.private_subnets
-  subnet_id    = module.vpc.private_subnets[0]
+  vpc_id       = var.vpc_id
+  subnet_ids   = var.subnet_ids
+  subnet_id    = var.subnet_ids[0]
 
   runners_name = "test-runner"
   runners_url  = "https://gitlab.com"
