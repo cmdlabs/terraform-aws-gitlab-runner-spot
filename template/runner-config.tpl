@@ -54,3 +54,5 @@ check_interval = 0
 %{ if runners_machine_off_peak_periods != "" ~}
     OffPeakPeriods = ${runners_machine_off_peak_periods}
 %{ endif ~}
+
+# vim: set ft=toml:
