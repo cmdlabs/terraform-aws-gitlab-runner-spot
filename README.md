@@ -57,7 +57,6 @@ gitlab_runner_registration_config = {
   registration_token = "<registration token>"
   description        = "<some description>"
   locked_to_project  = "true"
-  run_untagged       = "false"
   maximum_timeout    = "3600"
   access_level       = "<not_protected OR ref_protected, ref_protected runner will only run on pipelines triggered on protected branches>"
 }
