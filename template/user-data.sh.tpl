@@ -22,7 +22,7 @@ configure_cloudwatch() {
   local instance_id region
 
   read -r instance_id region <<< "$(
-    curl -s https://169.254.169.254/latest/dynamic/instance-identity/document \
+    curl -s http://169.254.169.254/latest/dynamic/instance-identity/document \
       | jq -r '[.instanceId, .region] | @tsv'
   )"
 
