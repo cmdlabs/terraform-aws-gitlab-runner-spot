@@ -15,26 +15,14 @@ fi
 script_under_test='template/user-data.sh.tpl'
 
 aws() {
-  echo "${FUNCNAME[0]} $*" >> commands_log
   case "${FUNCNAME[0]} $*" in
+
   "aws ssm get-parameters --names $runners_ssm_token_key --with-decryption --region $aws_region")
     echo '{"Parameters":[{"Value":"SECRETTOKEN"}]}' ;;
-  *)
-    echo "No response for >>> ${FUNCNAME[0]} $*" >> unknown_commands
-    echo "FAIL" ;;
-  esac
-}
 
-curl() {
-  echo "${FUNCNAME[0]} $*" >> commands_log
-  case "${FUNCNAME[0]} $*" in
-  "curl -s https://169.254.169.254/latest/dynamic/instance-identity/document")
-    echo '{"instanceId":"i-11111111","region":"ap-southeast-2"}' ;;
-  "curl -X POST -L $runners_url/api/v4/runners -F token=$gitlab_runner_registration_token -F description=$gitlab_runner_description -F locked=$gitlab_runner_locked_to_project -F run_untagged=$gitlab_runner_run_untagged -F maximum_timeout=$gitlab_runner_maximum_timeout -F access_level=$gitlab_runner_access_level")
-    echo '{"token":"ANOTHERSECRETTOKEN"}' ;;
-  *)
-    echo "No response for >>> ${FUNCNAME[0]} $*" >> unknown_commands
-    echo "FAIL" ;;
+  "aws ssm put-parameter --overwrite --type SecureString --name $runners_ssm_token_key --value $token --region $aws_region")
+    echo '{"Version":"1"}' ;;
+
   esac
 }
 
@@ -43,6 +31,8 @@ setUp() {
 }
 
 testConfigureCloudwatch() {
+  curl() { echo '{"instanceId":"i-11111111","region":"ap-southeast-2"}' ; }
+
   service() { : ; }
   chkconfig() { : ; }
 
@@ -64,6 +54,8 @@ EOF
 }
 
 testRegisterRunner() {
+  curl() { echo '{"token":"ANOTHERSECRETTOKEN"}' ; }
+
   config_toml='./test_config.toml'
 
   cat > "$config_toml" <<EOF
@@ -78,7 +70,6 @@ EOF
   gitlab_runner_registration_token='XXXXXXXX'
   gitlab_runner_description='my runner'
   gitlab_runner_locked_to_project='true'
-  gitlab_runner_run_untagged='true'
   gitlab_runner_maximum_timeout='10'
   gitlab_runner_access_level='debug'
 
@@ -87,21 +78,6 @@ EOF
   assertTrue "$config_toml does not have secret token in it" "grep -q SECRETTOKEN $config_toml"
 
   rm -f "$config_toml"
-}
-
-testUnknownCommands() {
-  # Tells us if we forgot to capture responses for any AWS commands issued.
-  true > expected_log
-  touch unknown_commands
-  assertEquals "unknown AWS commands issued somewhere" "" "$(diff -wu expected_log unknown_commands)"
-}
-
-tearDown() {
-  rm -f commands_log expected_log
-}
-
-oneTimeTearDown() {
-  rm -f unknown_commands
 }
 
 . shunit2
