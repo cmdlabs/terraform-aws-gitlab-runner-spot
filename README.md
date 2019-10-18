@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 ![CMD Solutions|medium](https://s3-ap-southeast-2.amazonaws.com/cmd-website-images/CMDlogo.jpg)
 
-# terraform-aws-gitlab-runner
+# terraform-aws-gitlab-runner-spot
 
 #### Table of contents
 
@@ -78,6 +78,7 @@ The below outlines the current parameters and defaults.
 |subnet_id|Subnet used for hosting the GitLab runner|string|""|Yes|
 |subnet_ids|List of subnets used for hosting the GitLab runners|list(string)|""|Yes|
 |key_name|The name of the EC2 key pair to use|string|default|No|
+|spot_price|Spot bid price for the GitLab Runner instance|string|0.06|No|
 |enable_ssh_access|Enables SSH access to the GitLab Runner instance|bool|false|No|
 |ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to docker machine and the GitLab Runner|list(string)|[0.0.0.0/0]|No|
 |gitlab_runner_registration_config||map(string)|(map)|No|
@@ -138,7 +139,7 @@ variable "subnet_ids" {
 }
 
 module "runner" {
-  source = "git@github.com:cmdlabs/terraform-aws-gitlab-runner.git"
+  source = "git@github.com:cmdlabs/terraform-aws-gitlab-runner-spot.git"
 
   key_name = "default"
 
