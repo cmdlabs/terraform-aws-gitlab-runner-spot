@@ -30,6 +30,12 @@ variable "key_name" {
   default     = "default"
 }
 
+variable "spot_price" {
+  description = "Spot bid price for the GitLab Runner instance"
+  type        = string
+  default     = "0.06"
+}
+
 variable "enable_ssh_access" {
   description = "Enables SSH access to the GitLab Runner instance"
   type        = bool

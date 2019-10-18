@@ -1,7 +1,8 @@
 locals {
-  instance_type                 = "t3.micro"
+  gitlab_runner_ami_filter      = ["amzn2-ami-hvm-*-x86_64-ebs"]
+  gitlab_runner_instance_type   = "t3.micro"
+  docker_machine_ami_filter     = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
   docker_machine_instance_type  = "m5a.large"
-  docker_machine_spot_price     = "0.06"
   docker_machine_version        = "0.16.2"
   docker_machine_root_size      = 16
   gitlab_runner_version         = "12.3.0"
@@ -113,7 +114,7 @@ data "template_file" "runners" {
     runners_machine_max_builds  = var.runners_machine_max_builds
     docker_machine_iam_instance_profile = aws_iam_instance_profile.docker_machine.name
     docker_machine_instance_type = local.docker_machine_instance_type
-    docker_machine_spot_price   = local.docker_machine_spot_price
+    docker_machine_spot_price   = var.spot_price
     docker_machine_security_group = aws_security_group.docker_machine.name
     docker_machine_root_size    = local.docker_machine_root_size
     docker_machine_ami          = data.aws_ami.docker-machine.id
@@ -147,7 +148,7 @@ data "aws_ami" "docker-machine" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+    values = local.docker_machine_ami_filter
   }
 
   owners = [local.canonical_account_id]
@@ -190,7 +191,7 @@ data "aws_ami" "runner" {
 
   filter {
     name   = "name"
-    values = ["amzn-ami-hvm-2018.03*-x86_64-ebs"]
+    values = local.gitlab_runner_ami_filter
   }
 
   owners = ["amazon"]
@@ -201,7 +202,7 @@ resource "aws_launch_configuration" "gitlab_runner_instance" {
   key_name             = var.key_name
   image_id             = data.aws_ami.runner.id
   user_data            = data.template_file.user_data.rendered
-  instance_type        = local.instance_type
+  instance_type        = local.gitlab_runner_instance_type
   iam_instance_profile = aws_iam_instance_profile.instance.name
 
   root_block_device {

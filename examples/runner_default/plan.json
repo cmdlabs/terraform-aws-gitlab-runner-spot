@@ -6,7 +6,7 @@
       "value": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0"
     },
     "enable_ssh_access": {
-      "value": false
+      "value": "true"
     },
     "registration_token": {
       "value": "GBpeL612xfp3DtEjzZsx"
@@ -104,13 +104,11 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:logs:ap-southeast-2:885164491973:log-group:gitlab-runner-log-group:*",
-                "id": "gitlab-runner-log-group",
-                "kms_key_id": "",
+                "kms_key_id": null,
                 "name": "gitlab-runner-log-group",
                 "name_prefix": null,
                 "retention_in_days": 0,
-                "tags": {}
+                "tags": null
               }
             },
             {
@@ -121,17 +119,10 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:iam::885164491973:instance-profile/gitlab-runner-docker-machine-profile",
-                "create_date": "2019-10-17T07:53:48Z",
-                "id": "gitlab-runner-docker-machine-profile",
                 "name": "gitlab-runner-docker-machine-profile",
                 "name_prefix": null,
                 "path": "/",
-                "role": "gitlab-runner-docker-machine-role",
-                "roles": [
-                  "gitlab-runner-docker-machine-role"
-                ],
-                "unique_id": "AIPA44F7KITCT4LOMR3TO"
+                "role": "gitlab-runner-docker-machine-role"
               }
             },
             {
@@ -142,17 +133,10 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:iam::885164491973:instance-profile/gitlab-runner-instance-profile",
-                "create_date": "2019-10-17T07:53:48Z",
-                "id": "gitlab-runner-instance-profile",
                 "name": "gitlab-runner-instance-profile",
                 "name_prefix": null,
                 "path": "/",
-                "role": "gitlab-runner-instance-role",
-                "roles": [
-                  "gitlab-runner-instance-role"
-                ],
-                "unique_id": "AIPA44F7KITCUMTNM6CAP"
+                "role": "gitlab-runner-instance-role"
               }
             },
             {
@@ -163,13 +147,10 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
                 "description": "Policy for docker machine instance to access cache",
-                "id": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
                 "name": "gitlab-runner-docker-machine-cache",
                 "name_prefix": null,
-                "path": "/",
-                "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowGitLabRunnersAccessCache\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:PutObjectAcl\",\n        \"s3:GetObject\",\n        \"s3:GetObjectAcl\"\n      ],\n      \"Resource\": [\n        \"arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0/*\"\n      ]\n    }\n  ]\n}\n"
+                "path": "/"
               }
             },
             {
@@ -180,9 +161,7 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
                 "description": "Policy for docker machine.",
-                "id": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
                 "name": "gitlab-runner-docker-machine",
                 "name_prefix": null,
                 "path": "/",
@@ -197,9 +176,7 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
                 "description": "Policy session manager.",
-                "id": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
                 "name": "gitlab-runner-session-manager",
                 "name_prefix": null,
                 "path": "/",
@@ -214,9 +191,7 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
                 "description": "Policy for creation of service linked roles.",
-                "id": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
                 "name": "gitlab-runner-service_linked_role",
                 "name_prefix": null,
                 "path": "/",
@@ -231,9 +206,7 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
                 "description": "Policy for runner token param access via SSM",
-                "id": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
                 "name": "gitlab-runner-ssm",
                 "name_prefix": null,
                 "path": "/",
@@ -248,19 +221,15 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:iam::885164491973:role/gitlab-runner-docker-machine-role",
-                "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
-                "create_date": "2019-10-17T07:53:46Z",
-                "description": "",
+                "assume_role_policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}\n",
+                "description": null,
                 "force_detach_policies": false,
-                "id": "gitlab-runner-docker-machine-role",
                 "max_session_duration": 3600,
                 "name": "gitlab-runner-docker-machine-role",
                 "name_prefix": null,
                 "path": "/",
                 "permissions_boundary": null,
-                "tags": {},
-                "unique_id": "AROA44F7KITCV2O2B4BBI"
+                "tags": null
               }
             },
             {
@@ -271,19 +240,15 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "arn": "arn:aws:iam::885164491973:role/gitlab-runner-instance-role",
-                "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
-                "create_date": "2019-10-17T07:53:46Z",
-                "description": "",
+                "assume_role_policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}\n",
+                "description": null,
                 "force_detach_policies": false,
-                "id": "gitlab-runner-instance-role",
                 "max_session_duration": 3600,
                 "name": "gitlab-runner-instance-role",
                 "name_prefix": null,
                 "path": "/",
                 "permissions_boundary": null,
-                "tags": {},
-                "unique_id": "AROA44F7KITCQWBHVJAGP"
+                "tags": null
               }
             },
             {
@@ -294,7 +259,6 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "id": "gitlab-runner-instance-role:gitlab-runner-instance-role",
                 "name": "gitlab-runner-instance-role",
                 "name_prefix": null,
                 "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowLoggingToCloudWatch\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\",\n        \"logs:DescribeLogStreams\"\n      ],\n      \"Resource\": [\n        \"arn:aws:logs:*:*:*\"\n      ]\n    }\n  ]\n}\n",
@@ -309,8 +273,6 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "id": "gitlab-runner-instance-role-20191017075352141100000008",
-                "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
                 "role": "gitlab-runner-instance-role"
               }
             },
@@ -322,8 +284,6 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "id": "gitlab-runner-instance-role-20191017075349468600000004",
-                "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
                 "role": "gitlab-runner-instance-role"
               }
             },
@@ -335,7 +295,6 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "id": "gitlab-runner-instance-role-20191017075348705800000003",
                 "policy_arn": "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
                 "role": "gitlab-runner-instance-role"
               }
@@ -348,8 +307,6 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "id": "gitlab-runner-instance-role-20191017075349564400000007",
-                "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
                 "role": "gitlab-runner-instance-role"
               }
             },
@@ -361,8 +318,6 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "id": "gitlab-runner-instance-role-20191017075349471200000005",
-                "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
                 "role": "gitlab-runner-instance-role"
               }
             },
@@ -374,8 +329,6 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "id": "gitlab-runner-instance-role-20191017075349515400000006",
-                "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
                 "role": "gitlab-runner-instance-role"
               }
             },
@@ -387,11 +340,11 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "associate_public_ip_address": false,
+                "associate_public_ip_address": true,
                 "enable_monitoring": true,
                 "ephemeral_block_device": [],
                 "iam_instance_profile": "gitlab-runner-instance-profile",
-                "image_id": "ami-042710e2a62ecec92",
+                "image_id": "ami-0804dc420cb24c62b",
                 "instance_type": "t3.micro",
                 "key_name": "default",
                 "name_prefix": null,
@@ -403,11 +356,7 @@
                     "volume_type": "gp2"
                   }
                 ],
-                "security_groups": [
-                  "sg-0da027c8708d5a1a1"
-                ],
                 "spot_price": null,
-                "user_data": "a942485eee07761c04af37d5c81d6a434cad347d",
                 "user_data_base64": null,
                 "vpc_classic_link_id": null,
                 "vpc_classic_link_security_groups": null
@@ -421,26 +370,20 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "acceleration_status": "",
                 "acl": "private",
-                "arn": "arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
                 "bucket": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-                "bucket_domain_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0.s3.amazonaws.com",
                 "bucket_prefix": null,
-                "bucket_regional_domain_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0.s3.ap-southeast-2.amazonaws.com",
                 "cors_rule": [],
                 "force_destroy": true,
-                "hosted_zone_id": "Z1WCIGYICN2BYD",
-                "id": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
                 "lifecycle_rule": [
                   {
-                    "abort_incomplete_multipart_upload_days": 0,
+                    "abort_incomplete_multipart_upload_days": null,
                     "enabled": true,
                     "expiration": [
                       {
                         "date": "",
                         "days": 1,
-                        "expired_object_delete_marker": false
+                        "expired_object_delete_marker": null
                       }
                     ],
                     "id": "clear",
@@ -451,23 +394,21 @@
                     ],
                     "noncurrent_version_transition": [],
                     "prefix": "runner/",
-                    "tags": {},
+                    "tags": null,
                     "transition": []
                   }
                 ],
                 "logging": [],
                 "object_lock_configuration": [],
                 "policy": null,
-                "region": "ap-southeast-2",
                 "replication_configuration": [],
-                "request_payer": "BucketOwner",
                 "server_side_encryption_configuration": [
                   {
                     "rule": [
                       {
                         "apply_server_side_encryption_by_default": [
                           {
-                            "kms_master_key_id": "",
+                            "kms_master_key_id": null,
                             "sse_algorithm": "AES256"
                           }
                         ]
@@ -475,16 +416,8 @@
                     ]
                   }
                 ],
-                "tags": {},
-                "versioning": [
-                  {
-                    "enabled": false,
-                    "mfa_delete": false
-                  }
-                ],
-                "website": [],
-                "website_domain": null,
-                "website_endpoint": null
+                "tags": null,
+                "website": []
               }
             },
             {
@@ -495,57 +428,10 @@
               "provider_name": "aws",
               "schema_version": 1,
               "values": {
-                "arn": "arn:aws:ec2:ap-southeast-2:885164491973:security-group/sg-04eaa83b1a9bbdca7",
                 "description": "Managed by Terraform",
-                "egress": [
-                  {
-                    "cidr_blocks": [
-                      "0.0.0.0/0"
-                    ],
-                    "description": "",
-                    "from_port": 0,
-                    "ipv6_cidr_blocks": [],
-                    "prefix_list_ids": [],
-                    "protocol": "-1",
-                    "security_groups": [],
-                    "self": false,
-                    "to_port": 0
-                  }
-                ],
-                "id": "sg-04eaa83b1a9bbdca7",
-                "ingress": [
-                  {
-                    "cidr_blocks": [
-                      "0.0.0.0/0"
-                    ],
-                    "description": "",
-                    "from_port": 22,
-                    "ipv6_cidr_blocks": [],
-                    "prefix_list_ids": [],
-                    "protocol": "tcp",
-                    "security_groups": [],
-                    "self": false,
-                    "to_port": 22
-                  },
-                  {
-                    "cidr_blocks": [],
-                    "description": "",
-                    "from_port": 2376,
-                    "ipv6_cidr_blocks": [],
-                    "prefix_list_ids": [],
-                    "protocol": "tcp",
-                    "security_groups": [
-                      "sg-0da027c8708d5a1a1"
-                    ],
-                    "self": true,
-                    "to_port": 2376
-                  }
-                ],
-                "name": "gitlab-runner-docker-machine20191017075345454800000001",
                 "name_prefix": "gitlab-runner-docker-machine",
-                "owner_id": "885164491973",
                 "revoke_rules_on_delete": false,
-                "tags": {},
+                "tags": null,
                 "timeouts": null,
                 "vpc_id": "vpc-07a59518ae4faa320"
               }
@@ -558,7 +444,6 @@
               "provider_name": "aws",
               "schema_version": 1,
               "values": {
-                "arn": "arn:aws:ec2:ap-southeast-2:885164491973:security-group/sg-0da027c8708d5a1a1",
                 "description": "Managed by Terraform",
                 "egress": [
                   {
@@ -575,13 +460,9 @@
                     "to_port": 0
                   }
                 ],
-                "id": "sg-0da027c8708d5a1a1",
-                "ingress": [],
-                "name": "gitlab-runner-security-group20191017075345459800000002",
                 "name_prefix": "gitlab-runner-security-group",
-                "owner_id": "885164491973",
                 "revoke_rules_on_delete": false,
-                "tags": {},
+                "tags": null,
                 "timeouts": null,
                 "vpc_id": "vpc-07a59518ae4faa320"
               }
@@ -594,16 +475,13 @@
               "provider_name": "aws",
               "schema_version": 2,
               "values": {
-                "cidr_blocks": [],
-                "description": "",
+                "cidr_blocks": null,
+                "description": null,
                 "from_port": 2376,
-                "id": "sgrule-2214692661",
-                "ipv6_cidr_blocks": [],
-                "prefix_list_ids": [],
+                "ipv6_cidr_blocks": null,
+                "prefix_list_ids": null,
                 "protocol": "tcp",
-                "security_group_id": "sg-04eaa83b1a9bbdca7",
                 "self": false,
-                "source_security_group_id": "sg-0da027c8708d5a1a1",
                 "to_port": 2376,
                 "type": "ingress"
               }
@@ -616,16 +494,13 @@
               "provider_name": "aws",
               "schema_version": 2,
               "values": {
-                "cidr_blocks": [],
-                "description": "",
+                "cidr_blocks": null,
+                "description": null,
                 "from_port": 2376,
-                "id": "sgrule-2352412340",
-                "ipv6_cidr_blocks": [],
-                "prefix_list_ids": [],
+                "ipv6_cidr_blocks": null,
+                "prefix_list_ids": null,
                 "protocol": "tcp",
-                "security_group_id": "sg-04eaa83b1a9bbdca7",
                 "self": true,
-                "source_security_group_id": "sg-04eaa83b1a9bbdca7",
                 "to_port": 2376,
                 "type": "ingress"
               }
@@ -641,15 +516,12 @@
                 "cidr_blocks": [
                   "0.0.0.0/0"
                 ],
-                "description": "",
+                "description": null,
                 "from_port": 22,
-                "id": "sgrule-3134283554",
-                "ipv6_cidr_blocks": [],
-                "prefix_list_ids": [],
+                "ipv6_cidr_blocks": null,
+                "prefix_list_ids": null,
                 "protocol": "tcp",
-                "security_group_id": "sg-04eaa83b1a9bbdca7",
                 "self": false,
-                "source_security_group_id": null,
                 "to_port": 22,
                 "type": "ingress"
               }
@@ -665,17 +537,36 @@
                 "cidr_blocks": [
                   "0.0.0.0/0"
                 ],
-                "description": "",
+                "description": null,
                 "from_port": 0,
-                "id": "sgrule-3440665133",
-                "ipv6_cidr_blocks": [],
-                "prefix_list_ids": [],
+                "ipv6_cidr_blocks": null,
+                "prefix_list_ids": null,
                 "protocol": "-1",
-                "security_group_id": "sg-04eaa83b1a9bbdca7",
                 "self": false,
-                "source_security_group_id": null,
-                "to_port": 0,
+                "to_port": 65535,
                 "type": "egress"
+              }
+            },
+            {
+              "address": "module.runner.aws_security_group_rule.runner_ssh[0]",
+              "mode": "managed",
+              "type": "aws_security_group_rule",
+              "name": "runner_ssh",
+              "index": 0,
+              "provider_name": "aws",
+              "schema_version": 2,
+              "values": {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": null,
+                "from_port": 22,
+                "ipv6_cidr_blocks": null,
+                "prefix_list_ids": null,
+                "protocol": "tcp",
+                "self": false,
+                "to_port": 22,
+                "type": "ingress"
               }
             },
             {
@@ -686,18 +577,91 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "allowed_pattern": "",
-                "arn": "arn:aws:ssm:ap-southeast-2:885164491973:parameter/gitlab-runner-runner-token",
-                "description": "",
-                "id": "gitlab-runner-runner-token",
-                "key_id": "alias/aws/ssm",
+                "allowed_pattern": null,
+                "description": null,
                 "name": "gitlab-runner-runner-token",
                 "overwrite": null,
-                "tags": {},
+                "tags": null,
                 "tier": "Standard",
                 "type": "SecureString",
-                "value": "null",
-                "version": 1
+                "value": "null"
+              }
+            },
+            {
+              "address": "module.runner.data.template_file.docker_machine_cache_policy",
+              "mode": "data",
+              "type": "template_file",
+              "name": "docker_machine_cache_policy",
+              "provider_name": "template",
+              "schema_version": 0,
+              "values": {
+                "filename": null,
+                "template": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowGitLabRunnersAccessCache\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:PutObjectAcl\",\n        \"s3:GetObject\",\n        \"s3:GetObjectAcl\"\n      ],\n      \"Resource\": [\n        \"${s3_cache_arn}/*\"\n      ]\n    }\n  ]\n}\n",
+                "vars": {}
+              }
+            },
+            {
+              "address": "module.runner.data.template_file.runners",
+              "mode": "data",
+              "type": "template_file",
+              "name": "runners",
+              "provider_name": "template",
+              "schema_version": 0,
+              "values": {
+                "filename": null,
+                "template": "concurrent = ${globals_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_docker_image}\"\n    privileged = true\n    disable_cache = false\n    shm_size = ${runners_docker_shm_size}\n    pull_policy = \"always\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${runners_cache_bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_machine_idle_count}\n    IdleTime = ${runners_machine_idle_time}\n%{ if runners_machine_max_builds != 0 ~}\n    MaxBuilds = ${runners_machine_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${docker_machine_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${aws_availability_zone}\",\n      \"amazonec2-vpc-id=${vpc_id}\",\n      \"amazonec2-subnet-id=${subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${docker_machine_spot_price}\",\n      \"amazonec2-security-group=${docker_machine_security_group}\",\n      \"amazonec2-monitoring=false\",\n      \"amazonec2-iam-instance-profile=${docker_machine_iam_instance_profile}\",\n      \"amazonec2-root-size=${docker_machine_root_size}\",\n      \"amazonec2-ami=${docker_machine_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_machine_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_machine_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_machine_off_peak_idle_time}\n%{ if runners_machine_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_machine_off_peak_periods}\n%{ endif ~}\n\n# vim: set ft=toml:\n",
+                "vars": {
+                  "aws_availability_zone": "a",
+                  "aws_region": "ap-southeast-2",
+                  "docker_machine_ami": "ami-0328aad0f6218c429",
+                  "docker_machine_iam_instance_profile": "gitlab-runner-docker-machine-profile",
+                  "docker_machine_instance_type": "m5a.large",
+                  "docker_machine_root_size": "16",
+                  "docker_machine_spot_price": "0.06",
+                  "globals_concurrent": "10",
+                  "runners_cache_bucket_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
+                  "runners_docker_image": "docker:18.03.1-ce",
+                  "runners_docker_shm_size": "0",
+                  "runners_environment": "[]",
+                  "runners_limit": "0",
+                  "runners_machine_idle_count": "0",
+                  "runners_machine_idle_time": "600",
+                  "runners_machine_max_builds": "0",
+                  "runners_machine_off_peak_idle_count": "0",
+                  "runners_machine_off_peak_idle_time": "60",
+                  "runners_machine_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\",\"* * * * * sat,sun *\"]",
+                  "runners_machine_off_peak_timezone": "Australia/Sydney",
+                  "runners_name": "test-runner",
+                  "runners_output_limit": "4096",
+                  "runners_request_concurrency": "1",
+                  "runners_url": "https://gitlab.com",
+                  "subnet_id": "subnet-00f1b18508dcc87f8",
+                  "vpc_id": "vpc-07a59518ae4faa320"
+                }
+              }
+            },
+            {
+              "address": "module.runner.data.template_file.user_data",
+              "mode": "data",
+              "type": "template_file",
+              "name": "user_data",
+              "provider_name": "template",
+              "schema_version": 0,
+              "values": {
+                "filename": null,
+                "template": "#!/usr/bin/env bash\n\nawslogs_conf='/etc/awslogs/awslogs.conf'\nawscli_conf='/etc/awslogs/awscli.conf'\nconfig_toml='/etc/gitlab-runner/config.toml'\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id region\n\n  read -r instance_id region <<< \"$(\n    curl -s http://169.254.169.254/latest/dynamic/instance-identity/document \\\n      | jq -r '[.instanceId, .region] | @tsv'\n  )\"\n\n  cat > \"$awslogs_conf\" <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' \"$awscli_conf\"\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > \"$config_toml\" <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${aws_region}\" | jq -r '.Parameters[0].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    response=$(\n      curl -X POST -L \"${runners_url}/api/v4/runners\" \\\n        -F \"token=${gitlab_runner_registration_token}\" \\\n        -F \"description=${gitlab_runner_description}\" \\\n        -F \"locked=${gitlab_runner_locked_to_project}\" \\\n        -F \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        -F \"access_level=${gitlab_runner_access_level}\" \\\n    )\n\n    token=$(jq -r .token <<< \"$response\")\n\n    if [ \"$token\" == \"null\" ] ; then\n      echo \"Received the following error:\"\n      echo \"$response\"\n      return\n    fi\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${aws_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' \"$config_toml\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+                "vars": {
+                  "aws_region": "ap-southeast-2",
+                  "docker_machine_version": "0.16.2",
+                  "gitlab_runner_access_level": "not_protected",
+                  "gitlab_runner_description": "runner default - auto",
+                  "gitlab_runner_locked_to_project": "true",
+                  "gitlab_runner_maximum_timeout": "3600",
+                  "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
+                  "gitlab_runner_version": "12.3.0",
+                  "runners_ssm_token_key": "gitlab-runner-runner-token",
+                  "runners_url": "https://gitlab.com"
+                }
               }
             }
           ],
@@ -835,27 +799,20 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:logs:ap-southeast-2:885164491973:log-group:gitlab-runner-log-group:*",
-          "id": "gitlab-runner-log-group",
-          "kms_key_id": "",
-          "name": "gitlab-runner-log-group",
-          "name_prefix": null,
-          "retention_in_days": 0,
-          "tags": {}
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:logs:ap-southeast-2:885164491973:log-group:gitlab-runner-log-group:*",
-          "id": "gitlab-runner-log-group",
-          "kms_key_id": "",
+          "kms_key_id": null,
           "name": "gitlab-runner-log-group",
           "name_prefix": null,
           "retention_in_days": 0,
-          "tags": {}
+          "tags": null
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "id": true
+        }
       }
     },
     {
@@ -867,35 +824,22 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:iam::885164491973:instance-profile/gitlab-runner-docker-machine-profile",
-          "create_date": "2019-10-17T07:53:48Z",
-          "id": "gitlab-runner-docker-machine-profile",
-          "name": "gitlab-runner-docker-machine-profile",
-          "name_prefix": null,
-          "path": "/",
-          "role": "gitlab-runner-docker-machine-role",
-          "roles": [
-            "gitlab-runner-docker-machine-role"
-          ],
-          "unique_id": "AIPA44F7KITCT4LOMR3TO"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:iam::885164491973:instance-profile/gitlab-runner-docker-machine-profile",
-          "create_date": "2019-10-17T07:53:48Z",
-          "id": "gitlab-runner-docker-machine-profile",
           "name": "gitlab-runner-docker-machine-profile",
           "name_prefix": null,
           "path": "/",
-          "role": "gitlab-runner-docker-machine-role",
-          "roles": [
-            "gitlab-runner-docker-machine-role"
-          ],
-          "unique_id": "AIPA44F7KITCT4LOMR3TO"
+          "role": "gitlab-runner-docker-machine-role"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "create_date": true,
+          "id": true,
+          "roles": true,
+          "unique_id": true
+        }
       }
     },
     {
@@ -907,35 +851,22 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:iam::885164491973:instance-profile/gitlab-runner-instance-profile",
-          "create_date": "2019-10-17T07:53:48Z",
-          "id": "gitlab-runner-instance-profile",
-          "name": "gitlab-runner-instance-profile",
-          "name_prefix": null,
-          "path": "/",
-          "role": "gitlab-runner-instance-role",
-          "roles": [
-            "gitlab-runner-instance-role"
-          ],
-          "unique_id": "AIPA44F7KITCUMTNM6CAP"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:iam::885164491973:instance-profile/gitlab-runner-instance-profile",
-          "create_date": "2019-10-17T07:53:48Z",
-          "id": "gitlab-runner-instance-profile",
           "name": "gitlab-runner-instance-profile",
           "name_prefix": null,
           "path": "/",
-          "role": "gitlab-runner-instance-role",
-          "roles": [
-            "gitlab-runner-instance-role"
-          ],
-          "unique_id": "AIPA44F7KITCUMTNM6CAP"
+          "role": "gitlab-runner-instance-role"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "create_date": true,
+          "id": true,
+          "roles": true,
+          "unique_id": true
+        }
       }
     },
     {
@@ -947,27 +878,20 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
-          "description": "Policy for docker machine instance to access cache",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
-          "name": "gitlab-runner-docker-machine-cache",
-          "name_prefix": null,
-          "path": "/",
-          "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowGitLabRunnersAccessCache\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:PutObjectAcl\",\n        \"s3:GetObject\",\n        \"s3:GetObjectAcl\"\n      ],\n      \"Resource\": [\n        \"arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0/*\"\n      ]\n    }\n  ]\n}\n"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
           "description": "Policy for docker machine instance to access cache",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
           "name": "gitlab-runner-docker-machine-cache",
           "name_prefix": null,
-          "path": "/",
-          "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowGitLabRunnersAccessCache\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:PutObjectAcl\",\n        \"s3:GetObject\",\n        \"s3:GetObjectAcl\"\n      ],\n      \"Resource\": [\n        \"arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0/*\"\n      ]\n    }\n  ]\n}\n"
+          "path": "/"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "id": true,
+          "policy": true
+        }
       }
     },
     {
@@ -979,27 +903,20 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
-          "description": "Policy for docker machine.",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
-          "name": "gitlab-runner-docker-machine",
-          "name_prefix": null,
-          "path": "/",
-          "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n      {\n        \"Action\": [\n          \"ec2:DescribeKeyPairs\",\n          \"ec2:TerminateInstances\",\n          \"ec2:StopInstances\",\n          \"ec2:StartInstances\",\n          \"ec2:RunInstances\",\n          \"ec2:RebootInstances\",\n          \"ec2:CreateKeyPair\",\n          \"ec2:DeleteKeyPair\",\n          \"ec2:ImportKeyPair\",\n          \"ec2:Describe*\",\n          \"ec2:CreateTags\",\n          \"ec2:RequestSpotInstances\",\n          \"ec2:CancelSpotInstanceRequests\",\n          \"ec2:DescribeSubnets\",\n          \"ec2:AssociateIamInstanceProfile\",\n          \"iam:PassRole\"\n        ],\n        \"Effect\": \"Allow\",\n        \"Resource\": \"*\"\n      }\n    ]\n  }\n"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
           "description": "Policy for docker machine.",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
           "name": "gitlab-runner-docker-machine",
           "name_prefix": null,
           "path": "/",
           "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n      {\n        \"Action\": [\n          \"ec2:DescribeKeyPairs\",\n          \"ec2:TerminateInstances\",\n          \"ec2:StopInstances\",\n          \"ec2:StartInstances\",\n          \"ec2:RunInstances\",\n          \"ec2:RebootInstances\",\n          \"ec2:CreateKeyPair\",\n          \"ec2:DeleteKeyPair\",\n          \"ec2:ImportKeyPair\",\n          \"ec2:Describe*\",\n          \"ec2:CreateTags\",\n          \"ec2:RequestSpotInstances\",\n          \"ec2:CancelSpotInstanceRequests\",\n          \"ec2:DescribeSubnets\",\n          \"ec2:AssociateIamInstanceProfile\",\n          \"iam:PassRole\"\n        ],\n        \"Effect\": \"Allow\",\n        \"Resource\": \"*\"\n      }\n    ]\n  }\n"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "id": true
+        }
       }
     },
     {
@@ -1011,27 +928,20 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
-          "description": "Policy session manager.",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
-          "name": "gitlab-runner-session-manager",
-          "name_prefix": null,
-          "path": "/",
-          "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssmmessages:CreateControlChannel\",\n                \"ssmmessages:CreateDataChannel\",\n                \"ssmmessages:OpenControlChannel\",\n                \"ssmmessages:OpenDataChannel\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
           "description": "Policy session manager.",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
           "name": "gitlab-runner-session-manager",
           "name_prefix": null,
           "path": "/",
           "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssmmessages:CreateControlChannel\",\n                \"ssmmessages:CreateDataChannel\",\n                \"ssmmessages:OpenControlChannel\",\n                \"ssmmessages:OpenDataChannel\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "id": true
+        }
       }
     },
     {
@@ -1043,27 +953,20 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
-          "description": "Policy for creation of service linked roles.",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
-          "name": "gitlab-runner-service_linked_role",
-          "name_prefix": null,
-          "path": "/",
-          "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"iam:CreateServiceLinkedRole\",\n      \"Resource\": \"arn:aws:iam::*:role/aws-service-role/*\"\n    }\n  ]\n}"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
           "description": "Policy for creation of service linked roles.",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
           "name": "gitlab-runner-service_linked_role",
           "name_prefix": null,
           "path": "/",
           "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"iam:CreateServiceLinkedRole\",\n      \"Resource\": \"arn:aws:iam::*:role/aws-service-role/*\"\n    }\n  ]\n}"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "id": true
+        }
       }
     },
     {
@@ -1075,27 +978,20 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
-          "description": "Policy for runner token param access via SSM",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
-          "name": "gitlab-runner-ssm",
-          "name_prefix": null,
-          "path": "/",
-          "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:PutParameter\"\n            ],\n            \"Resource\": \"*\"\n        },\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:GetParameters\"\n            ],\n            \"Resource\": \"arn:aws:ssm:*\"\n        }\n    ]\n}"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
           "description": "Policy for runner token param access via SSM",
-          "id": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
           "name": "gitlab-runner-ssm",
           "name_prefix": null,
           "path": "/",
           "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:PutParameter\"\n            ],\n            \"Resource\": \"*\"\n        },\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:GetParameters\"\n            ],\n            \"Resource\": \"arn:aws:ssm:*\"\n        }\n    ]\n}"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "id": true
+        }
       }
     },
     {
@@ -1107,39 +1003,26 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:iam::885164491973:role/gitlab-runner-docker-machine-role",
-          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
-          "create_date": "2019-10-17T07:53:46Z",
-          "description": "",
-          "force_detach_policies": false,
-          "id": "gitlab-runner-docker-machine-role",
-          "max_session_duration": 3600,
-          "name": "gitlab-runner-docker-machine-role",
-          "name_prefix": null,
-          "path": "/",
-          "permissions_boundary": null,
-          "tags": {},
-          "unique_id": "AROA44F7KITCV2O2B4BBI"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:iam::885164491973:role/gitlab-runner-docker-machine-role",
-          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
-          "create_date": "2019-10-17T07:53:46Z",
-          "description": "",
+          "assume_role_policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}\n",
+          "description": null,
           "force_detach_policies": false,
-          "id": "gitlab-runner-docker-machine-role",
           "max_session_duration": 3600,
           "name": "gitlab-runner-docker-machine-role",
           "name_prefix": null,
           "path": "/",
           "permissions_boundary": null,
-          "tags": {},
-          "unique_id": "AROA44F7KITCV2O2B4BBI"
+          "tags": null
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "create_date": true,
+          "id": true,
+          "unique_id": true
+        }
       }
     },
     {
@@ -1151,39 +1034,26 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:iam::885164491973:role/gitlab-runner-instance-role",
-          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
-          "create_date": "2019-10-17T07:53:46Z",
-          "description": "",
-          "force_detach_policies": false,
-          "id": "gitlab-runner-instance-role",
-          "max_session_duration": 3600,
-          "name": "gitlab-runner-instance-role",
-          "name_prefix": null,
-          "path": "/",
-          "permissions_boundary": null,
-          "tags": {},
-          "unique_id": "AROA44F7KITCQWBHVJAGP"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:iam::885164491973:role/gitlab-runner-instance-role",
-          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
-          "create_date": "2019-10-17T07:53:46Z",
-          "description": "",
+          "assume_role_policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      },\n      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}\n",
+          "description": null,
           "force_detach_policies": false,
-          "id": "gitlab-runner-instance-role",
           "max_session_duration": 3600,
           "name": "gitlab-runner-instance-role",
           "name_prefix": null,
           "path": "/",
           "permissions_boundary": null,
-          "tags": {},
-          "unique_id": "AROA44F7KITCQWBHVJAGP"
+          "tags": null
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "create_date": true,
+          "id": true,
+          "unique_id": true
+        }
       }
     },
     {
@@ -1195,23 +1065,18 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "id": "gitlab-runner-instance-role:gitlab-runner-instance-role",
-          "name": "gitlab-runner-instance-role",
-          "name_prefix": null,
-          "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowLoggingToCloudWatch\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\",\n        \"logs:DescribeLogStreams\"\n      ],\n      \"Resource\": [\n        \"arn:aws:logs:*:*:*\"\n      ]\n    }\n  ]\n}\n",
-          "role": "gitlab-runner-instance-role"
-        },
+        "before": null,
         "after": {
-          "id": "gitlab-runner-instance-role:gitlab-runner-instance-role",
           "name": "gitlab-runner-instance-role",
           "name_prefix": null,
           "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowLoggingToCloudWatch\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\",\n        \"logs:DescribeLogStreams\"\n      ],\n      \"Resource\": [\n        \"arn:aws:logs:*:*:*\"\n      ]\n    }\n  ]\n}\n",
           "role": "gitlab-runner-instance-role"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "id": true
+        }
       }
     },
     {
@@ -1223,19 +1088,16 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "id": "gitlab-runner-instance-role-20191017075352141100000008",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
-          "role": "gitlab-runner-instance-role"
-        },
+        "before": null,
         "after": {
-          "id": "gitlab-runner-instance-role-20191017075352141100000008",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
           "role": "gitlab-runner-instance-role"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "id": true,
+          "policy_arn": true
+        }
       }
     },
     {
@@ -1247,19 +1109,16 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "id": "gitlab-runner-instance-role-20191017075349468600000004",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
-          "role": "gitlab-runner-instance-role"
-        },
+        "before": null,
         "after": {
-          "id": "gitlab-runner-instance-role-20191017075349468600000004",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
           "role": "gitlab-runner-instance-role"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "id": true,
+          "policy_arn": true
+        }
       }
     },
     {
@@ -1271,19 +1130,16 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "id": "gitlab-runner-instance-role-20191017075348705800000003",
-          "policy_arn": "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-          "role": "gitlab-runner-instance-role"
-        },
+        "before": null,
         "after": {
-          "id": "gitlab-runner-instance-role-20191017075348705800000003",
           "policy_arn": "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
           "role": "gitlab-runner-instance-role"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "id": true
+        }
       }
     },
     {
@@ -1295,19 +1151,16 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "id": "gitlab-runner-instance-role-20191017075349564400000007",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
-          "role": "gitlab-runner-instance-role"
-        },
+        "before": null,
         "after": {
-          "id": "gitlab-runner-instance-role-20191017075349564400000007",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
           "role": "gitlab-runner-instance-role"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "id": true,
+          "policy_arn": true
+        }
       }
     },
     {
@@ -1319,19 +1172,16 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "id": "gitlab-runner-instance-role-20191017075349471200000005",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
-          "role": "gitlab-runner-instance-role"
-        },
+        "before": null,
         "after": {
-          "id": "gitlab-runner-instance-role-20191017075349471200000005",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
           "role": "gitlab-runner-instance-role"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "id": true,
+          "policy_arn": true
+        }
       }
     },
     {
@@ -1343,19 +1193,16 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "id": "gitlab-runner-instance-role-20191017075349515400000006",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
-          "role": "gitlab-runner-instance-role"
-        },
+        "before": null,
         "after": {
-          "id": "gitlab-runner-instance-role-20191017075349515400000006",
-          "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
           "role": "gitlab-runner-instance-role"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "id": true,
+          "policy_arn": true
+        }
       }
     },
     {
@@ -1371,11 +1218,11 @@
         ],
         "before": null,
         "after": {
-          "associate_public_ip_address": false,
+          "associate_public_ip_address": true,
           "enable_monitoring": true,
           "ephemeral_block_device": [],
           "iam_instance_profile": "gitlab-runner-instance-profile",
-          "image_id": "ami-042710e2a62ecec92",
+          "image_id": "ami-0804dc420cb24c62b",
           "instance_type": "t3.micro",
           "key_name": "default",
           "name_prefix": null,
@@ -1387,11 +1234,7 @@
               "volume_type": "gp2"
             }
           ],
-          "security_groups": [
-            "sg-0da027c8708d5a1a1"
-          ],
           "spot_price": null,
-          "user_data": "a942485eee07761c04af37d5c81d6a434cad347d",
           "user_data_base64": null,
           "vpc_classic_link_id": null,
           "vpc_classic_link_security_groups": null
@@ -1408,9 +1251,8 @@
               "iops": true
             }
           ],
-          "security_groups": [
-            false
-          ]
+          "security_groups": true,
+          "user_data": true
         }
       }
     },
@@ -1423,95 +1265,24 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "acceleration_status": "",
-          "acl": "private",
-          "arn": "arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-          "bucket": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-          "bucket_domain_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0.s3.amazonaws.com",
-          "bucket_prefix": null,
-          "bucket_regional_domain_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0.s3.ap-southeast-2.amazonaws.com",
-          "cors_rule": [],
-          "force_destroy": true,
-          "hosted_zone_id": "Z1WCIGYICN2BYD",
-          "id": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-          "lifecycle_rule": [
-            {
-              "abort_incomplete_multipart_upload_days": 0,
-              "enabled": true,
-              "expiration": [
-                {
-                  "date": "",
-                  "days": 1,
-                  "expired_object_delete_marker": false
-                }
-              ],
-              "id": "clear",
-              "noncurrent_version_expiration": [
-                {
-                  "days": 1
-                }
-              ],
-              "noncurrent_version_transition": [],
-              "prefix": "runner/",
-              "tags": {},
-              "transition": []
-            }
-          ],
-          "logging": [],
-          "object_lock_configuration": [],
-          "policy": null,
-          "region": "ap-southeast-2",
-          "replication_configuration": [],
-          "request_payer": "BucketOwner",
-          "server_side_encryption_configuration": [
-            {
-              "rule": [
-                {
-                  "apply_server_side_encryption_by_default": [
-                    {
-                      "kms_master_key_id": "",
-                      "sse_algorithm": "AES256"
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          "tags": {},
-          "versioning": [
-            {
-              "enabled": false,
-              "mfa_delete": false
-            }
-          ],
-          "website": [],
-          "website_domain": null,
-          "website_endpoint": null
-        },
+        "before": null,
         "after": {
-          "acceleration_status": "",
           "acl": "private",
-          "arn": "arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
           "bucket": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-          "bucket_domain_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0.s3.amazonaws.com",
           "bucket_prefix": null,
-          "bucket_regional_domain_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0.s3.ap-southeast-2.amazonaws.com",
           "cors_rule": [],
           "force_destroy": true,
-          "hosted_zone_id": "Z1WCIGYICN2BYD",
-          "id": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
           "lifecycle_rule": [
             {
-              "abort_incomplete_multipart_upload_days": 0,
+              "abort_incomplete_multipart_upload_days": null,
               "enabled": true,
               "expiration": [
                 {
                   "date": "",
                   "days": 1,
-                  "expired_object_delete_marker": false
+                  "expired_object_delete_marker": null
                 }
               ],
               "id": "clear",
@@ -1522,23 +1293,21 @@
               ],
               "noncurrent_version_transition": [],
               "prefix": "runner/",
-              "tags": {},
+              "tags": null,
               "transition": []
             }
           ],
           "logging": [],
           "object_lock_configuration": [],
           "policy": null,
-          "region": "ap-southeast-2",
           "replication_configuration": [],
-          "request_payer": "BucketOwner",
           "server_side_encryption_configuration": [
             {
               "rule": [
                 {
                   "apply_server_side_encryption_by_default": [
                     {
-                      "kms_master_key_id": "",
+                      "kms_master_key_id": null,
                       "sse_algorithm": "AES256"
                     }
                   ]
@@ -1546,18 +1315,50 @@
               ]
             }
           ],
-          "tags": {},
-          "versioning": [
+          "tags": null,
+          "website": []
+        },
+        "after_unknown": {
+          "acceleration_status": true,
+          "arn": true,
+          "bucket_domain_name": true,
+          "bucket_regional_domain_name": true,
+          "cors_rule": [],
+          "hosted_zone_id": true,
+          "id": true,
+          "lifecycle_rule": [
             {
-              "enabled": false,
-              "mfa_delete": false
+              "expiration": [
+                {}
+              ],
+              "noncurrent_version_expiration": [
+                {}
+              ],
+              "noncurrent_version_transition": [],
+              "transition": []
             }
           ],
+          "logging": [],
+          "object_lock_configuration": [],
+          "region": true,
+          "replication_configuration": [],
+          "request_payer": true,
+          "server_side_encryption_configuration": [
+            {
+              "rule": [
+                {
+                  "apply_server_side_encryption_by_default": [
+                    {}
+                  ]
+                }
+              ]
+            }
+          ],
+          "versioning": true,
           "website": [],
-          "website_domain": null,
-          "website_endpoint": null
-        },
-        "after_unknown": {}
+          "website_domain": true,
+          "website_endpoint": true
+        }
       }
     },
     {
@@ -1569,119 +1370,25 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:ec2:ap-southeast-2:885164491973:security-group/sg-04eaa83b1a9bbdca7",
-          "description": "Managed by Terraform",
-          "egress": [
-            {
-              "cidr_blocks": [
-                "0.0.0.0/0"
-              ],
-              "description": "",
-              "from_port": 0,
-              "ipv6_cidr_blocks": [],
-              "prefix_list_ids": [],
-              "protocol": "-1",
-              "security_groups": [],
-              "self": false,
-              "to_port": 0
-            }
-          ],
-          "id": "sg-04eaa83b1a9bbdca7",
-          "ingress": [
-            {
-              "cidr_blocks": [
-                "0.0.0.0/0"
-              ],
-              "description": "",
-              "from_port": 22,
-              "ipv6_cidr_blocks": [],
-              "prefix_list_ids": [],
-              "protocol": "tcp",
-              "security_groups": [],
-              "self": false,
-              "to_port": 22
-            },
-            {
-              "cidr_blocks": [],
-              "description": "",
-              "from_port": 2376,
-              "ipv6_cidr_blocks": [],
-              "prefix_list_ids": [],
-              "protocol": "tcp",
-              "security_groups": [
-                "sg-0da027c8708d5a1a1"
-              ],
-              "self": true,
-              "to_port": 2376
-            }
-          ],
-          "name": "gitlab-runner-docker-machine20191017075345454800000001",
-          "name_prefix": "gitlab-runner-docker-machine",
-          "owner_id": "885164491973",
-          "revoke_rules_on_delete": false,
-          "tags": {},
-          "timeouts": null,
-          "vpc_id": "vpc-07a59518ae4faa320"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:ec2:ap-southeast-2:885164491973:security-group/sg-04eaa83b1a9bbdca7",
           "description": "Managed by Terraform",
-          "egress": [
-            {
-              "cidr_blocks": [
-                "0.0.0.0/0"
-              ],
-              "description": "",
-              "from_port": 0,
-              "ipv6_cidr_blocks": [],
-              "prefix_list_ids": [],
-              "protocol": "-1",
-              "security_groups": [],
-              "self": false,
-              "to_port": 0
-            }
-          ],
-          "id": "sg-04eaa83b1a9bbdca7",
-          "ingress": [
-            {
-              "cidr_blocks": [
-                "0.0.0.0/0"
-              ],
-              "description": "",
-              "from_port": 22,
-              "ipv6_cidr_blocks": [],
-              "prefix_list_ids": [],
-              "protocol": "tcp",
-              "security_groups": [],
-              "self": false,
-              "to_port": 22
-            },
-            {
-              "cidr_blocks": [],
-              "description": "",
-              "from_port": 2376,
-              "ipv6_cidr_blocks": [],
-              "prefix_list_ids": [],
-              "protocol": "tcp",
-              "security_groups": [
-                "sg-0da027c8708d5a1a1"
-              ],
-              "self": true,
-              "to_port": 2376
-            }
-          ],
-          "name": "gitlab-runner-docker-machine20191017075345454800000001",
           "name_prefix": "gitlab-runner-docker-machine",
-          "owner_id": "885164491973",
           "revoke_rules_on_delete": false,
-          "tags": {},
+          "tags": null,
           "timeouts": null,
           "vpc_id": "vpc-07a59518ae4faa320"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "egress": true,
+          "id": true,
+          "ingress": true,
+          "name": true,
+          "owner_id": true
+        }
       }
     },
     {
@@ -1693,38 +1400,10 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "arn": "arn:aws:ec2:ap-southeast-2:885164491973:security-group/sg-0da027c8708d5a1a1",
-          "description": "Managed by Terraform",
-          "egress": [
-            {
-              "cidr_blocks": [
-                "0.0.0.0/0"
-              ],
-              "description": "",
-              "from_port": 0,
-              "ipv6_cidr_blocks": [],
-              "prefix_list_ids": [],
-              "protocol": "-1",
-              "security_groups": [],
-              "self": false,
-              "to_port": 0
-            }
-          ],
-          "id": "sg-0da027c8708d5a1a1",
-          "ingress": [],
-          "name": "gitlab-runner-security-group20191017075345459800000002",
-          "name_prefix": "gitlab-runner-security-group",
-          "owner_id": "885164491973",
-          "revoke_rules_on_delete": false,
-          "tags": {},
-          "timeouts": null,
-          "vpc_id": "vpc-07a59518ae4faa320"
-        },
+        "before": null,
         "after": {
-          "arn": "arn:aws:ec2:ap-southeast-2:885164491973:security-group/sg-0da027c8708d5a1a1",
           "description": "Managed by Terraform",
           "egress": [
             {
@@ -1741,17 +1420,29 @@
               "to_port": 0
             }
           ],
-          "id": "sg-0da027c8708d5a1a1",
-          "ingress": [],
-          "name": "gitlab-runner-security-group20191017075345459800000002",
           "name_prefix": "gitlab-runner-security-group",
-          "owner_id": "885164491973",
           "revoke_rules_on_delete": false,
-          "tags": {},
+          "tags": null,
           "timeouts": null,
           "vpc_id": "vpc-07a59518ae4faa320"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "egress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "id": true,
+          "ingress": true,
+          "name": true,
+          "owner_id": true
+        }
       }
     },
     {
@@ -1763,37 +1454,25 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "cidr_blocks": [],
-          "description": "",
-          "from_port": 2376,
-          "id": "sgrule-2214692661",
-          "ipv6_cidr_blocks": [],
-          "prefix_list_ids": [],
-          "protocol": "tcp",
-          "security_group_id": "sg-04eaa83b1a9bbdca7",
-          "self": false,
-          "source_security_group_id": "sg-0da027c8708d5a1a1",
-          "to_port": 2376,
-          "type": "ingress"
-        },
+        "before": null,
         "after": {
-          "cidr_blocks": [],
-          "description": "",
+          "cidr_blocks": null,
+          "description": null,
           "from_port": 2376,
-          "id": "sgrule-2214692661",
-          "ipv6_cidr_blocks": [],
-          "prefix_list_ids": [],
+          "ipv6_cidr_blocks": null,
+          "prefix_list_ids": null,
           "protocol": "tcp",
-          "security_group_id": "sg-04eaa83b1a9bbdca7",
           "self": false,
-          "source_security_group_id": "sg-0da027c8708d5a1a1",
           "to_port": 2376,
           "type": "ingress"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "id": true,
+          "security_group_id": true,
+          "source_security_group_id": true
+        }
       }
     },
     {
@@ -1805,37 +1484,25 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "cidr_blocks": [],
-          "description": "",
-          "from_port": 2376,
-          "id": "sgrule-2352412340",
-          "ipv6_cidr_blocks": [],
-          "prefix_list_ids": [],
-          "protocol": "tcp",
-          "security_group_id": "sg-04eaa83b1a9bbdca7",
-          "self": true,
-          "source_security_group_id": "sg-04eaa83b1a9bbdca7",
-          "to_port": 2376,
-          "type": "ingress"
-        },
+        "before": null,
         "after": {
-          "cidr_blocks": [],
-          "description": "",
+          "cidr_blocks": null,
+          "description": null,
           "from_port": 2376,
-          "id": "sgrule-2352412340",
-          "ipv6_cidr_blocks": [],
-          "prefix_list_ids": [],
+          "ipv6_cidr_blocks": null,
+          "prefix_list_ids": null,
           "protocol": "tcp",
-          "security_group_id": "sg-04eaa83b1a9bbdca7",
           "self": true,
-          "source_security_group_id": "sg-04eaa83b1a9bbdca7",
           "to_port": 2376,
           "type": "ingress"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "id": true,
+          "security_group_id": true,
+          "source_security_group_id": true
+        }
       }
     },
     {
@@ -1847,41 +1514,30 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "cidr_blocks": [
-            "0.0.0.0/0"
-          ],
-          "description": "",
-          "from_port": 22,
-          "id": "sgrule-3134283554",
-          "ipv6_cidr_blocks": [],
-          "prefix_list_ids": [],
-          "protocol": "tcp",
-          "security_group_id": "sg-04eaa83b1a9bbdca7",
-          "self": false,
-          "source_security_group_id": null,
-          "to_port": 22,
-          "type": "ingress"
-        },
+        "before": null,
         "after": {
           "cidr_blocks": [
             "0.0.0.0/0"
           ],
-          "description": "",
+          "description": null,
           "from_port": 22,
-          "id": "sgrule-3134283554",
-          "ipv6_cidr_blocks": [],
-          "prefix_list_ids": [],
+          "ipv6_cidr_blocks": null,
+          "prefix_list_ids": null,
           "protocol": "tcp",
-          "security_group_id": "sg-04eaa83b1a9bbdca7",
           "self": false,
-          "source_security_group_id": null,
           "to_port": 22,
           "type": "ingress"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "cidr_blocks": [
+            false
+          ],
+          "id": true,
+          "security_group_id": true,
+          "source_security_group_id": true
+        }
       }
     },
     {
@@ -1893,41 +1549,66 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "cidr_blocks": [
-            "0.0.0.0/0"
-          ],
-          "description": "",
-          "from_port": 0,
-          "id": "sgrule-3440665133",
-          "ipv6_cidr_blocks": [],
-          "prefix_list_ids": [],
-          "protocol": "-1",
-          "security_group_id": "sg-04eaa83b1a9bbdca7",
-          "self": false,
-          "source_security_group_id": null,
-          "to_port": 0,
-          "type": "egress"
-        },
+        "before": null,
         "after": {
           "cidr_blocks": [
             "0.0.0.0/0"
           ],
-          "description": "",
+          "description": null,
           "from_port": 0,
-          "id": "sgrule-3440665133",
-          "ipv6_cidr_blocks": [],
-          "prefix_list_ids": [],
+          "ipv6_cidr_blocks": null,
+          "prefix_list_ids": null,
           "protocol": "-1",
-          "security_group_id": "sg-04eaa83b1a9bbdca7",
           "self": false,
-          "source_security_group_id": null,
-          "to_port": 0,
+          "to_port": 65535,
           "type": "egress"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "cidr_blocks": [
+            false
+          ],
+          "id": true,
+          "security_group_id": true,
+          "source_security_group_id": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.aws_security_group_rule.runner_ssh[0]",
+      "module_address": "module.runner",
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "runner_ssh",
+      "index": 0,
+      "provider_name": "aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": null,
+          "from_port": 22,
+          "ipv6_cidr_blocks": null,
+          "prefix_list_ids": null,
+          "protocol": "tcp",
+          "self": false,
+          "to_port": 22,
+          "type": "ingress"
+        },
+        "after_unknown": {
+          "cidr_blocks": [
+            false
+          ],
+          "id": true,
+          "security_group_id": true,
+          "source_security_group_id": true
+        }
       }
     },
     {
@@ -1939,37 +1620,141 @@
       "provider_name": "aws",
       "change": {
         "actions": [
-          "no-op"
+          "create"
         ],
-        "before": {
-          "allowed_pattern": "",
-          "arn": "arn:aws:ssm:ap-southeast-2:885164491973:parameter/gitlab-runner-runner-token",
-          "description": "",
-          "id": "gitlab-runner-runner-token",
-          "key_id": "alias/aws/ssm",
-          "name": "gitlab-runner-runner-token",
-          "overwrite": null,
-          "tags": {},
-          "tier": "Standard",
-          "type": "SecureString",
-          "value": "null",
-          "version": 1
-        },
+        "before": null,
         "after": {
-          "allowed_pattern": "",
-          "arn": "arn:aws:ssm:ap-southeast-2:885164491973:parameter/gitlab-runner-runner-token",
-          "description": "",
-          "id": "gitlab-runner-runner-token",
-          "key_id": "alias/aws/ssm",
+          "allowed_pattern": null,
+          "description": null,
           "name": "gitlab-runner-runner-token",
           "overwrite": null,
-          "tags": {},
+          "tags": null,
           "tier": "Standard",
           "type": "SecureString",
-          "value": "null",
-          "version": 1
+          "value": "null"
         },
-        "after_unknown": {}
+        "after_unknown": {
+          "arn": true,
+          "id": true,
+          "key_id": true,
+          "version": true
+        }
+      }
+    },
+    {
+      "address": "module.runner.data.template_file.docker_machine_cache_policy",
+      "module_address": "module.runner",
+      "mode": "data",
+      "type": "template_file",
+      "name": "docker_machine_cache_policy",
+      "provider_name": "template",
+      "change": {
+        "actions": [
+          "read"
+        ],
+        "before": null,
+        "after": {
+          "filename": null,
+          "template": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowGitLabRunnersAccessCache\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:PutObjectAcl\",\n        \"s3:GetObject\",\n        \"s3:GetObjectAcl\"\n      ],\n      \"Resource\": [\n        \"${s3_cache_arn}/*\"\n      ]\n    }\n  ]\n}\n",
+          "vars": {}
+        },
+        "after_unknown": {
+          "id": true,
+          "rendered": true,
+          "vars": {
+            "s3_cache_arn": true
+          }
+        }
+      }
+    },
+    {
+      "address": "module.runner.data.template_file.runners",
+      "module_address": "module.runner",
+      "mode": "data",
+      "type": "template_file",
+      "name": "runners",
+      "provider_name": "template",
+      "change": {
+        "actions": [
+          "read"
+        ],
+        "before": null,
+        "after": {
+          "filename": null,
+          "template": "concurrent = ${globals_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_docker_image}\"\n    privileged = true\n    disable_cache = false\n    shm_size = ${runners_docker_shm_size}\n    pull_policy = \"always\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${runners_cache_bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_machine_idle_count}\n    IdleTime = ${runners_machine_idle_time}\n%{ if runners_machine_max_builds != 0 ~}\n    MaxBuilds = ${runners_machine_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${docker_machine_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${aws_availability_zone}\",\n      \"amazonec2-vpc-id=${vpc_id}\",\n      \"amazonec2-subnet-id=${subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${docker_machine_spot_price}\",\n      \"amazonec2-security-group=${docker_machine_security_group}\",\n      \"amazonec2-monitoring=false\",\n      \"amazonec2-iam-instance-profile=${docker_machine_iam_instance_profile}\",\n      \"amazonec2-root-size=${docker_machine_root_size}\",\n      \"amazonec2-ami=${docker_machine_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_machine_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_machine_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_machine_off_peak_idle_time}\n%{ if runners_machine_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_machine_off_peak_periods}\n%{ endif ~}\n\n# vim: set ft=toml:\n",
+          "vars": {
+            "aws_availability_zone": "a",
+            "aws_region": "ap-southeast-2",
+            "docker_machine_ami": "ami-0328aad0f6218c429",
+            "docker_machine_iam_instance_profile": "gitlab-runner-docker-machine-profile",
+            "docker_machine_instance_type": "m5a.large",
+            "docker_machine_root_size": "16",
+            "docker_machine_spot_price": "0.06",
+            "globals_concurrent": "10",
+            "runners_cache_bucket_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
+            "runners_docker_image": "docker:18.03.1-ce",
+            "runners_docker_shm_size": "0",
+            "runners_environment": "[]",
+            "runners_limit": "0",
+            "runners_machine_idle_count": "0",
+            "runners_machine_idle_time": "600",
+            "runners_machine_max_builds": "0",
+            "runners_machine_off_peak_idle_count": "0",
+            "runners_machine_off_peak_idle_time": "60",
+            "runners_machine_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\",\"* * * * * sat,sun *\"]",
+            "runners_machine_off_peak_timezone": "Australia/Sydney",
+            "runners_name": "test-runner",
+            "runners_output_limit": "4096",
+            "runners_request_concurrency": "1",
+            "runners_url": "https://gitlab.com",
+            "subnet_id": "subnet-00f1b18508dcc87f8",
+            "vpc_id": "vpc-07a59518ae4faa320"
+          }
+        },
+        "after_unknown": {
+          "id": true,
+          "rendered": true,
+          "vars": {
+            "docker_machine_security_group": true
+          }
+        }
+      }
+    },
+    {
+      "address": "module.runner.data.template_file.user_data",
+      "module_address": "module.runner",
+      "mode": "data",
+      "type": "template_file",
+      "name": "user_data",
+      "provider_name": "template",
+      "change": {
+        "actions": [
+          "read"
+        ],
+        "before": null,
+        "after": {
+          "filename": null,
+          "template": "#!/usr/bin/env bash\n\nawslogs_conf='/etc/awslogs/awslogs.conf'\nawscli_conf='/etc/awslogs/awscli.conf'\nconfig_toml='/etc/gitlab-runner/config.toml'\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id region\n\n  read -r instance_id region <<< \"$(\n    curl -s http://169.254.169.254/latest/dynamic/instance-identity/document \\\n      | jq -r '[.instanceId, .region] | @tsv'\n  )\"\n\n  cat > \"$awslogs_conf\" <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' \"$awscli_conf\"\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > \"$config_toml\" <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${aws_region}\" | jq -r '.Parameters[0].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    response=$(\n      curl -X POST -L \"${runners_url}/api/v4/runners\" \\\n        -F \"token=${gitlab_runner_registration_token}\" \\\n        -F \"description=${gitlab_runner_description}\" \\\n        -F \"locked=${gitlab_runner_locked_to_project}\" \\\n        -F \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        -F \"access_level=${gitlab_runner_access_level}\" \\\n    )\n\n    token=$(jq -r .token <<< \"$response\")\n\n    if [ \"$token\" == \"null\" ] ; then\n      echo \"Received the following error:\"\n      echo \"$response\"\n      return\n    fi\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${aws_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' \"$config_toml\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+          "vars": {
+            "aws_region": "ap-southeast-2",
+            "docker_machine_version": "0.16.2",
+            "gitlab_runner_access_level": "not_protected",
+            "gitlab_runner_description": "runner default - auto",
+            "gitlab_runner_locked_to_project": "true",
+            "gitlab_runner_maximum_timeout": "3600",
+            "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
+            "gitlab_runner_version": "12.3.0",
+            "runners_ssm_token_key": "gitlab-runner-runner-token",
+            "runners_url": "https://gitlab.com"
+          }
+        },
+        "after_unknown": {
+          "id": true,
+          "rendered": true,
+          "vars": {
+            "runners_config": true
+          }
+        }
       }
     }
   ],
@@ -1989,7 +1774,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-17 08:03:43.799704 +0000 UTC",
+              "id": "2019-10-18 07:51:18.956113 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -2007,643 +1792,6 @@
         "child_modules": [
           {
             "resources": [
-              {
-                "address": "aws_cloudwatch_log_group.environment",
-                "mode": "managed",
-                "type": "aws_cloudwatch_log_group",
-                "name": "environment",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:logs:ap-southeast-2:885164491973:log-group:gitlab-runner-log-group:*",
-                  "id": "gitlab-runner-log-group",
-                  "kms_key_id": "",
-                  "name": "gitlab-runner-log-group",
-                  "name_prefix": null,
-                  "retention_in_days": 0,
-                  "tags": {}
-                }
-              },
-              {
-                "address": "aws_iam_instance_profile.docker_machine",
-                "mode": "managed",
-                "type": "aws_iam_instance_profile",
-                "name": "docker_machine",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:iam::885164491973:instance-profile/gitlab-runner-docker-machine-profile",
-                  "create_date": "2019-10-17T07:53:48Z",
-                  "id": "gitlab-runner-docker-machine-profile",
-                  "name": "gitlab-runner-docker-machine-profile",
-                  "name_prefix": null,
-                  "path": "/",
-                  "role": "gitlab-runner-docker-machine-role",
-                  "roles": [
-                    "gitlab-runner-docker-machine-role"
-                  ],
-                  "unique_id": "AIPA44F7KITCT4LOMR3TO"
-                },
-                "depends_on": [
-                  "aws_iam_role.docker_machine"
-                ]
-              },
-              {
-                "address": "aws_iam_instance_profile.instance",
-                "mode": "managed",
-                "type": "aws_iam_instance_profile",
-                "name": "instance",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:iam::885164491973:instance-profile/gitlab-runner-instance-profile",
-                  "create_date": "2019-10-17T07:53:48Z",
-                  "id": "gitlab-runner-instance-profile",
-                  "name": "gitlab-runner-instance-profile",
-                  "name_prefix": null,
-                  "path": "/",
-                  "role": "gitlab-runner-instance-role",
-                  "roles": [
-                    "gitlab-runner-instance-role"
-                  ],
-                  "unique_id": "AIPA44F7KITCUMTNM6CAP"
-                },
-                "depends_on": [
-                  "aws_iam_role.instance"
-                ]
-              },
-              {
-                "address": "aws_iam_policy.docker_machine_cache",
-                "mode": "managed",
-                "type": "aws_iam_policy",
-                "name": "docker_machine_cache",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
-                  "description": "Policy for docker machine instance to access cache",
-                  "id": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
-                  "name": "gitlab-runner-docker-machine-cache",
-                  "name_prefix": null,
-                  "path": "/",
-                  "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowGitLabRunnersAccessCache\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:PutObjectAcl\",\n        \"s3:GetObject\",\n        \"s3:GetObjectAcl\"\n      ],\n      \"Resource\": [\n        \"arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0/*\"\n      ]\n    }\n  ]\n}\n"
-                },
-                "depends_on": [
-                  "data.template_file.docker_machine_cache_policy"
-                ]
-              },
-              {
-                "address": "aws_iam_policy.instance_docker_machine_policy",
-                "mode": "managed",
-                "type": "aws_iam_policy",
-                "name": "instance_docker_machine_policy",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
-                  "description": "Policy for docker machine.",
-                  "id": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
-                  "name": "gitlab-runner-docker-machine",
-                  "name_prefix": null,
-                  "path": "/",
-                  "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n      {\n        \"Action\": [\n          \"ec2:DescribeKeyPairs\",\n          \"ec2:TerminateInstances\",\n          \"ec2:StopInstances\",\n          \"ec2:StartInstances\",\n          \"ec2:RunInstances\",\n          \"ec2:RebootInstances\",\n          \"ec2:CreateKeyPair\",\n          \"ec2:DeleteKeyPair\",\n          \"ec2:ImportKeyPair\",\n          \"ec2:Describe*\",\n          \"ec2:CreateTags\",\n          \"ec2:RequestSpotInstances\",\n          \"ec2:CancelSpotInstanceRequests\",\n          \"ec2:DescribeSubnets\",\n          \"ec2:AssociateIamInstanceProfile\",\n          \"iam:PassRole\"\n        ],\n        \"Effect\": \"Allow\",\n        \"Resource\": \"*\"\n      }\n    ]\n  }\n"
-                },
-                "depends_on": [
-                  "data.template_file.instance_docker_machine_policy"
-                ]
-              },
-              {
-                "address": "aws_iam_policy.instance_session_manager_policy",
-                "mode": "managed",
-                "type": "aws_iam_policy",
-                "name": "instance_session_manager_policy",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
-                  "description": "Policy session manager.",
-                  "id": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
-                  "name": "gitlab-runner-session-manager",
-                  "name_prefix": null,
-                  "path": "/",
-                  "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssmmessages:CreateControlChannel\",\n                \"ssmmessages:CreateDataChannel\",\n                \"ssmmessages:OpenControlChannel\",\n                \"ssmmessages:OpenDataChannel\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}"
-                },
-                "depends_on": [
-                  "data.template_file.instance_session_manager_policy"
-                ]
-              },
-              {
-                "address": "aws_iam_policy.service_linked_role",
-                "mode": "managed",
-                "type": "aws_iam_policy",
-                "name": "service_linked_role",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
-                  "description": "Policy for creation of service linked roles.",
-                  "id": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
-                  "name": "gitlab-runner-service_linked_role",
-                  "name_prefix": null,
-                  "path": "/",
-                  "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"iam:CreateServiceLinkedRole\",\n      \"Resource\": \"arn:aws:iam::*:role/aws-service-role/*\"\n    }\n  ]\n}"
-                },
-                "depends_on": [
-                  "data.template_file.service_linked_role"
-                ]
-              },
-              {
-                "address": "aws_iam_policy.ssm",
-                "mode": "managed",
-                "type": "aws_iam_policy",
-                "name": "ssm",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
-                  "description": "Policy for runner token param access via SSM",
-                  "id": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
-                  "name": "gitlab-runner-ssm",
-                  "name_prefix": null,
-                  "path": "/",
-                  "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:PutParameter\"\n            ],\n            \"Resource\": \"*\"\n        },\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:GetParameters\"\n            ],\n            \"Resource\": \"arn:aws:ssm:*\"\n        }\n    ]\n}"
-                },
-                "depends_on": [
-                  "data.template_file.ssm_policy"
-                ]
-              },
-              {
-                "address": "aws_iam_role.docker_machine",
-                "mode": "managed",
-                "type": "aws_iam_role",
-                "name": "docker_machine",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:iam::885164491973:role/gitlab-runner-docker-machine-role",
-                  "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
-                  "create_date": "2019-10-17T07:53:46Z",
-                  "description": "",
-                  "force_detach_policies": false,
-                  "id": "gitlab-runner-docker-machine-role",
-                  "max_session_duration": 3600,
-                  "name": "gitlab-runner-docker-machine-role",
-                  "name_prefix": null,
-                  "path": "/",
-                  "permissions_boundary": null,
-                  "tags": {},
-                  "unique_id": "AROA44F7KITCV2O2B4BBI"
-                },
-                "depends_on": [
-                  "data.template_file.dockermachine_role_trust_policy"
-                ]
-              },
-              {
-                "address": "aws_iam_role.instance",
-                "mode": "managed",
-                "type": "aws_iam_role",
-                "name": "instance",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "arn": "arn:aws:iam::885164491973:role/gitlab-runner-instance-role",
-                  "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
-                  "create_date": "2019-10-17T07:53:46Z",
-                  "description": "",
-                  "force_detach_policies": false,
-                  "id": "gitlab-runner-instance-role",
-                  "max_session_duration": 3600,
-                  "name": "gitlab-runner-instance-role",
-                  "name_prefix": null,
-                  "path": "/",
-                  "permissions_boundary": null,
-                  "tags": {},
-                  "unique_id": "AROA44F7KITCQWBHVJAGP"
-                },
-                "depends_on": [
-                  "data.template_file.instance_role_trust_policy"
-                ]
-              },
-              {
-                "address": "aws_iam_role_policy.instance",
-                "mode": "managed",
-                "type": "aws_iam_role_policy",
-                "name": "instance",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "id": "gitlab-runner-instance-role:gitlab-runner-instance-role",
-                  "name": "gitlab-runner-instance-role",
-                  "name_prefix": null,
-                  "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowLoggingToCloudWatch\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\",\n        \"logs:DescribeLogStreams\"\n      ],\n      \"Resource\": [\n        \"arn:aws:logs:*:*:*\"\n      ]\n    }\n  ]\n}\n",
-                  "role": "gitlab-runner-instance-role"
-                },
-                "depends_on": [
-                  "aws_iam_role.instance",
-                  "data.template_file.instance_profile"
-                ]
-              },
-              {
-                "address": "aws_iam_role_policy_attachment.docker_machine_cache_instance",
-                "mode": "managed",
-                "type": "aws_iam_role_policy_attachment",
-                "name": "docker_machine_cache_instance",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "id": "gitlab-runner-instance-role-20191017075352141100000008",
-                  "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine-cache",
-                  "role": "gitlab-runner-instance-role"
-                },
-                "depends_on": [
-                  "aws_iam_policy.docker_machine_cache",
-                  "aws_iam_role.instance"
-                ]
-              },
-              {
-                "address": "aws_iam_role_policy_attachment.instance_docker_machine_policy",
-                "mode": "managed",
-                "type": "aws_iam_role_policy_attachment",
-                "name": "instance_docker_machine_policy",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "id": "gitlab-runner-instance-role-20191017075349468600000004",
-                  "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-docker-machine",
-                  "role": "gitlab-runner-instance-role"
-                },
-                "depends_on": [
-                  "aws_iam_policy.instance_docker_machine_policy",
-                  "aws_iam_role.instance"
-                ]
-              },
-              {
-                "address": "aws_iam_role_policy_attachment.instance_session_manager_aws_managed",
-                "mode": "managed",
-                "type": "aws_iam_role_policy_attachment",
-                "name": "instance_session_manager_aws_managed",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "id": "gitlab-runner-instance-role-20191017075348705800000003",
-                  "policy_arn": "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-                  "role": "gitlab-runner-instance-role"
-                },
-                "depends_on": [
-                  "aws_iam_role.instance"
-                ]
-              },
-              {
-                "address": "aws_iam_role_policy_attachment.instance_session_manager_policy",
-                "mode": "managed",
-                "type": "aws_iam_role_policy_attachment",
-                "name": "instance_session_manager_policy",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "id": "gitlab-runner-instance-role-20191017075349564400000007",
-                  "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-session-manager",
-                  "role": "gitlab-runner-instance-role"
-                },
-                "depends_on": [
-                  "aws_iam_policy.instance_session_manager_policy",
-                  "aws_iam_role.instance"
-                ]
-              },
-              {
-                "address": "aws_iam_role_policy_attachment.service_linked_role",
-                "mode": "managed",
-                "type": "aws_iam_role_policy_attachment",
-                "name": "service_linked_role",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "id": "gitlab-runner-instance-role-20191017075349471200000005",
-                  "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-service_linked_role",
-                  "role": "gitlab-runner-instance-role"
-                },
-                "depends_on": [
-                  "aws_iam_policy.service_linked_role",
-                  "aws_iam_role.instance"
-                ]
-              },
-              {
-                "address": "aws_iam_role_policy_attachment.ssm",
-                "mode": "managed",
-                "type": "aws_iam_role_policy_attachment",
-                "name": "ssm",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "id": "gitlab-runner-instance-role-20191017075349515400000006",
-                  "policy_arn": "arn:aws:iam::885164491973:policy/gitlab-runner-ssm",
-                  "role": "gitlab-runner-instance-role"
-                },
-                "depends_on": [
-                  "aws_iam_policy.ssm",
-                  "aws_iam_role.instance"
-                ]
-              },
-              {
-                "address": "aws_s3_bucket.build_cache",
-                "mode": "managed",
-                "type": "aws_s3_bucket",
-                "name": "build_cache",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "acceleration_status": "",
-                  "acl": "private",
-                  "arn": "arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-                  "bucket": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-                  "bucket_domain_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0.s3.amazonaws.com",
-                  "bucket_prefix": null,
-                  "bucket_regional_domain_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0.s3.ap-southeast-2.amazonaws.com",
-                  "cors_rule": [],
-                  "force_destroy": true,
-                  "hosted_zone_id": "Z1WCIGYICN2BYD",
-                  "id": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-                  "lifecycle_rule": [
-                    {
-                      "abort_incomplete_multipart_upload_days": 0,
-                      "enabled": true,
-                      "expiration": [
-                        {
-                          "date": "",
-                          "days": 1,
-                          "expired_object_delete_marker": false
-                        }
-                      ],
-                      "id": "clear",
-                      "noncurrent_version_expiration": [
-                        {
-                          "days": 1
-                        }
-                      ],
-                      "noncurrent_version_transition": [],
-                      "prefix": "runner/",
-                      "tags": {},
-                      "transition": []
-                    }
-                  ],
-                  "logging": [],
-                  "object_lock_configuration": [],
-                  "policy": null,
-                  "region": "ap-southeast-2",
-                  "replication_configuration": [],
-                  "request_payer": "BucketOwner",
-                  "server_side_encryption_configuration": [
-                    {
-                      "rule": [
-                        {
-                          "apply_server_side_encryption_by_default": [
-                            {
-                              "kms_master_key_id": "",
-                              "sse_algorithm": "AES256"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ],
-                  "tags": {},
-                  "versioning": [
-                    {
-                      "enabled": false,
-                      "mfa_delete": false
-                    }
-                  ],
-                  "website": [],
-                  "website_domain": null,
-                  "website_endpoint": null
-                }
-              },
-              {
-                "address": "aws_security_group.docker_machine",
-                "mode": "managed",
-                "type": "aws_security_group",
-                "name": "docker_machine",
-                "provider_name": "aws",
-                "schema_version": 1,
-                "values": {
-                  "arn": "arn:aws:ec2:ap-southeast-2:885164491973:security-group/sg-04eaa83b1a9bbdca7",
-                  "description": "Managed by Terraform",
-                  "egress": [
-                    {
-                      "cidr_blocks": [
-                        "0.0.0.0/0"
-                      ],
-                      "description": "",
-                      "from_port": 0,
-                      "ipv6_cidr_blocks": [],
-                      "prefix_list_ids": [],
-                      "protocol": "-1",
-                      "security_groups": [],
-                      "self": false,
-                      "to_port": 0
-                    }
-                  ],
-                  "id": "sg-04eaa83b1a9bbdca7",
-                  "ingress": [
-                    {
-                      "cidr_blocks": [
-                        "0.0.0.0/0"
-                      ],
-                      "description": "",
-                      "from_port": 22,
-                      "ipv6_cidr_blocks": [],
-                      "prefix_list_ids": [],
-                      "protocol": "tcp",
-                      "security_groups": [],
-                      "self": false,
-                      "to_port": 22
-                    },
-                    {
-                      "cidr_blocks": [],
-                      "description": "",
-                      "from_port": 2376,
-                      "ipv6_cidr_blocks": [],
-                      "prefix_list_ids": [],
-                      "protocol": "tcp",
-                      "security_groups": [
-                        "sg-0da027c8708d5a1a1"
-                      ],
-                      "self": true,
-                      "to_port": 2376
-                    }
-                  ],
-                  "name": "gitlab-runner-docker-machine20191017075345454800000001",
-                  "name_prefix": "gitlab-runner-docker-machine",
-                  "owner_id": "885164491973",
-                  "revoke_rules_on_delete": false,
-                  "tags": {},
-                  "timeouts": null,
-                  "vpc_id": "vpc-07a59518ae4faa320"
-                }
-              },
-              {
-                "address": "aws_security_group.runner",
-                "mode": "managed",
-                "type": "aws_security_group",
-                "name": "runner",
-                "provider_name": "aws",
-                "schema_version": 1,
-                "values": {
-                  "arn": "arn:aws:ec2:ap-southeast-2:885164491973:security-group/sg-0da027c8708d5a1a1",
-                  "description": "Managed by Terraform",
-                  "egress": [
-                    {
-                      "cidr_blocks": [
-                        "0.0.0.0/0"
-                      ],
-                      "description": "",
-                      "from_port": 0,
-                      "ipv6_cidr_blocks": [],
-                      "prefix_list_ids": [],
-                      "protocol": "-1",
-                      "security_groups": [],
-                      "self": false,
-                      "to_port": 0
-                    }
-                  ],
-                  "id": "sg-0da027c8708d5a1a1",
-                  "ingress": [],
-                  "name": "gitlab-runner-security-group20191017075345459800000002",
-                  "name_prefix": "gitlab-runner-security-group",
-                  "owner_id": "885164491973",
-                  "revoke_rules_on_delete": false,
-                  "tags": {},
-                  "timeouts": null,
-                  "vpc_id": "vpc-07a59518ae4faa320"
-                }
-              },
-              {
-                "address": "aws_security_group_rule.docker_machine_docker_runner",
-                "mode": "managed",
-                "type": "aws_security_group_rule",
-                "name": "docker_machine_docker_runner",
-                "provider_name": "aws",
-                "schema_version": 2,
-                "values": {
-                  "cidr_blocks": [],
-                  "description": "",
-                  "from_port": 2376,
-                  "id": "sgrule-2214692661",
-                  "ipv6_cidr_blocks": [],
-                  "prefix_list_ids": [],
-                  "protocol": "tcp",
-                  "security_group_id": "sg-04eaa83b1a9bbdca7",
-                  "self": false,
-                  "source_security_group_id": "sg-0da027c8708d5a1a1",
-                  "to_port": 2376,
-                  "type": "ingress"
-                },
-                "depends_on": [
-                  "aws_security_group.docker_machine",
-                  "aws_security_group.runner"
-                ]
-              },
-              {
-                "address": "aws_security_group_rule.docker_machine_docker_self",
-                "mode": "managed",
-                "type": "aws_security_group_rule",
-                "name": "docker_machine_docker_self",
-                "provider_name": "aws",
-                "schema_version": 2,
-                "values": {
-                  "cidr_blocks": [],
-                  "description": "",
-                  "from_port": 2376,
-                  "id": "sgrule-2352412340",
-                  "ipv6_cidr_blocks": [],
-                  "prefix_list_ids": [],
-                  "protocol": "tcp",
-                  "security_group_id": "sg-04eaa83b1a9bbdca7",
-                  "self": true,
-                  "source_security_group_id": "sg-04eaa83b1a9bbdca7",
-                  "to_port": 2376,
-                  "type": "ingress"
-                },
-                "depends_on": [
-                  "aws_security_group.docker_machine"
-                ]
-              },
-              {
-                "address": "aws_security_group_rule.docker_machine_ssh",
-                "mode": "managed",
-                "type": "aws_security_group_rule",
-                "name": "docker_machine_ssh",
-                "provider_name": "aws",
-                "schema_version": 2,
-                "values": {
-                  "cidr_blocks": [
-                    "0.0.0.0/0"
-                  ],
-                  "description": "",
-                  "from_port": 22,
-                  "id": "sgrule-3134283554",
-                  "ipv6_cidr_blocks": [],
-                  "prefix_list_ids": [],
-                  "protocol": "tcp",
-                  "security_group_id": "sg-04eaa83b1a9bbdca7",
-                  "self": false,
-                  "source_security_group_id": null,
-                  "to_port": 22,
-                  "type": "ingress"
-                },
-                "depends_on": [
-                  "aws_security_group.docker_machine"
-                ]
-              },
-              {
-                "address": "aws_security_group_rule.out_all",
-                "mode": "managed",
-                "type": "aws_security_group_rule",
-                "name": "out_all",
-                "provider_name": "aws",
-                "schema_version": 2,
-                "values": {
-                  "cidr_blocks": [
-                    "0.0.0.0/0"
-                  ],
-                  "description": "",
-                  "from_port": 0,
-                  "id": "sgrule-3440665133",
-                  "ipv6_cidr_blocks": [],
-                  "prefix_list_ids": [],
-                  "protocol": "-1",
-                  "security_group_id": "sg-04eaa83b1a9bbdca7",
-                  "self": false,
-                  "source_security_group_id": null,
-                  "to_port": 0,
-                  "type": "egress"
-                },
-                "depends_on": [
-                  "aws_security_group.docker_machine"
-                ]
-              },
-              {
-                "address": "aws_ssm_parameter.runner_registration_token",
-                "mode": "managed",
-                "type": "aws_ssm_parameter",
-                "name": "runner_registration_token",
-                "provider_name": "aws",
-                "schema_version": 0,
-                "values": {
-                  "allowed_pattern": "",
-                  "arn": "arn:aws:ssm:ap-southeast-2:885164491973:parameter/gitlab-runner-runner-token",
-                  "description": "",
-                  "id": "gitlab-runner-runner-token",
-                  "key_id": "alias/aws/ssm",
-                  "name": "gitlab-runner-runner-token",
-                  "overwrite": null,
-                  "tags": {},
-                  "tier": "Standard",
-                  "type": "SecureString",
-                  "value": "null",
-                  "version": 1
-                }
-              },
               {
                 "address": "data.aws_ami.docker-machine",
                 "mode": "data",
@@ -2738,7 +1886,7 @@
                         "delete_on_termination": "true",
                         "encrypted": "false",
                         "iops": "0",
-                        "snapshot_id": "snap-0a3de281278d574d8",
+                        "snapshot_id": "snap-0037fda5f14f34025",
                         "volume_size": "8",
                         "volume_type": "standard"
                       },
@@ -2746,26 +1894,26 @@
                       "virtual_name": ""
                     }
                   ],
-                  "creation_date": "2019-08-26T20:04:12.000Z",
-                  "description": "Amazon Linux AMI 2018.03.0.20190826 x86_64 HVM ebs",
+                  "creation_date": "2019-08-30T07:02:25.000Z",
+                  "description": "Amazon Linux 2 AMI 2.0.20190823.1 x86_64 HVM ebs",
                   "executable_users": null,
                   "filter": [
                     {
                       "name": "name",
                       "values": [
-                        "amzn-ami-hvm-2018.03*-x86_64-ebs"
+                        "amzn2-ami-hvm-*-x86_64-ebs"
                       ]
                     }
                   ],
                   "hypervisor": "xen",
-                  "id": "ami-042710e2a62ecec92",
-                  "image_id": "ami-042710e2a62ecec92",
-                  "image_location": "amazon/amzn-ami-hvm-2018.03.0.20190826-x86_64-ebs",
+                  "id": "ami-0804dc420cb24c62b",
+                  "image_id": "ami-0804dc420cb24c62b",
+                  "image_location": "amazon/amzn2-ami-hvm-2.0.20190823.1-x86_64-ebs",
                   "image_owner_alias": "amazon",
                   "image_type": "machine",
                   "kernel_id": null,
                   "most_recent": true,
-                  "name": "amzn-ami-hvm-2018.03.0.20190826-x86_64-ebs",
+                  "name": "amzn2-ami-hvm-2.0.20190823.1-x86_64-ebs",
                   "name_regex": null,
                   "owner_id": "137112412989",
                   "owners": [
@@ -2777,7 +1925,7 @@
                   "ramdisk_id": null,
                   "root_device_name": "/dev/xvda",
                   "root_device_type": "ebs",
-                  "root_snapshot_id": "snap-0a3de281278d574d8",
+                  "root_snapshot_id": "snap-0037fda5f14f34025",
                   "sriov_net_support": "simple",
                   "state": "available",
                   "state_reason": {
@@ -2798,29 +1946,9 @@
                 "values": {
                   "account_id": "885164491973",
                   "arn": "arn:aws:iam::885164491973:user/alex",
-                  "id": "2019-10-17 08:03:44.758414 +0000 UTC",
+                  "id": "2019-10-18 07:51:19.988911 +0000 UTC",
                   "user_id": "AIDAIA2HJENE7W7DDPY5G"
                 }
-              },
-              {
-                "address": "data.template_file.docker_machine_cache_policy",
-                "mode": "data",
-                "type": "template_file",
-                "name": "docker_machine_cache_policy",
-                "provider_name": "template",
-                "schema_version": 0,
-                "values": {
-                  "filename": null,
-                  "id": "8290fc1051c1077aff1d85e27146aeb440013c1cf00326d275c0490a7e0a2861",
-                  "rendered": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowGitLabRunnersAccessCache\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:PutObjectAcl\",\n        \"s3:GetObject\",\n        \"s3:GetObjectAcl\"\n      ],\n      \"Resource\": [\n        \"arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0/*\"\n      ]\n    }\n  ]\n}\n",
-                  "template": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"allowGitLabRunnersAccessCache\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:PutObjectAcl\",\n        \"s3:GetObject\",\n        \"s3:GetObjectAcl\"\n      ],\n      \"Resource\": [\n        \"${s3_cache_arn}/*\"\n      ]\n    }\n  ]\n}\n",
-                  "vars": {
-                    "s3_cache_arn": "arn:aws:s3:::config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0"
-                  }
-                },
-                "depends_on": [
-                  "aws_s3_bucket.build_cache"
-                ]
               },
               {
                 "address": "data.template_file.dockermachine_role_trust_policy",
@@ -2898,54 +2026,6 @@
                 }
               },
               {
-                "address": "data.template_file.runners",
-                "mode": "data",
-                "type": "template_file",
-                "name": "runners",
-                "provider_name": "template",
-                "schema_version": 0,
-                "values": {
-                  "filename": null,
-                  "id": "a95b7e7c6ab346f0beb36dfc605792b49ab107d6cb162c39e1e15dd36f9743db",
-                  "rendered": "concurrent = 10\ncheck_interval = 0\n\n[[runners]]\n  name = \"test-runner\"\n  url = \"https://gitlab.com\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = []\n  request_concurrency = 1\n  output_limit = 4096\n  limit = 0\n  [runners.docker]\n    tls_verify = false\n    image = \"docker:18.03.1-ce\"\n    privileged = true\n    disable_cache = false\n    shm_size = 0\n    pull_policy = \"always\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0\"\n      BucketLocation = \"ap-southeast-2\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = 0\n    IdleTime = 600\n    MaxBuilds = 0\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=m5a.large\",\n      \"amazonec2-region=ap-southeast-2\",\n      \"amazonec2-zone=a\",\n      \"amazonec2-vpc-id=vpc-07a59518ae4faa320\",\n      \"amazonec2-subnet-id=subnet-00f1b18508dcc87f8\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=0.06\",\n      \"amazonec2-security-group=gitlab-runner-docker-machine20191017075345454800000001\",\n      \"amazonec2-monitoring=false\",\n      \"amazonec2-iam-instance-profile=gitlab-runner-docker-machine-profile,\n      \"amazonec2-root-size=16\",\n      \"amazonec2-ami=ami-0328aad0f6218c429\"\n    ]\n    OffPeakTimezone = \"Australia/Sydney\"\n    OffPeakIdleCount = 0\n    OffPeakIdleTime = 60\n    OffPeakPeriods = [\"* * 0-9,17-23 * * mon-fri *\",\"* * * * * sat,sun *\"]\n",
-                  "template": "concurrent = ${globals_concurrent}\ncheck_interval = 0\n\n[[runners]]\n  name = \"${runners_name}\"\n  url = \"${runners_url}\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = ${runners_environment}\n  request_concurrency = ${runners_request_concurrency}\n  output_limit = ${runners_output_limit}\n  limit = ${runners_limit}\n  [runners.docker]\n    tls_verify = false\n    image = \"${runners_docker_image}\"\n    privileged = true\n    disable_cache = false\n    shm_size = ${runners_docker_shm_size}\n    pull_policy = \"always\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"${runners_cache_bucket_name}\"\n      BucketLocation = \"${aws_region}\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = ${runners_machine_idle_count}\n    IdleTime = ${runners_machine_idle_time}\n%{ if runners_machine_max_builds != 0 ~}\n    MaxBuilds = ${runners_machine_max_builds}\n%{ endif ~}\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=${docker_machine_instance_type}\",\n      \"amazonec2-region=${aws_region}\",\n      \"amazonec2-zone=${aws_availability_zone}\",\n      \"amazonec2-vpc-id=${vpc_id}\",\n      \"amazonec2-subnet-id=${subnet_id}\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=${docker_machine_spot_price}\",\n      \"amazonec2-security-group=${docker_machine_security_group}\",\n      \"amazonec2-monitoring=false\",\n      \"amazonec2-iam-instance-profile=${docker_machine_iam_instance_profile},\n      \"amazonec2-root-size=${docker_machine_root_size}\",\n      \"amazonec2-ami=${docker_machine_ami}\"\n    ]\n    OffPeakTimezone = \"${runners_machine_off_peak_timezone}\"\n    OffPeakIdleCount = ${runners_machine_off_peak_idle_count}\n    OffPeakIdleTime = ${runners_machine_off_peak_idle_time}\n%{ if runners_machine_off_peak_periods != \"\" ~}\n    OffPeakPeriods = ${runners_machine_off_peak_periods}\n%{ endif ~}\n",
-                  "vars": {
-                    "aws_availability_zone": "a",
-                    "aws_region": "ap-southeast-2",
-                    "docker_machine_ami": "ami-0328aad0f6218c429",
-                    "docker_machine_iam_instance_profile": "gitlab-runner-docker-machine-profile",
-                    "docker_machine_instance_type": "m5a.large",
-                    "docker_machine_root_size": "16",
-                    "docker_machine_security_group": "gitlab-runner-docker-machine20191017075345454800000001",
-                    "docker_machine_spot_price": "0.06",
-                    "globals_concurrent": "10",
-                    "runners_cache_bucket_name": "config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0",
-                    "runners_docker_image": "docker:18.03.1-ce",
-                    "runners_docker_shm_size": "0",
-                    "runners_environment": "[]",
-                    "runners_limit": "0",
-                    "runners_machine_idle_count": "0",
-                    "runners_machine_idle_time": "600",
-                    "runners_machine_max_builds": "0",
-                    "runners_machine_off_peak_idle_count": "0",
-                    "runners_machine_off_peak_idle_time": "60",
-                    "runners_machine_off_peak_periods": "[\"* * 0-9,17-23 * * mon-fri *\",\"* * * * * sat,sun *\"]",
-                    "runners_machine_off_peak_timezone": "Australia/Sydney",
-                    "runners_name": "test-runner",
-                    "runners_output_limit": "4096",
-                    "runners_request_concurrency": "1",
-                    "runners_url": "https://gitlab.com",
-                    "subnet_id": "subnet-00f1b18508dcc87f8",
-                    "vpc_id": "vpc-07a59518ae4faa320"
-                  }
-                },
-                "depends_on": [
-                  "aws_iam_instance_profile.docker_machine",
-                  "aws_security_group.docker_machine",
-                  "data.aws_ami.docker-machine"
-                ]
-              },
-              {
                 "address": "data.template_file.service_linked_role",
                 "mode": "data",
                 "type": "template_file",
@@ -2974,37 +2054,6 @@
                   "template": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:PutParameter\"\n            ],\n            \"Resource\": \"*\"\n        },\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ssm:GetParameters\"\n            ],\n            \"Resource\": \"arn:aws:ssm:*\"\n        }\n    ]\n}",
                   "vars": null
                 }
-              },
-              {
-                "address": "data.template_file.user_data",
-                "mode": "data",
-                "type": "template_file",
-                "name": "user_data",
-                "provider_name": "template",
-                "schema_version": 0,
-                "values": {
-                  "filename": null,
-                  "id": "a4d3b2a40f9d2eee8f87a73a22b16138dfa593af1d94b7526648b947719886ea",
-                  "rendered": "#!/usr/bin/env bash\n\nawslogs_conf='/etc/awslogs/awslogs.conf'\nawscli_conf='/etc/awslogs/awscli.conf'\nconfig_toml='/etc/gitlab-runner/config.toml'\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id region\n\n  read -r instance_id region <<< \"$(\n    curl -s https://169.254.169.254/latest/dynamic/instance-identity/document \\\n      | jq -r '[.instanceId, .region] | @tsv'\n  )\"\n\n  cat > \"$awslogs_conf\" <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' \"$awscli_conf\"\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > \"$config_toml\" <<EOF\nconcurrent = 10\ncheck_interval = 0\n\n[[runners]]\n  name = \"test-runner\"\n  url = \"https://gitlab.com\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = []\n  request_concurrency = 1\n  output_limit = 4096\n  limit = 0\n  [runners.docker]\n    tls_verify = false\n    image = \"docker:18.03.1-ce\"\n    privileged = true\n    disable_cache = false\n    shm_size = 0\n    pull_policy = \"always\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0\"\n      BucketLocation = \"ap-southeast-2\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = 0\n    IdleTime = 600\n    MaxBuilds = 0\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=m5a.large\",\n      \"amazonec2-region=ap-southeast-2\",\n      \"amazonec2-zone=a\",\n      \"amazonec2-vpc-id=vpc-07a59518ae4faa320\",\n      \"amazonec2-subnet-id=subnet-00f1b18508dcc87f8\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=0.06\",\n      \"amazonec2-security-group=gitlab-runner-docker-machine20191017075345454800000001\",\n      \"amazonec2-monitoring=false\",\n      \"amazonec2-iam-instance-profile=gitlab-runner-docker-machine-profile,\n      \"amazonec2-root-size=16\",\n      \"amazonec2-ami=ami-0328aad0f6218c429\"\n    ]\n    OffPeakTimezone = \"Australia/Sydney\"\n    OffPeakIdleCount = 0\n    OffPeakIdleTime = 60\n    OffPeakPeriods = [\"* * 0-9,17-23 * * mon-fri *\",\"* * * * * sat,sun *\"]\n\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"12.3.0\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"0.16.2\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"gitlab-runner-runner-token\" \\\n    --with-decryption --region \"ap-southeast-2\" | jq -r '.Parameters[].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    token=$(\n      curl -X POST -L \"https://gitlab.com/api/v4/runners\" \\\n        -F \"token=GBpeL612xfp3DtEjzZsx\" \\\n        -F \"description=runner default - auto\" \\\n        -F \"locked=true\" \\\n        -F \"run_untagged=false\" \\\n        -F \"maximum_timeout=3600\" \\\n        -F \"access_level=not_protected\" \\\n      | jq -r .token\n    )\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"gitlab-runner-runner-token\" --value \"$token\" --region \"ap-southeast-2\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' \"$config_toml\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
-                  "template": "#!/usr/bin/env bash\n\nawslogs_conf='/etc/awslogs/awslogs.conf'\nawscli_conf='/etc/awslogs/awscli.conf'\nconfig_toml='/etc/gitlab-runner/config.toml'\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id region\n\n  read -r instance_id region <<< \"$(\n    curl -s https://169.254.169.254/latest/dynamic/instance-identity/document \\\n      | jq -r '[.instanceId, .region] | @tsv'\n  )\"\n\n  cat > \"$awslogs_conf\" <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' \"$awscli_conf\"\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > \"$config_toml\" <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${aws_region}\" | jq -r '.Parameters[].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    token=$(\n      curl -X POST -L \"${runners_url}/api/v4/runners\" \\\n        -F \"token=${gitlab_runner_registration_token}\" \\\n        -F \"description=${gitlab_runner_description}\" \\\n        -F \"locked=${gitlab_runner_locked_to_project}\" \\\n        -F \"run_untagged=${gitlab_runner_run_untagged}\" \\\n        -F \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        -F \"access_level=${gitlab_runner_access_level}\" \\\n      | jq -r .token\n    )\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${aws_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' \"$config_toml\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
-                  "vars": {
-                    "aws_region": "ap-southeast-2",
-                    "docker_machine_version": "0.16.2",
-                    "gitlab_runner_access_level": "not_protected",
-                    "gitlab_runner_description": "runner default - auto",
-                    "gitlab_runner_locked_to_project": "true",
-                    "gitlab_runner_maximum_timeout": "3600",
-                    "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
-                    "gitlab_runner_run_untagged": "false",
-                    "gitlab_runner_version": "12.3.0",
-                    "runners_config": "concurrent = 10\ncheck_interval = 0\n\n[[runners]]\n  name = \"test-runner\"\n  url = \"https://gitlab.com\"\n  token = \"##TOKEN##\"\n  executor = \"docker+machine\"\n  environment = []\n  request_concurrency = 1\n  output_limit = 4096\n  limit = 0\n  [runners.docker]\n    tls_verify = false\n    image = \"docker:18.03.1-ce\"\n    privileged = true\n    disable_cache = false\n    shm_size = 0\n    pull_policy = \"always\"\n  [runners.cache]\n    Type = \"s3\"\n    Shared = false\n    [runners.cache.s3]\n      ServerAddress = \"s3.amazonaws.com\"\n      BucketName = \"config-bucket-1c5a1978-d138-4084-a3b4-fd4c403a89a0\"\n      BucketLocation = \"ap-southeast-2\"\n      Insecure = false\n  [runners.machine]\n    IdleCount = 0\n    IdleTime = 600\n    MaxBuilds = 0\n    MachineDriver = \"amazonec2\"\n    MachineName = \"runner-%s\"\n    MachineOptions = [\n      \"amazonec2-instance-type=m5a.large\",\n      \"amazonec2-region=ap-southeast-2\",\n      \"amazonec2-zone=a\",\n      \"amazonec2-vpc-id=vpc-07a59518ae4faa320\",\n      \"amazonec2-subnet-id=subnet-00f1b18508dcc87f8\",\n      \"amazonec2-private-address-only=true\",\n      \"amazonec2-request-spot-instance=true\",\n      \"amazonec2-spot-price=0.06\",\n      \"amazonec2-security-group=gitlab-runner-docker-machine20191017075345454800000001\",\n      \"amazonec2-monitoring=false\",\n      \"amazonec2-iam-instance-profile=gitlab-runner-docker-machine-profile,\n      \"amazonec2-root-size=16\",\n      \"amazonec2-ami=ami-0328aad0f6218c429\"\n    ]\n    OffPeakTimezone = \"Australia/Sydney\"\n    OffPeakIdleCount = 0\n    OffPeakIdleTime = 60\n    OffPeakPeriods = [\"* * 0-9,17-23 * * mon-fri *\",\"* * * * * sat,sun *\"]\n",
-                    "runners_ssm_token_key": "gitlab-runner-runner-token",
-                    "runners_url": "https://gitlab.com"
-                  }
-                },
-                "depends_on": [
-                  "data.template_file.runners"
-                ]
               }
             ],
             "address": "module.runner"
@@ -3653,7 +2702,7 @@
                   },
                   "instance_type": {
                     "references": [
-                      "local.instance_type"
+                      "local.gitlab_runner_instance_type"
                     ]
                   },
                   "key_name": {
@@ -3983,8 +3032,8 @@
                         "constant_value": "name"
                       },
                       "values": {
-                        "constant_value": [
-                          "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
+                        "references": [
+                          "local.docker_machine_ami_filter"
                         ]
                       }
                     }
@@ -4013,8 +3062,8 @@
                         "constant_value": "name"
                       },
                       "values": {
-                        "constant_value": [
-                          "amzn-ami-hvm-2018.03*-x86_64-ebs"
+                        "references": [
+                          "local.gitlab_runner_ami_filter"
                         ]
                       }
                     }
@@ -4166,7 +3215,7 @@
                       "var.runners_machine_max_builds",
                       "aws_iam_instance_profile.docker_machine",
                       "local.docker_machine_instance_type",
-                      "local.docker_machine_spot_price",
+                      "var.spot_price",
                       "aws_security_group.docker_machine",
                       "local.docker_machine_root_size",
                       "data.aws_ami.docker-machine",
@@ -4230,7 +3279,6 @@
                       "var.gitlab_runner_registration_config",
                       "var.gitlab_runner_registration_config",
                       "var.gitlab_runner_registration_config",
-                      "var.gitlab_runner_registration_config",
                       "local.gitlab_runner_version",
                       "data.template_file.runners",
                       "local.runners_ssm_token_key",
@@ -4259,8 +3307,7 @@
                   "description": "",
                   "locked_to_project": "",
                   "maximum_timeout": "",
-                  "registration_token": "",
-                  "run_untagged": ""
+                  "registration_token": ""
                 },
                 "description": "Configuration used to register the runner"
               },
@@ -4337,6 +3384,10 @@
                   "scale_out_recurrence": "0 8 * * 1-5"
                 },
                 "description": "Map containing the configuration of the ASG scale-in and scale-up for the runner instance"
+              },
+              "spot_price": {
+                "default": "0.06",
+                "description": "Spot bid price for the GitLab Runner instance"
               },
               "ssh_cidr_blocks": {
                 "default": [
