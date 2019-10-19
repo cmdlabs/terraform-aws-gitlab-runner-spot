@@ -46,7 +46,7 @@
                 "min_elb_capacity": null,
                 "min_size": 1,
                 "mixed_instances_policy": [],
-                "name": "gitlab-runner-as-group",
+                "name": "gitlab-runner-autoscaling-group",
                 "name_prefix": null,
                 "placement_group": null,
                 "protect_from_scale_in": false,
@@ -72,12 +72,12 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "autoscaling_group_name": "gitlab-runner-as-group",
+                "autoscaling_group_name": "gitlab-runner-autoscaling-group",
                 "desired_capacity": 0,
                 "max_size": 0,
                 "min_size": 0,
                 "recurrence": "0 18 * * 1-5",
-                "scheduled_action_name": "scale_in-gitlab-runner-as-group"
+                "scheduled_action_name": "scale_in-gitlab-runner-autoscaling-group"
               }
             },
             {
@@ -88,12 +88,12 @@
               "provider_name": "aws",
               "schema_version": 0,
               "values": {
-                "autoscaling_group_name": "gitlab-runner-as-group",
+                "autoscaling_group_name": "gitlab-runner-autoscaling-group",
                 "desired_capacity": 1,
                 "max_size": 1,
                 "min_size": 1,
                 "recurrence": "0 8 * * 1-5",
-                "scheduled_action_name": "scale_out-gitlab-runner-as-group"
+                "scheduled_action_name": "scale_out-gitlab-runner-autoscaling-group"
               }
             },
             {
@@ -506,10 +506,11 @@
               }
             },
             {
-              "address": "module.runner.aws_security_group_rule.docker_machine_ssh",
+              "address": "module.runner.aws_security_group_rule.docker_machine_ssh[0]",
               "mode": "managed",
               "type": "aws_security_group_rule",
               "name": "docker_machine_ssh",
+              "index": 0,
               "provider_name": "aws",
               "schema_version": 2,
               "values": {
@@ -649,13 +650,14 @@
               "schema_version": 0,
               "values": {
                 "filename": null,
-                "template": "#!/usr/bin/env bash\n\nawslogs_conf='/etc/awslogs/awslogs.conf'\nawscli_conf='/etc/awslogs/awscli.conf'\nconfig_toml='/etc/gitlab-runner/config.toml'\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id region\n\n  read -r instance_id region <<< \"$(\n    curl -s http://169.254.169.254/latest/dynamic/instance-identity/document \\\n      | jq -r '[.instanceId, .region] | @tsv'\n  )\"\n\n  cat > \"$awslogs_conf\" <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' \"$awscli_conf\"\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > \"$config_toml\" <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${aws_region}\" | jq -r '.Parameters[0].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    response=$(\n      curl -X POST -L \"${runners_url}/api/v4/runners\" \\\n        -F \"token=${gitlab_runner_registration_token}\" \\\n        -F \"description=${gitlab_runner_description}\" \\\n        -F \"locked=${gitlab_runner_locked_to_project}\" \\\n        -F \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        -F \"access_level=${gitlab_runner_access_level}\" \\\n    )\n\n    token=$(jq -r .token <<< \"$response\")\n\n    if [ \"$token\" == \"null\" ] ; then\n      echo \"Received the following error:\"\n      echo \"$response\"\n      return\n    fi\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${aws_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' \"$config_toml\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+                "template": "#!/usr/bin/env bash\n\nawslogs_conf='/etc/awslogs/awslogs.conf'\nawscli_conf='/etc/awslogs/awscli.conf'\nconfig_toml='/etc/gitlab-runner/config.toml'\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id region\n\n  read -r instance_id region <<< \"$(\n    curl -s http://169.254.169.254/latest/dynamic/instance-identity/document \\\n      | jq -r '[.instanceId, .region] | @tsv'\n  )\"\n\n  cat > \"$awslogs_conf\" <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = ${gitlab_runner_log_group_name}\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = ${gitlab_runner_log_group_name}\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = ${gitlab_runner_log_group_name}\ninitial_position = start_of_file\nEOF\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' \"$awscli_conf\"\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > \"$config_toml\" <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${aws_region}\" | jq -r '.Parameters[0].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    response=$(\n      curl -X POST -L \"${runners_url}/api/v4/runners\" \\\n        -F \"token=${gitlab_runner_registration_token}\" \\\n        -F \"description=${gitlab_runner_description}\" \\\n        -F \"locked=${gitlab_runner_locked_to_project}\" \\\n        -F \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        -F \"access_level=${gitlab_runner_access_level}\" \\\n    )\n\n    token=$(jq -r .token <<< \"$response\")\n\n    if [ \"$token\" == \"null\" ] ; then\n      echo \"Received the following error:\"\n      echo \"$response\"\n      return\n    fi\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${aws_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' \"$config_toml\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
                 "vars": {
                   "aws_region": "ap-southeast-2",
                   "docker_machine_version": "0.16.2",
                   "gitlab_runner_access_level": "not_protected",
                   "gitlab_runner_description": "runner default - auto",
                   "gitlab_runner_locked_to_project": "true",
+                  "gitlab_runner_log_group_name": "gitlab-runner-log-group",
                   "gitlab_runner_maximum_timeout": "3600",
                   "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
                   "gitlab_runner_version": "12.3.0",
@@ -695,7 +697,7 @@
           "min_elb_capacity": null,
           "min_size": 1,
           "mixed_instances_policy": [],
-          "name": "gitlab-runner-as-group",
+          "name": "gitlab-runner-autoscaling-group",
           "name_prefix": null,
           "placement_group": null,
           "protect_from_scale_in": false,
@@ -747,12 +749,12 @@
         ],
         "before": null,
         "after": {
-          "autoscaling_group_name": "gitlab-runner-as-group",
+          "autoscaling_group_name": "gitlab-runner-autoscaling-group",
           "desired_capacity": 0,
           "max_size": 0,
           "min_size": 0,
           "recurrence": "0 18 * * 1-5",
-          "scheduled_action_name": "scale_in-gitlab-runner-as-group"
+          "scheduled_action_name": "scale_in-gitlab-runner-autoscaling-group"
         },
         "after_unknown": {
           "arn": true,
@@ -775,12 +777,12 @@
         ],
         "before": null,
         "after": {
-          "autoscaling_group_name": "gitlab-runner-as-group",
+          "autoscaling_group_name": "gitlab-runner-autoscaling-group",
           "desired_capacity": 1,
           "max_size": 1,
           "min_size": 1,
           "recurrence": "0 8 * * 1-5",
-          "scheduled_action_name": "scale_out-gitlab-runner-as-group"
+          "scheduled_action_name": "scale_out-gitlab-runner-autoscaling-group"
         },
         "after_unknown": {
           "arn": true,
@@ -1506,11 +1508,12 @@
       }
     },
     {
-      "address": "module.runner.aws_security_group_rule.docker_machine_ssh",
+      "address": "module.runner.aws_security_group_rule.docker_machine_ssh[0]",
       "module_address": "module.runner",
       "mode": "managed",
       "type": "aws_security_group_rule",
       "name": "docker_machine_ssh",
+      "index": 0,
       "provider_name": "aws",
       "change": {
         "actions": [
@@ -1734,13 +1737,14 @@
         "before": null,
         "after": {
           "filename": null,
-          "template": "#!/usr/bin/env bash\n\nawslogs_conf='/etc/awslogs/awslogs.conf'\nawscli_conf='/etc/awslogs/awscli.conf'\nconfig_toml='/etc/gitlab-runner/config.toml'\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id region\n\n  read -r instance_id region <<< \"$(\n    curl -s http://169.254.169.254/latest/dynamic/instance-identity/document \\\n      | jq -r '[.instanceId, .region] | @tsv'\n  )\"\n\n  cat > \"$awslogs_conf\" <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = gitlab-runner-log-group\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = gitlab-runner-log-group\ninitial_position = start_of_file\nEOF\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' \"$awscli_conf\"\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > \"$config_toml\" <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${aws_region}\" | jq -r '.Parameters[0].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    response=$(\n      curl -X POST -L \"${runners_url}/api/v4/runners\" \\\n        -F \"token=${gitlab_runner_registration_token}\" \\\n        -F \"description=${gitlab_runner_description}\" \\\n        -F \"locked=${gitlab_runner_locked_to_project}\" \\\n        -F \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        -F \"access_level=${gitlab_runner_access_level}\" \\\n    )\n\n    token=$(jq -r .token <<< \"$response\")\n\n    if [ \"$token\" == \"null\" ] ; then\n      echo \"Received the following error:\"\n      echo \"$response\"\n      return\n    fi\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${aws_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' \"$config_toml\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
+          "template": "#!/usr/bin/env bash\n\nawslogs_conf='/etc/awslogs/awslogs.conf'\nawscli_conf='/etc/awslogs/awscli.conf'\nconfig_toml='/etc/gitlab-runner/config.toml'\n\nupdate_hosts_file() {\n  echo \"\\\n127.0.0.1   localhost localhost.localdomain $(hostname)\" \\\n  >> /etc/hosts\n}\n\nupdate_system() {\n  yum -y update\n}\n\ninstall_deps() {\n  yum -y install aws-cli awslogs jq\n}\n\nconfigure_cloudwatch() {\n  local instance_id region\n\n  read -r instance_id region <<< \"$(\n    curl -s http://169.254.169.254/latest/dynamic/instance-identity/document \\\n      | jq -r '[.instanceId, .region] | @tsv'\n  )\"\n\n  cat > \"$awslogs_conf\" <<EOF\n[general]\nstate_file = /var/lib/awslogs/agent-state\n\n[/var/log/dmesg]\nfile = /var/log/dmesg\nlog_stream_name = $instance_id/dmesg\nlog_group_name = ${gitlab_runner_log_group_name}\ninitial_position = start_of_file\n\n[/var/log/messages]\nfile = /var/log/messages\nlog_stream_name = $instance_id/messages\nlog_group_name = ${gitlab_runner_log_group_name}\ndatetime_format = %b %d %H:%M:%S\ninitial_position = start_of_file\n\n[/var/log/user-data.log]\nfile = /var/log/user-data.log\nlog_stream_name = $instance_id/user-data\nlog_group_name = ${gitlab_runner_log_group_name}\ninitial_position = start_of_file\nEOF\n\n  sed -i '\n    s/region = us-east-1/region = '\"$region\"'/\n  ' \"$awscli_conf\"\n\n  service awslogs start\n  chkconfig awslogs on\n}\n\ngenerate_config_toml() {\n  mkdir -p /etc/gitlab-runner\n  cat > \"$config_toml\" <<EOF\n${runners_config}\nEOF\n}\n\ninstall_gitlab_runner() {\n  curl -L \\\n    https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash\n  yum -y install gitlab-runner-\"${gitlab_runner_version}\"\n  curl --fail --retry 6 -L \\\n    https://github.com/docker/machine/releases/download/v\"${docker_machine_version}\"/docker-machine-\"$(uname -s)\"-\"$(uname -m)\" > /tmp/docker-machine\n  chmod +x /tmp/docker-machine\n  cp /tmp/docker-machine /usr/local/bin/docker-machine\n  ln -s /usr/local/bin/docker-machine /usr/bin/docker-machine\n\n  # Create a dummy machine so that the cert is generated properly\n  # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676\n  docker-machine create --driver none --url localhost dummy-machine\n}\n\nregister_runner() {\n  token=$(aws ssm get-parameters --names \"${runners_ssm_token_key}\" \\\n    --with-decryption --region \"${aws_region}\" | jq -r '.Parameters[0].Value')\n\n  if [ \"$token\" == \"null\" ] ; then\n    response=$(\n      curl -X POST -L \"${runners_url}/api/v4/runners\" \\\n        -F \"token=${gitlab_runner_registration_token}\" \\\n        -F \"description=${gitlab_runner_description}\" \\\n        -F \"locked=${gitlab_runner_locked_to_project}\" \\\n        -F \"maximum_timeout=${gitlab_runner_maximum_timeout}\" \\\n        -F \"access_level=${gitlab_runner_access_level}\" \\\n    )\n\n    token=$(jq -r .token <<< \"$response\")\n\n    if [ \"$token\" == \"null\" ] ; then\n      echo \"Received the following error:\"\n      echo \"$response\"\n      return\n    fi\n\n    aws ssm put-parameter --overwrite --type SecureString --name \\\n      \"${runners_ssm_token_key}\" --value \"$token\" --region \"${aws_region}\"\n  fi\n\n  sed -i 's/##TOKEN##/'\"$token\"'/' \"$config_toml\"\n}\n\nstart_gitlab_runner() {\n  service gitlab-runner restart\n  chkconfig gitlab-runner on\n}\n\nmain() {\n  update_hosts_file\n  update_system\n  install_deps\n  configure_cloudwatch\n  generate_config_toml\n  install_gitlab_runner\n  register_runner\n  start_gitlab_runner\n}\n\nif [ \"$0\" == \"$BASH_SOURCE\" ] ; then\n  main\nfi\n\n# vim: set ft=sh:\n",
           "vars": {
             "aws_region": "ap-southeast-2",
             "docker_machine_version": "0.16.2",
             "gitlab_runner_access_level": "not_protected",
             "gitlab_runner_description": "runner default - auto",
             "gitlab_runner_locked_to_project": "true",
+            "gitlab_runner_log_group_name": "gitlab-runner-log-group",
             "gitlab_runner_maximum_timeout": "3600",
             "gitlab_runner_registration_token": "GBpeL612xfp3DtEjzZsx",
             "gitlab_runner_version": "12.3.0",
@@ -1774,7 +1778,7 @@
             "values": {
               "blacklisted_names": null,
               "blacklisted_zone_ids": null,
-              "id": "2019-10-18 10:18:27.976166 +0000 UTC",
+              "id": "2019-10-19 07:59:33.03216 +0000 UTC",
               "names": [
                 "ap-southeast-2a",
                 "ap-southeast-2b",
@@ -1946,7 +1950,7 @@
                 "values": {
                   "account_id": "885164491973",
                   "arn": "arn:aws:iam::885164491973:user/alex",
-                  "id": "2019-10-18 10:18:28.910955 +0000 UTC",
+                  "id": "2019-10-19 07:59:34.101451 +0000 UTC",
                   "user_id": "AIDAIA2HJENE7W7DDPY5G"
                 }
               },
@@ -2225,7 +2229,7 @@
                 "provider_config_key": "runner:aws",
                 "expressions": {
                   "desired_capacity": {
-                    "constant_value": "1"
+                    "constant_value": 1
                   },
                   "health_check_grace_period": {
                     "constant_value": 0
@@ -2236,13 +2240,13 @@
                     ]
                   },
                   "max_size": {
-                    "constant_value": "1"
+                    "constant_value": 1
                   },
                   "min_size": {
-                    "constant_value": "1"
+                    "constant_value": 1
                   },
                   "name": {
-                    "constant_value": "gitlab-runner-as-group"
+                    "constant_value": "gitlab-runner-autoscaling-group"
                   },
                   "vpc_zone_identifier": {
                     "references": [
@@ -2340,7 +2344,9 @@
                 "provider_config_key": "runner:aws",
                 "expressions": {
                   "name": {
-                    "constant_value": "gitlab-runner-log-group"
+                    "references": [
+                      "local.gitlab_runner_log_group_name"
+                    ]
                   }
                 },
                 "schema_version": 0
@@ -2927,7 +2933,12 @@
                     "constant_value": "ingress"
                   }
                 },
-                "schema_version": 2
+                "schema_version": 2,
+                "count_expression": {
+                  "references": [
+                    "var.enable_ssh_access"
+                  ]
+                }
               },
               {
                 "address": "aws_security_group_rule.out_all",
@@ -3280,6 +3291,7 @@
                       "var.gitlab_runner_registration_config",
                       "var.gitlab_runner_registration_config",
                       "local.gitlab_runner_version",
+                      "local.gitlab_runner_log_group_name",
                       "data.template_file.runners",
                       "local.runners_ssm_token_key",
                       "var.runners_url"

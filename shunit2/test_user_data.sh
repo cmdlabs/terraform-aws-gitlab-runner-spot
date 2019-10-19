@@ -72,6 +72,7 @@ EOF
   gitlab_runner_locked_to_project='true'
   gitlab_runner_maximum_timeout='10'
   gitlab_runner_access_level='debug'
+  gitlab_runner_log_group_name='gitlab-runner-log-group'
 
   register_runner
 
@@ -108,6 +109,7 @@ EOF
   gitlab_runner_locked_to_project='true'
   gitlab_runner_maximum_timeout='10'
   gitlab_runner_access_level='debug'
+  gitlab_runner_log_group_name='gitlab-runner-log-group'
 
   register_runner
 

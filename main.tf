@@ -6,6 +6,7 @@ locals {
   docker_machine_version        = "0.16.2"
   docker_machine_root_size      = 16
   gitlab_runner_version         = "12.3.0"
+  gitlab_runner_log_group_name  = "gitlab-runner-log-group"
   runners_docker_image          = "docker:18.03.1-ce"
   runners_ssm_token_key         = "gitlab-runner-runner-token"
   canonical_account_id          = "099720109477"
@@ -138,6 +139,7 @@ data "template_file" "user_data" {
     gitlab_runner_maximum_timeout    = var.gitlab_runner_registration_config["maximum_timeout"]
     gitlab_runner_registration_token = var.gitlab_runner_registration_config["registration_token"]
     gitlab_runner_version            = local.gitlab_runner_version
+    gitlab_runner_log_group_name     = local.gitlab_runner_log_group_name
     runners_config                   = data.template_file.runners.rendered
     runners_ssm_token_key            = local.runners_ssm_token_key
     runners_url                      = var.runners_url

@@ -33,20 +33,20 @@ state_file = /var/lib/awslogs/agent-state
 [/var/log/dmesg]
 file = /var/log/dmesg
 log_stream_name = $instance_id/dmesg
-log_group_name = gitlab-runner-log-group
+log_group_name = ${gitlab_runner_log_group_name}
 initial_position = start_of_file
 
 [/var/log/messages]
 file = /var/log/messages
 log_stream_name = $instance_id/messages
-log_group_name = gitlab-runner-log-group
+log_group_name = ${gitlab_runner_log_group_name}
 datetime_format = %b %d %H:%M:%S
 initial_position = start_of_file
 
 [/var/log/user-data.log]
 file = /var/log/user-data.log
 log_stream_name = $instance_id/user-data
-log_group_name = gitlab-runner-log-group
+log_group_name = ${gitlab_runner_log_group_name}
 initial_position = start_of_file
 EOF
 

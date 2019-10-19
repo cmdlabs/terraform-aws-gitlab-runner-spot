@@ -121,5 +121,5 @@ resource "aws_iam_role_policy" "instance" {
 }
 
 resource "aws_cloudwatch_log_group" "environment" {
-  name  = "gitlab-runner-log-group"
+  name  = local.gitlab_runner_log_group_name
 }
