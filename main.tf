@@ -154,12 +154,11 @@ data "aws_ami" "docker-machine" {
 }
 
 resource "aws_autoscaling_group" "gitlab_runner_instance" {
-  name                = "gitlab-runner-as-group"
-  vpc_zone_identifier = var.subnet_ids
-
-  min_size                  = "1"
-  max_size                  = "1"
-  desired_capacity          = "1"
+  name                      = "gitlab-runner-autoscaling-group"
+  vpc_zone_identifier       = var.subnet_ids
+  min_size                  = 1
+  max_size                  = 1
+  desired_capacity          = 1
   health_check_grace_period = 0
   launch_configuration      = aws_launch_configuration.gitlab_runner_instance.name
 }
