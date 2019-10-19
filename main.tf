@@ -61,6 +61,8 @@ resource "aws_security_group_rule" "docker_machine_docker_self" {
 }
 
 resource "aws_security_group_rule" "docker_machine_ssh" {
+  count = var.enable_ssh_access ? 1 : 0
+
   type        = "ingress"
   from_port   = 22
   to_port     = 22
