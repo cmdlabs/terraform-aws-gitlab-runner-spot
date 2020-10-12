@@ -48,6 +48,12 @@ variable "ssh_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "gitlab_runner_version" {
+  description = "Version of the GitLab Runner to install"
+  type        = string
+  default     = "12.3.0"
+}
+
 variable "gitlab_runner_registration_config" {
   description = "Configuration used to register the runner"
   type        = map(string)
@@ -58,6 +64,7 @@ variable "gitlab_runner_registration_config" {
     locked_to_project  = ""
     maximum_timeout    = ""
     access_level       = ""
+    tag_list           = ""
   }
 }
 
@@ -115,6 +122,12 @@ variable "runners_docker_shm_size" {
   description = "Shared memory size for images (in bytes)"
   type        = number
   default     = 0
+}
+
+variable "runners_docker_volumes" {
+  description = "List of volumes for images"
+  type        = list(string)
+  default     = []
 }
 
 variable "runners_cache_bucket_name" {

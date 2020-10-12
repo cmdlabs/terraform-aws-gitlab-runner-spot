@@ -17,6 +17,7 @@ check_interval = 0
     disable_cache = false
     shm_size = ${runners_docker_shm_size}
     pull_policy = "always"
+    volumes = ${runners_docker_volumes}
   [runners.cache]
     Type = "s3"
     Shared = false

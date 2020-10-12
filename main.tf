@@ -5,7 +5,6 @@ locals {
   docker_machine_instance_type  = "m5a.large"
   docker_machine_version        = "0.16.2"
   docker_machine_root_size      = 16
-  gitlab_runner_version         = "12.3.0"
   gitlab_runner_log_group_name  = "gitlab-runner-log-group"
   runners_docker_image          = "docker:18.03.1-ce"
   runners_ssm_token_key         = "gitlab-runner-runner-token"
@@ -110,6 +109,7 @@ data "template_file" "runners" {
     runners_limit                       = var.runners_limit
     runners_docker_image                = local.runners_docker_image
     runners_docker_shm_size             = var.runners_docker_shm_size
+    runners_docker_volumes              = jsonencode(var.runners_docker_volumes)
     runners_cache_bucket_name           = var.runners_cache_bucket_name
     runners_machine_idle_count          = var.runners_machine_idle_count
     runners_machine_idle_time           = var.runners_machine_idle_time
@@ -138,7 +138,8 @@ data "template_file" "user_data" {
     gitlab_runner_locked_to_project  = var.gitlab_runner_registration_config["locked_to_project"]
     gitlab_runner_maximum_timeout    = var.gitlab_runner_registration_config["maximum_timeout"]
     gitlab_runner_registration_token = var.gitlab_runner_registration_config["registration_token"]
-    gitlab_runner_version            = local.gitlab_runner_version
+    gitlab_runner_tag_list           = var.gitlab_runner_registration_config["tag_list"]
+    gitlab_runner_version            = var.gitlab_runner_version
     gitlab_runner_log_group_name     = local.gitlab_runner_log_group_name
     runners_config                   = data.template_file.runners.rendered
     runners_ssm_token_key            = local.runners_ssm_token_key

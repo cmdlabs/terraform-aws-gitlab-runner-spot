@@ -92,6 +92,7 @@ register_runner() {
         -F "locked=${gitlab_runner_locked_to_project}" \
         -F "maximum_timeout=${gitlab_runner_maximum_timeout}" \
         -F "access_level=${gitlab_runner_access_level}" \
+        -F "tag_list=${gitlab_runner_tag_list}" \
     )
 
     token=$(jq -r .token <<< "$response")
