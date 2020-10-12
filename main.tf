@@ -166,6 +166,16 @@ resource "aws_autoscaling_group" "gitlab_runner_instance" {
   desired_capacity          = 1
   health_check_grace_period = 0
   launch_configuration      = aws_launch_configuration.gitlab_runner_instance.name
+
+  dynamic "tag" {
+    for_each = var.tags
+
+    content {
+      key                 = tag.value["key"]
+      value               = tag.value["value"]
+      propagate_at_launch = tag.value["propagate_at_launch"]
+    }
+  }
 }
 
 resource "aws_autoscaling_schedule" "scale_in" {

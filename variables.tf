@@ -9,6 +9,17 @@ variable "aws_availability_zone" {
   default     = "a"
 }
 
+variable "tags" {
+  description = "Tags for the runner instances"
+  type        = list(map(string))
+
+  default = [{
+    key                 = "Name"
+    value               = "gitlab-runner-manager"
+    propagate_at_launch = true
+  }]
+}
+
 variable "vpc_id" {
   description = "The target VPC for the docker-machine and runner instances"
   type        = string
