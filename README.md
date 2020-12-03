@@ -62,6 +62,10 @@ gitlab_runner_registration_config = {
 }
 ```
 
+### GitLab runner docker login
+
+To login to the Docker registry and avoid the pull rate limit set the variable `gitlab_runner_registration_config["docker_user"]` and `gitlab_runner_registration_config["docker_password"]`. See the previous section for an example.
+
 ### GitLab runner cache
 
 The module creates a cache for the runner in S3. Old objects are automatically remove via a configurable life cycle policy on the bucket.

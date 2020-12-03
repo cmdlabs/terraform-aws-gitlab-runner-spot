@@ -139,6 +139,8 @@ data "template_file" "user_data" {
     gitlab_runner_maximum_timeout    = var.gitlab_runner_registration_config["maximum_timeout"]
     gitlab_runner_registration_token = var.gitlab_runner_registration_config["registration_token"]
     gitlab_runner_tag_list           = var.gitlab_runner_registration_config["tag_list"]
+    gitlab_runner_docker_user        = var.gitlab_runner_registration_config["docker_user"]
+    gitlab_runner_docker_password    = var.gitlab_runner_registration_config["docker_password"]
     gitlab_runner_version            = var.gitlab_runner_version
     gitlab_runner_log_group_name     = local.gitlab_runner_log_group_name
     runners_config                   = data.template_file.runners.rendered

@@ -15,7 +15,7 @@ update_system() {
 }
 
 install_deps() {
-  yum -y install aws-cli awslogs jq
+  yum -y install aws-cli awslogs jq docker
 }
 
 configure_cloudwatch() {
@@ -78,6 +78,11 @@ install_gitlab_runner() {
   # Create a dummy machine so that the cert is generated properly
   # See: https://gitlab.com/gitlab-org/gitlab-runner/issues/3676
   docker-machine create --driver none --url localhost dummy-machine
+
+  # Optionally login to docker to avoid pull rate limit
+  if [ ! -z "${gitlab_runner_docker_user}" ]; then
+    docker login -u ${gitlab_runner_docker_user} -p ${gitlab_runner_docker_password}
+  fi
 }
 
 register_runner() {

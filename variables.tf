@@ -76,6 +76,8 @@ variable "gitlab_runner_registration_config" {
     maximum_timeout    = ""
     access_level       = ""
     tag_list           = ""
+    docker_user        = ""
+    docker_password    = ""
   }
 }
 
