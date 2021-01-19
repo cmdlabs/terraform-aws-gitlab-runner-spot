@@ -41,6 +41,12 @@ variable "key_name" {
   default     = "default"
 }
 
+variable "instance_type" {
+  description = "Instance type of the GitLab Runner instance"
+  type        = string
+  default     = "m5a.large"
+}
+
 variable "spot_price" {
   description = "Spot bid price for the GitLab Runner instance"
   type        = string

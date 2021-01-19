@@ -2,7 +2,6 @@ locals {
   gitlab_runner_ami_filter      = ["amzn2-ami-hvm-*-x86_64-ebs"]
   gitlab_runner_instance_type   = "t3.micro"
   docker_machine_ami_filter     = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
-  docker_machine_instance_type  = "m5a.large"
   docker_machine_version        = "0.16.2"
   docker_machine_root_size      = 16
   gitlab_runner_log_group_name  = "gitlab-runner-log-group"
@@ -115,7 +114,7 @@ data "template_file" "runners" {
     runners_machine_idle_time           = var.runners_machine_idle_time
     runners_machine_max_builds          = var.runners_machine_max_builds
     docker_machine_iam_instance_profile = aws_iam_instance_profile.docker_machine.name
-    docker_machine_instance_type        = local.docker_machine_instance_type
+    docker_machine_instance_type        = var.instance_type
     docker_machine_spot_price           = var.spot_price
     docker_machine_security_group       = aws_security_group.docker_machine.name
     docker_machine_root_size            = local.docker_machine_root_size
