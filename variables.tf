@@ -92,6 +92,7 @@ variable "schedule_config" {
   description = "Map containing the configuration of the ASG scale-in and scale-up for the runner instance"
   type        = map
   default = {
+    enabled              = true
     scale_in_recurrence  = "0 18 * * 1-5"
     scale_in_count       = 0
     scale_out_recurrence = "0 8 * * 1-5"
