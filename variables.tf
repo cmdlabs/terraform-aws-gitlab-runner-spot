@@ -47,6 +47,12 @@ variable "instance_type" {
   default     = "m5a.large"
 }
 
+variable "request_spot_instance" {
+  description = "Whether to request spot instances for the GitLab Runner instance"
+  type        = bool
+  default     = true
+}
+
 variable "spot_price" {
   description = "Spot bid price for the GitLab Runner instance"
   type        = string
