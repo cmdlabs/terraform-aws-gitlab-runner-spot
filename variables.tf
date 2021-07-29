@@ -74,7 +74,7 @@ variable "ssh_cidr_blocks" {
 variable "gitlab_runner_version" {
   description = "Version of the GitLab Runner to install"
   type        = string
-  default     = "12.3.0"
+  default     = "14.1.0"
 }
 
 variable "gitlab_runner_registration_config" {
