@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+exec > >(tee -a /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+
 awslogs_conf='/etc/awslogs/awslogs.conf'
 awscli_conf='/etc/awslogs/awscli.conf'
 config_toml='/etc/gitlab-runner/config.toml'
