@@ -101,6 +101,7 @@ data "template_file" "runners" {
     subnet_id                            = var.subnet_id
     globals_concurrent                   = var.globals_concurrent
     runners_name                         = var.runners_name
+    runners_tags                         = var.runners_tags
     runners_url                          = var.runners_url
     runners_environment                  = jsonencode(var.runners_environment)
     runners_request_concurrency          = var.runners_request_concurrency

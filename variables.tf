@@ -116,6 +116,12 @@ variable "runners_name" {
   type        = string
 }
 
+variable "runners_tags" {
+  description = "amazonec2-tags key-value pairs for AWS extra tags, just informatory"
+  type        = string
+  default     = "runner-manager-name,gitlab-runner-manager"
+}
+
 variable "runners_url" {
   description = "The GitLab URL for the instance to connect to"
   type        = string

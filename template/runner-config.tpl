@@ -41,6 +41,7 @@ check_interval = 0
       "amazonec2-vpc-id=${vpc_id}",
       "amazonec2-subnet-id=${subnet_id}",
       "amazonec2-private-address-only=true",
+      "amazonec2-tags=${runners_tags}",
       "amazonec2-request-spot-instance=${docker_machine_request_spot_instance}",
       "amazonec2-spot-price=${docker_machine_spot_price}",
       "amazonec2-security-group=${docker_machine_security_group}",
