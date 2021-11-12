@@ -122,6 +122,12 @@ variable "runners_tags" {
   default     = "runner-manager-name,gitlab-runner-manager"
 }
 
+variable "runners_ssm_token_key" {
+  description = "The key of the SSM paratmeter for storing the runners token"
+  type        = string
+  default     = "gitlab-runner-runner-token"
+}
+
 variable "runners_url" {
   description = "The GitLab URL for the instance to connect to"
   type        = string

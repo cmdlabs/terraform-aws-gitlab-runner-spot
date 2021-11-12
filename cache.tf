@@ -40,7 +40,7 @@ data "template_file" "docker_machine_cache_policy" {
 }
 
 resource "aws_iam_policy" "docker_machine_cache" {
-  name        = "gitlab-runner-docker-machine-cache"
+  name_prefix = "gitlab-runner-docker-machine-cache"
   path        = "/"
   description = "Policy for docker machine instance to access cache"
 

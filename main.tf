@@ -6,7 +6,6 @@ locals {
   docker_machine_root_size      = 16
   gitlab_runner_log_group_name  = "gitlab-runner-log-group"
   runners_docker_image          = "docker:18.03.1-ce"
-  runners_ssm_token_key         = "gitlab-runner-runner-token"
   canonical_account_id          = "099720109477"
 }
 
@@ -82,7 +81,7 @@ resource "aws_security_group_rule" "out_all" {
 }
 
 resource "aws_ssm_parameter" "runner_registration_token" {
-  name  = local.runners_ssm_token_key
+  name  = var.runners_ssm_token_key
   type  = "SecureString"
   value = "null"
 
@@ -145,7 +144,7 @@ data "template_file" "user_data" {
     gitlab_runner_version            = var.gitlab_runner_version
     gitlab_runner_log_group_name     = local.gitlab_runner_log_group_name
     runners_config                   = data.template_file.runners.rendered
-    runners_ssm_token_key            = local.runners_ssm_token_key
+    runners_ssm_token_key            = var.runners_ssm_token_key
     runners_url                      = var.runners_url
   }
 }
@@ -162,7 +161,7 @@ data "aws_ami" "docker-machine" {
 }
 
 resource "aws_autoscaling_group" "gitlab_runner_instance" {
-  name                      = "gitlab-runner-autoscaling-group"
+  name                      = "${var.runners_name}-autoscaling-group"
   vpc_zone_identifier       = var.subnet_ids
   min_size                  = 1
   max_size                  = 1
