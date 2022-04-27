@@ -35,6 +35,7 @@ check_interval = 0
     MachineDriver = "amazonec2"
     MachineName = "runner-%s"
     MachineOptions = [
+      "engine-install-url=https://releases.rancher.com/install-docker/19.03.9.sh",
       "amazonec2-instance-type=${docker_machine_instance_type}",
       "amazonec2-region=${aws_region}",
       "amazonec2-zone=${aws_availability_zone}",
