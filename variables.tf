@@ -9,6 +9,17 @@ variable "aws_availability_zone" {
   default     = "a"
 }
 
+variable "tags" {
+  description = "Tags for the runner instances"
+  type        = list(map(string))
+
+  default = [{
+    key                 = "Name"
+    value               = "gitlab-runner-manager"
+    propagate_at_launch = true
+  }]
+}
+
 variable "vpc_id" {
   description = "The target VPC for the docker-machine and runner instances"
   type        = string
@@ -30,6 +41,18 @@ variable "key_name" {
   default     = "default"
 }
 
+variable "instance_type" {
+  description = "Instance type of the GitLab Runner instance"
+  type        = string
+  default     = "m5a.large"
+}
+
+variable "request_spot_instance" {
+  description = "Whether to request spot instances for the GitLab Runner instance"
+  type        = bool
+  default     = true
+}
+
 variable "spot_price" {
   description = "Spot bid price for the GitLab Runner instance"
   type        = string
@@ -48,6 +71,12 @@ variable "ssh_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "gitlab_runner_version" {
+  description = "Version of the GitLab Runner to install"
+  type        = string
+  default     = "14.1.0"
+}
+
 variable "gitlab_runner_registration_config" {
   description = "Configuration used to register the runner"
   type        = map(string)
@@ -56,15 +85,20 @@ variable "gitlab_runner_registration_config" {
     registration_token = ""
     description        = ""
     locked_to_project  = ""
+    run_untagged       = ""
     maximum_timeout    = ""
     access_level       = ""
+    tag_list           = ""
+    docker_user        = ""
+    docker_password    = ""
   }
 }
 
 variable "schedule_config" {
   description = "Map containing the configuration of the ASG scale-in and scale-up for the runner instance"
-  type        = map
+  type        = map(any)
   default = {
+    enabled              = true
     scale_in_recurrence  = "0 18 * * 1-5"
     scale_in_count       = 0
     scale_out_recurrence = "0 8 * * 1-5"
@@ -80,6 +114,18 @@ variable "globals_concurrent" {
 variable "runners_name" {
   description = "The Runner's description, just informatory"
   type        = string
+}
+
+variable "runners_tags" {
+  description = "amazonec2-tags key-value pairs for AWS extra tags, just informatory"
+  type        = string
+  default     = "runner-manager-name,gitlab-runner-manager"
+}
+
+variable "runners_ssm_token_key" {
+  description = "The key of the SSM paratmeter for storing the runners token"
+  type        = string
+  default     = "gitlab-runner-runner-token"
 }
 
 variable "runners_url" {
@@ -117,9 +163,21 @@ variable "runners_docker_shm_size" {
   default     = 0
 }
 
+variable "runners_docker_volumes" {
+  description = "List of volumes for images"
+  type        = list(string)
+  default     = []
+}
+
 variable "runners_cache_bucket_name" {
   type        = string
   description = "Name of the storage bucket where runner cache will be stored"
+}
+
+variable "runners_cache_expiration_days" {
+  description = "Number of days before cached objects will expire"
+  type        = number
+  default     = 1
 }
 
 variable "runners_machine_idle_count" {

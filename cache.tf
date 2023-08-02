@@ -3,30 +3,36 @@ data "aws_caller_identity" "current" {}
 resource "aws_s3_bucket" "build_cache" {
   bucket = var.runners_cache_bucket_name
 
-  acl    = "private"
+  acl = "private"
 
   force_destroy = true
-
-  lifecycle_rule {
-    id      = "clear"
-    enabled = true
-
-    prefix = "runner/"
-
-    expiration {
-      days = 1
-    }
-
-    noncurrent_version_expiration {
-      days = 1
-    }
-  }
 
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
         sse_algorithm = "AES256"
       }
+    }
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "build_cache" {
+  bucket = aws_s3_bucket.build_cache.id
+
+  rule {
+    id     = "clear"
+    status = "Enabled"
+
+    filter {
+      prefix = "runner/"
+    }
+
+    expiration {
+      days = var.runners_cache_expiration_days
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = var.runners_cache_expiration_days
     }
   }
 }
@@ -40,7 +46,7 @@ data "template_file" "docker_machine_cache_policy" {
 }
 
 resource "aws_iam_policy" "docker_machine_cache" {
-  name        = "gitlab-runner-docker-machine-cache"
+  name_prefix = "gitlab-runner-docker-machine-cache"
   path        = "/"
   description = "Policy for docker machine instance to access cache"
 

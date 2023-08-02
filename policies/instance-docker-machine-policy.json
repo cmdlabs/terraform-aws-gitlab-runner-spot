@@ -18,6 +18,7 @@
         "ec2:CancelSpotInstanceRequests",
         "ec2:DescribeSubnets",
         "ec2:AssociateIamInstanceProfile",
+        "ec2:AuthorizeSecurityGroupIngress",
         "iam:PassRole"
       ],
       "Effect": "Allow",

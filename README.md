@@ -62,6 +62,10 @@ gitlab_runner_registration_config = {
 }
 ```
 
+### GitLab runner docker login
+
+To login to the Docker registry and avoid the pull rate limit set the variable `gitlab_runner_registration_config["docker_user"]` and `gitlab_runner_registration_config["docker_password"]`. See the previous section for an example.
+
 ### GitLab runner cache
 
 The module creates a cache for the runner in S3. Old objects are automatically remove via a configurable life cycle policy on the bucket.
@@ -78,6 +82,7 @@ The below outlines the current parameters and defaults.
 |subnet_id|Subnet used for hosting the GitLab runner|string|""|Yes|
 |subnet_ids|List of subnets used for hosting the GitLab runners|list(string)|""|Yes|
 |key_name|The name of the EC2 key pair to use|string|default|No|
+|instance_type|Instance type of the GitLab Runner instance|string|m5a.large|No|
 |spot_price|Spot bid price for the GitLab Runner instance|string|0.06|No|
 |enable_ssh_access|Enables SSH access to the GitLab Runner instance|bool|false|No|
 |ssh_cidr_blocks|List of CIDR blocks to allow SSH Access to docker machine and the GitLab Runner|list(string)|[0.0.0.0/0]|No|

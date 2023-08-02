@@ -1,6 +1,6 @@
 resource "aws_iam_instance_profile" "instance" {
-  name = "gitlab-runner-instance-profile"
-  role = aws_iam_role.instance.name
+  name_prefix = "gitlab-runner-instance-profile"
+  role        = aws_iam_role.instance.name
 }
 
 data "template_file" "instance_role_trust_policy" {
@@ -8,7 +8,7 @@ data "template_file" "instance_role_trust_policy" {
 }
 
 resource "aws_iam_role" "instance" {
-  name               = "gitlab-runner-instance-role"
+  name_prefix        = "gitlab-runner-instance-role"
   assume_role_policy = data.template_file.instance_role_trust_policy.rendered
 }
 
@@ -19,7 +19,7 @@ data "template_file" "instance_docker_machine_policy" {
 }
 
 resource "aws_iam_policy" "instance_docker_machine_policy" {
-  name        = "gitlab-runner-docker-machine"
+  name_prefix = "gitlab-runner-docker-machine"
   path        = "/"
   description = "Policy for docker machine."
 
@@ -38,7 +38,7 @@ data "template_file" "instance_session_manager_policy" {
 }
 
 resource "aws_iam_policy" "instance_session_manager_policy" {
-  name        = "gitlab-runner-session-manager"
+  name_prefix = "gitlab-runner-session-manager"
   path        = "/"
   description = "Policy session manager."
 
@@ -65,13 +65,13 @@ data "template_file" "dockermachine_role_trust_policy" {
 }
 
 resource "aws_iam_role" "docker_machine" {
-  name               = "gitlab-runner-docker-machine-role"
+  name_prefix        = "gitlab-runner-docker-machine-role"
   assume_role_policy = data.template_file.dockermachine_role_trust_policy.rendered
 }
 
 resource "aws_iam_instance_profile" "docker_machine" {
-  name = "gitlab-runner-docker-machine-profile"
-  role = aws_iam_role.docker_machine.name
+  name_prefix = "gitlab-runner-docker-machine-profile"
+  role        = aws_iam_role.docker_machine.name
 }
 
 data "template_file" "service_linked_role" {
@@ -79,7 +79,7 @@ data "template_file" "service_linked_role" {
 }
 
 resource "aws_iam_policy" "service_linked_role" {
-  name        = "gitlab-runner-service_linked_role"
+  name_prefix = "gitlab-runner-service_linked_role"
   path        = "/"
   description = "Policy for creation of service linked roles."
 
@@ -98,7 +98,7 @@ data "template_file" "ssm_policy" {
 }
 
 resource "aws_iam_policy" "ssm" {
-  name        = "gitlab-runner-ssm"
+  name_prefix = "gitlab-runner-ssm"
   path        = "/"
   description = "Policy for runner token param access via SSM"
 
@@ -115,11 +115,11 @@ data "template_file" "instance_profile" {
 }
 
 resource "aws_iam_role_policy" "instance" {
-  name   = "gitlab-runner-instance-role"
-  role   = aws_iam_role.instance.name
-  policy = data.template_file.instance_profile.rendered
+  name_prefix = "gitlab-runner-instance-role"
+  role        = aws_iam_role.instance.name
+  policy      = data.template_file.instance_profile.rendered
 }
 
 resource "aws_cloudwatch_log_group" "environment" {
-  name  = local.gitlab_runner_log_group_name
+  name_prefix = local.gitlab_runner_log_group_name
 }
