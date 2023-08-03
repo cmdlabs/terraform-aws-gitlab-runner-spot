@@ -59,6 +59,12 @@ variable "spot_price" {
   default     = "0.06"
 }
 
+variable "root_size" {
+  description = "The root disk size of the runner instances (in GB)"
+  type        = number
+  default     = 16
+}
+
 variable "enable_ssh_access" {
   description = "Enables SSH access to the GitLab Runner instance"
   type        = bool

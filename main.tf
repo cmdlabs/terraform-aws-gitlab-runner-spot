@@ -1,12 +1,11 @@
 locals {
-  gitlab_runner_ami_filter      = ["amzn2-ami-hvm-*-x86_64-ebs"]
-  gitlab_runner_instance_type   = "t3.micro"
-  docker_machine_ami_filter     = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
-  docker_machine_version        = "0.16.2"
-  docker_machine_root_size      = 16
-  gitlab_runner_log_group_name  = "gitlab-runner-log-group"
-  runners_docker_image          = "docker:18.03.1-ce"
-  canonical_account_id          = "099720109477"
+  gitlab_runner_ami_filter     = ["amzn2-ami-hvm-*-x86_64-ebs"]
+  gitlab_runner_instance_type  = "t3.micro"
+  docker_machine_ami_filter    = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+  docker_machine_version       = "0.16.2"
+  gitlab_runner_log_group_name = "gitlab-runner-log-group"
+  runners_docker_image         = "docker:18.03.1-ce"
+  canonical_account_id         = "099720109477"
 }
 
 resource "aws_security_group" "runner" {
@@ -86,7 +85,7 @@ resource "aws_ssm_parameter" "runner_registration_token" {
   value = "null"
 
   lifecycle {
-    ignore_changes = [value]  # Managed by the user-data script.
+    ignore_changes = [value] # Managed by the user-data script.
   }
 }
 
@@ -118,7 +117,7 @@ data "template_file" "runners" {
     docker_machine_request_spot_instance = var.request_spot_instance
     docker_machine_spot_price            = var.spot_price
     docker_machine_security_group        = aws_security_group.docker_machine.name
-    docker_machine_root_size             = local.docker_machine_root_size
+    docker_machine_root_size             = var.root_size
     docker_machine_ami                   = data.aws_ami.docker-machine.id
     runners_machine_off_peak_idle_count  = var.runners_machine_off_peak_idle_count
     runners_machine_off_peak_idle_time   = var.runners_machine_off_peak_idle_time
